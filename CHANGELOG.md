@@ -12,6 +12,7 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - OpenAPI 3.1 contract validation and generated Angular API client.
 - API domain, adapter fixture, application-context, and architecture boundary tests plus a Java 25 CI gate.
 - A Java 25 container, Render Free blueprint, Vercel API proxy, and automated zero-cost hosting guard.
+- A live zero-cost release candidate at `https://commitquest-web.vercel.app`, backed by the Render Free API.
 
 ### Changed
 
