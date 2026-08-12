@@ -15,13 +15,17 @@
 - Fixture-driven GitHub adapter contract tests
 - Spring application-context and ArchUnit boundary checks
 - OpenAPI validation and generated-client compilation
+- Full, history, foundation, and archive classification fixtures
+- Repository-authored roadmap parsing and evidence-level invariants
+- Bounded provider-cache behavior
+- A 17-public-repository compatibility matrix based on the portfolio audit
 
 Run all current gates with:
 
 ```powershell
 npm run verify
 cd apps/api
-./gradlew.bat check
+./gradlew.bat check bootJar
 ```
 
 ## Connected-product gates

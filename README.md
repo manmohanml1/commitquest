@@ -6,7 +6,7 @@ The product remains separate from GitHub: GitHub is the source of truth, and eve
 
 ## Current milestone
 
-Version `0.3.0` is a deployed release candidate. It adds an ephemeral preview for any public GitHub repository while preserving the released, fixture-driven Portfolio Citadel campaign:
+Version `0.3.0` is in progress. Its hosted vertical slice accepts public GitHub repositories, while the final evidence-classification and repository-compatibility work is tracked in the milestone checklist:
 
 - Paste and validate one public GitHub repository URL
 - Fetch GitHub evidence only through a Java 25/Spring Boot 4 API

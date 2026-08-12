@@ -10,13 +10,23 @@
 
 export interface Encounter {
   id: string;
+  level: EncounterLevelEnum;
+  kind: EncounterKindEnum;
+  reference: string;
   title: string;
   summary: string;
   status: EncounterStatusEnum;
-  pullRequest: number;
-  release: string;
   evidenceUrl: string;
+}
+export enum EncounterLevelEnum {
+  VERIFIED = 'verified',
+  INFERRED = 'inferred',
+}
+export enum EncounterKindEnum {
+  PULL_REQUEST = 'pull-request',
+  COMMIT = 'commit',
 }
 export enum EncounterStatusEnum {
   VICTORY = 'victory',
+  OBSERVED = 'observed',
 }

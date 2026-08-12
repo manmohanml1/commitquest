@@ -19,6 +19,7 @@ export interface Quest {
   evidenceUrl: string;
 }
 export enum QuestLevelEnum {
+  VERIFIED = 'verified',
   REPOSITORY_AUTHORED = 'repository-authored',
 }
 export enum QuestStatusEnum {

@@ -29,14 +29,17 @@ export interface CampaignProjection {
   chapters: Array<Chapter>;
 }
 export enum CampaignProjectionSchemaVersionEnum {
-  NUMBER_2 = 2,
+  NUMBER_3 = 3,
 }
 export enum CampaignProjectionMappingAlgorithmVersionEnum {
-  NUMBER_3 = 3,
+  NUMBER_4 = 4,
 }
 export enum CampaignProjectionScoringRulesetVersionEnum {
   NUMBER_1 = 1,
 }
 export enum CampaignProjectionModeEnum {
-  PREVIEW = 'preview',
+  FULL = 'full',
+  HISTORY = 'history',
+  FOUNDATION = 'foundation',
+  ARCHIVE = 'archive',
 }

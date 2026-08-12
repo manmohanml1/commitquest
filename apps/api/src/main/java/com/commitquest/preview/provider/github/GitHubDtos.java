@@ -15,6 +15,7 @@ final class GitHubDtos {
             @JsonProperty("default_branch") String defaultBranch,
             String language,
             boolean archived,
+            @JsonProperty("pushed_at") String pushedAt,
             @JsonProperty("private") boolean privateRepository) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -46,4 +47,27 @@ final class GitHubDtos {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     record Workflow(long id, String name, String state, @JsonProperty("html_url") String htmlUrl) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    record ContentDetail(
+            String name,
+            String path,
+            @JsonProperty("html_url") String htmlUrl,
+            String encoding,
+            String content) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    record Tag(String name) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    record Commit(
+            String sha,
+            @JsonProperty("html_url") String htmlUrl,
+            CommitDetail commit) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    record CommitDetail(String message, CommitAuthor author) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    record CommitAuthor(String date) {}
 }

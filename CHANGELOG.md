@@ -13,12 +13,18 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - API domain, adapter fixture, application-context, and architecture boundary tests plus a Java 25 CI gate.
 - A Java 25 container, Render Free blueprint, Vercel API proxy, and automated zero-cost hosting guard.
 - A live zero-cost release candidate at `https://commitquest-web.vercel.app`, backed by the Render Free API.
+- Repository-authored `ROADMAP.md` candidate extraction with explicit provenance.
+- Full, history, foundation, and archive campaign classification.
+- Clearly labelled commit expeditions, tag milestones, and foundation chapters when verified PR or Release evidence is absent.
+- A bounded ten-minute in-memory provider cache and a 17-repository compatibility matrix.
 
 ### Changed
 
 - Established an independent Git-connected Vercel project and pinned the web build runtime to Node 24.
 - Made campaign summary labels and repository evidence links reflect the active ephemeral or bundled campaign.
 - Superseded the payable AWS v0.3 deployment with a Vercel Hobby and Render Free hosting contract.
+- Upgraded the campaign projection to schema v3 and mapping algorithm v4 so missing GitHub workflow artifacts remain informative without becoming fabricated achievements.
+- Expanded merged-PR sampling and made capped evidence metrics explicit.
 
 ## [0.2.0] - 2026-08-12
 

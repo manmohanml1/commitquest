@@ -65,7 +65,7 @@ describe('App', () => {
     expect(questTab?.getAttribute('aria-selected')).toBe('true');
     expect(element.querySelector('#campaign-panel-quests')?.hasAttribute('hidden')).toBe(false);
     expect(element.textContent).toContain('Candidate quest board');
-    expect(element.textContent).toContain('REPOSITORY-AUTHORED · NOT YET VERIFIED');
+    expect(element.textContent).toContain('VERIFIED ISSUES · REPOSITORY-AUTHORED ROADMAP');
   });
 
   it('supports arrow-key movement between campaign tabs', () => {
@@ -91,8 +91,9 @@ describe('App', () => {
     const form = element.querySelector<HTMLFormElement>('.preview-form');
     const preview: CampaignProjection = {
       ...PORTFOLIO_CITADEL,
-      mappingAlgorithmVersion: 3,
-      mode: 'preview',
+      schemaVersion: 3,
+      mappingAlgorithmVersion: 4,
+      mode: 'foundation',
       repository: 'openai/openai-java',
       slug: 'openai-openai-java',
       title: 'Openai Java Frontier',
@@ -119,6 +120,36 @@ describe('App', () => {
       'No preview data was persisted',
     );
     expect(element.textContent).toContain('Restore Portfolio Citadel');
+    expect(element.textContent).toContain('Foundation');
+  });
+
+  it('explains absent repository evidence instead of rendering blank ledgers', async () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    const preview: CampaignProjection = {
+      ...PORTFOLIO_CITADEL,
+      schemaVersion: 3,
+      mappingAlgorithmVersion: 4,
+      mode: 'foundation',
+      quests: [],
+      encounters: [],
+      chapters: [],
+    };
+
+    element
+      .querySelector<HTMLFormElement>('.preview-form')
+      ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    http.expectOne('/api/v1/repository-previews').flush(preview);
+    await fixture.whenStable();
+
+    for (const tab of ['quests', 'encounters', 'chapters']) {
+      element.querySelector<HTMLButtonElement>(`#campaign-tab-${tab}`)?.click();
+      fixture.detectChanges();
+    }
+
+    expect(element.textContent).toContain('A quiet quest board is valid evidence');
+    expect(element.textContent).toContain('CommitQuest does not invent an encounter');
   });
 
   it('keeps Portfolio Citadel usable when live preview fails', async () => {

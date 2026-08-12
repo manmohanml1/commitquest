@@ -19,7 +19,7 @@ export interface CampaignEvidence {
 export interface CampaignQuest {
   id: string;
   regionId: string;
-  level: 'repository-authored';
+  level: 'verified' | 'repository-authored';
   title: string;
   summary: string;
   status: 'candidate';
@@ -31,14 +31,19 @@ export interface CampaignEncounter {
   id: string;
   title: string;
   summary: string;
-  status: 'victory';
-  pullRequest: number;
-  release: string;
+  level?: 'verified' | 'inferred';
+  kind?: 'pull-request' | 'commit';
+  reference?: string;
+  status: 'victory' | 'observed';
+  pullRequest?: number;
+  release?: string;
   evidenceUrl: string;
 }
 
 export interface CampaignChapter {
   version: string;
+  level?: 'verified' | 'repository-authored' | 'inferred';
+  kind?: 'release' | 'tag' | 'foundation';
   title: string;
   summary: string;
   status: 'unlocked' | 'current';
@@ -46,13 +51,13 @@ export interface CampaignChapter {
 }
 
 export interface CampaignProjection {
-  schemaVersion: 2;
-  mappingAlgorithmVersion: 2 | 3;
+  schemaVersion: 2 | 3;
+  mappingAlgorithmVersion: 2 | 3 | 4;
   scoringRulesetVersion: 1;
   slug: string;
   title: string;
   repository: string;
-  mode: 'history' | 'preview';
+  mode: 'full' | 'history' | 'foundation' | 'archive' | 'preview';
   currentChapter: string;
   metrics: ReadonlyArray<{ value: string; label: string }>;
   evidence: ReadonlyArray<CampaignEvidence>;

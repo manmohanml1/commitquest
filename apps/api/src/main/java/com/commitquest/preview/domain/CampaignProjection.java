@@ -54,15 +54,18 @@ public record CampaignProjection(
 
     public record Encounter(
             String id,
+            String level,
+            String kind,
+            String reference,
             String title,
             String summary,
             String status,
-            long pullRequest,
-            String release,
             String evidenceUrl) {}
 
     public record Chapter(
             String version,
+            String level,
+            String kind,
             String title,
             String summary,
             String status,
