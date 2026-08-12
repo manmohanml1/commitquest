@@ -4,6 +4,8 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-12
+
 ### Added
 
 - Canonical project guide and repository contributor instructions derived from initial planning.

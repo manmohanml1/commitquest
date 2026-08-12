@@ -4,6 +4,30 @@
 
 The Angular output in `apps/web/dist/commitquest-web/browser` is a static, provider-independent site. Every pull request must pass formatting, linting, unit tests, and a production build before a preview deployment. The Portfolio Citadel fixture has no runtime dependency on GitHub, authentication, a database, or AI.
 
+## Milestone 0.3 deployment boundary
+
+The web and API are independent deployment units:
+
+- **Web:** a new Vercel project named `commitquest-web`, connected only to this repository. It must not reuse the existing portfolio or wearable projects.
+- **API:** a containerized Java 25/Spring Boot 4 service on AWS ECS Fargate when the public-repository endpoint is ready to host. GitHub credentials exist only in the API environment.
+
+The web remains provider-independent and retains the bundled Portfolio Citadel projection as an outage-safe demonstration. Its API base URL is supplied through environment-specific configuration; no GitHub token or other server secret may be exposed in a `NEXT_PUBLIC_`, `VITE_`, Angular environment file, or browser bundle.
+
+### Vercel web project
+
+Create the project from the repository root because the npm workspace and lockfile live there. The repository-owned `vercel.json` defines the build contract:
+
+| Setting | Value |
+| --- | --- |
+| Project name | `commitquest-web` |
+| Framework | Angular |
+| Node.js | 24 LTS |
+| Install command | `npm ci --ignore-scripts --no-audit --no-fund` |
+| Build command | `npm run build` |
+| Output directory | `apps/web/dist/commitquest-web/browser` |
+
+Version 0.2 requires no runtime environment variables. Preview deployments are branch-scoped; production deploys from the protected release branch after verification.
+
 ## Environments
 
 - **Development:** local Angular server and bundled fixture.
