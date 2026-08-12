@@ -64,30 +64,34 @@ export class PortfolioCitadelScene extends Phaser.Scene {
   private createRegion(item: CampaignEvidence, index: number): void {
     const color = COLORS[item.tone];
     const diamond = this.add
-      .rectangle(0, 0, 64, 64, 0x10263a, 1)
+      .rectangle(0, 0, 70, 70, 0x10263a, 1)
       .setStrokeStyle(2, color, 0.85)
       .setAngle(45);
     const icon = this.add
       .text(0, -2, item.icon, {
         color: `#${color.toString(16).padStart(6, '0')}`,
         fontFamily: 'Consolas, monospace',
-        fontSize: '22px',
+        fontSize: '24px',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
     const label = this.add
-      .text(0, 56, item.title, {
-        color: '#dce8e7',
+      .text(0, 62, item.title, {
+        color: '#f2f7f4',
         fontFamily: 'Segoe UI, sans-serif',
-        fontSize: '11px',
+        fontSize: '13px',
         fontStyle: 'bold',
+        stroke: '#07111f',
+        strokeThickness: 3,
       })
       .setOrigin(0.5);
     const status = this.add
-      .text(0, 76, item.status.toUpperCase(), {
-        color: '#688195',
+      .text(0, 84, item.status.toUpperCase(), {
+        color: '#9bb1be',
         fontFamily: 'Consolas, monospace',
-        fontSize: '9px',
+        fontSize: '10px',
+        stroke: '#07111f',
+        strokeThickness: 2,
       })
       .setOrigin(0.5);
     const container = this.add.container(item.position.x, item.position.y, [

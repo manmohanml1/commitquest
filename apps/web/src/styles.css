@@ -36,6 +36,13 @@ button {
   font: inherit;
 }
 
+/* Phaser inserts this canvas dynamically, outside Angular's scoped style attributes. */
+.game-host canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 main {
   min-height: 100vh;
   overflow: hidden;

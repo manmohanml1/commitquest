@@ -22,6 +22,10 @@ describe('App', () => {
     const buttons = fixture.nativeElement.querySelectorAll(
       '.region-controls button',
     ) as NodeListOf<HTMLButtonElement>;
+    expect(buttons).toHaveLength(6);
+    expect(buttons[0].getAttribute('aria-label')).toBe(
+      'Select Presentation Capital, status Restored',
+    );
     buttons[1].click();
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.evidence-panel h3')?.textContent).toContain(

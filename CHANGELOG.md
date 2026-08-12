@@ -11,6 +11,7 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - Pull-request template, code ownership, dependency automation, release packaging, and stronger CI governance.
 - Expanded Portfolio Citadel projection with six regions, candidate quests, verified encounters, and release chapters.
 - Keyboard-accessible campaign navigation and explicit history-campaign evidence states.
+- Responsive region navigator and fully scaled Phaser overview for readable world-map exploration.
 
 ## [0.1.0] - 2026-08-11
 

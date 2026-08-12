@@ -106,20 +106,33 @@
             >{{ campaign.evidence.length }} / {{ campaign.evidence.length }} REGIONS MAPPED</span
           >
         </div>
-        <div #gameHost class="game-host" aria-hidden="true"></div>
+        <div class="map-guide">
+          <div>
+            <strong>Choose a repository region</strong>
+            <span
+              >The buttons remain readable at every screen size and control the evidence
+              panel.</span
+            >
+          </div>
+          <span>ROUTES BELOW ARE A VISUAL OVERVIEW</span>
+        </div>
         <div class="region-controls" aria-label="Interactive repository regions">
           @for (item of campaign.evidence; track item.title; let index = $index) {
             <button
               type="button"
               [class.active]="selectedIndex() === index"
               [attr.aria-pressed]="selectedIndex() === index"
+              [attr.aria-label]="'Select ' + item.title + ', status ' + item.status"
               (click)="selectEvidence(index)"
             >
-              <span>{{ index + 1 }}</span
-              >{{ item.title }}<small>{{ item.status }}</small>
+              <span>R0{{ index + 1 }}</span>
+              <strong>{{ item.title }}</strong>
+              <small>{{ item.status }}</small>
             </button>
           }
         </div>
+        <div class="map-caption"><span></span> VISUAL ROUTE OVERVIEW · SELECT REGIONS ABOVE</div>
+        <div #gameHost class="game-host" aria-hidden="true"></div>
       </div>
 
       <aside class="evidence-panel" aria-live="polite">
