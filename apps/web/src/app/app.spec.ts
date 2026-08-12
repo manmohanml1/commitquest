@@ -1,10 +1,23 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { App } from './app';
+import { provideApi } from './api/generated/provide-api';
+import { PORTFOLIO_CITADEL } from './data/portfolio-citadel.fixture';
+import { CampaignProjection } from './domain/campaign';
 
 describe('App', () => {
+  let http: HttpTestingController;
+
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [App] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [App],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideApi('')],
+    }).compileComponents();
+    http = TestBed.inject(HttpTestingController);
   });
+
+  afterEach(() => http.verify());
 
   it('renders the Portfolio Citadel evidence experience', () => {
     const fixture = TestBed.createComponent(App);
@@ -68,5 +81,69 @@ describe('App', () => {
         .querySelector<HTMLButtonElement>('#campaign-tab-quests')
         ?.getAttribute('aria-selected'),
     ).toBe('true');
+  });
+
+  it('submits a public repository and renders its ephemeral campaign', async () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    const input = element.querySelector<HTMLInputElement>('#repository-url');
+    const form = element.querySelector<HTMLFormElement>('.preview-form');
+    const preview: CampaignProjection = {
+      ...PORTFOLIO_CITADEL,
+      mappingAlgorithmVersion: 3,
+      mode: 'preview',
+      repository: 'openai/openai-java',
+      slug: 'openai-openai-java',
+      title: 'Openai Java Frontier',
+    };
+
+    if (!input || !form) throw new Error('Preview form is missing');
+    input.value = 'https://github.com/openai/openai-java';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+
+    const request = http.expectOne('/api/v1/repository-previews');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({
+      repositoryUrl: 'https://github.com/openai/openai-java',
+    });
+    request.flush(preview);
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(element.querySelector('.campaign-section h2')?.textContent).toContain(
+      'Openai Java Frontier',
+    );
+    expect(element.querySelector('.preview-feedback')?.textContent).toContain(
+      'No preview data was persisted',
+    );
+    expect(element.textContent).toContain('Restore Portfolio Citadel');
+  });
+
+  it('keeps Portfolio Citadel usable when live preview fails', async () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    element
+      .querySelector<HTMLFormElement>('.preview-form')
+      ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+
+    http.expectOne('/api/v1/repository-previews').flush(
+      {
+        code: 'RATE_LIMITED',
+        detail: "GitHub's public API rate limit is temporarily exhausted. Try again later.",
+      },
+      { status: 429, statusText: 'Too Many Requests' },
+    );
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(element.querySelector('.campaign-section h2')?.textContent).toContain(
+      'Portfolio Citadel',
+    );
+    expect(element.querySelector('.preview-feedback')?.textContent).toContain(
+      'rate limit is temporarily exhausted',
+    );
   });
 });

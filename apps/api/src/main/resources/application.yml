@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: commitquest-api
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: ${PORT:8081}
+  error:
+    include-message: never
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+commitquest:
+  github:
+    base-url: https://api.github.com
+    token: ${COMMITQUEST_GITHUB_TOKEN:}
+    connect-timeout: 3s
+    read-timeout: 8s
+  web:
+    allowed-origin-patterns:
+      - http://localhost:4200
+      - http://localhost:4201
+      - http://127.0.0.1:4200
+      - http://127.0.0.1:4201
+      - https://commitquest-web.vercel.app
+      - https://commitquest-web-*.vercel.app

@@ -53,12 +53,12 @@ The bundled Portfolio Citadel campaign is the permanent zero-account demonstrati
 | Phase     | Product proof                                                 | Infrastructure allowed                                            |
 | --------- | ------------------------------------------------------------- | ----------------------------------------------------------------- |
 | `0.1–0.2` | Compelling bundled campaign and complete interaction language | Angular, Phaser, versioned fixtures, static hosting               |
-| `0.3`     | Ephemeral public-repository preview                           | Java 25/Spring Boot API and server-side GitHub adapter            |
+| `0.3`     | Ephemeral public-repository preview                           | Java 25/Spring Boot API, Render Free, and Vercel Hobby             |
 | `0.4–0.5` | Persistent, user-controlled connected campaign                | PostgreSQL, GitHub App, jOOQ, Flyway, authentication              |
 | `0.6–0.8` | Reliable live progression and public sharing                  | Webhooks, durable inbox/outbox, SQS, SSE, object storage          |
 | `0.9–1.0` | Operable public product                                       | Load/security/recovery hardening, Terraform, production telemetry |
 
-Do not scaffold databases, queues, caches, cloud resources, or placeholder services before their first milestone uses them. Redis is permitted only after measurements demonstrate shared ephemeral coordination is necessary. SQS is the initial hosted queue; Kafka is not part of the first production architecture.
+Do not scaffold databases, queues, caches, cloud resources, or placeholder services before their first milestone uses them. No payable resource may be provisioned. Later hosted infrastructure requires a separate ADR proving a hard zero-spend cap. Redis and Kafka are not default dependencies.
 
 ## Technology baseline
 
@@ -93,11 +93,11 @@ Code is organized by business capability. Provider DTOs terminate in adapters. M
 
 - PostgreSQL 18 is the transactional source of truth
 - Transactional inbox/outbox for webhook deduplication and reliable delivery
-- SQS for hosted asynchronous processing
+- A durable queue only after a zero-cost, hard-capped provider is accepted
 - S3-compatible object storage for immutable generated assets and snapshots
 - Redis only when justified by a measured requirement
-- AWS ECS Fargate, RDS, ECR, Secrets Manager, and S3 for the planned production deployment
-- Terraform for reproducible infrastructure and GitHub Actions for delivery
+- Vercel Hobby for the static web and one Render Free container for the v0.3 API
+- Repository-owned deployment configuration and GitHub Actions for delivery
 
 ## Coding patterns
 

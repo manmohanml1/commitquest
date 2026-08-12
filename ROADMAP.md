@@ -3,8 +3,8 @@
 | Version | Outcome                                                                                 | Status         |
 | ------- | --------------------------------------------------------------------------------------- | -------------- |
 | 0.1.0   | Product contracts, branded landing experience, interactive Portfolio Citadel slice      | Released       |
-| 0.2.0   | Versioned fixture schema, complete campaign map, encounters, chapters, candidate quests | Ready for review |
-| 0.3.0   | Paste a public GitHub URL and generate an ephemeral repository preview                  | Planned        |
+| 0.2.0   | Versioned fixture schema, complete campaign map, encounters, chapters, candidate quests | Released       |
+| 0.3.0   | Paste a public GitHub URL and generate an ephemeral repository preview                  | In review      |
 | 0.4.0   | Accounts, PostgreSQL persistence, campaign visibility, deletion                         | Planned        |
 | 0.5.0   | Minimum-permission GitHub App installation and initial synchronization                  | Planned        |
 | 0.6.0   | Secure, idempotent webhook ingestion and real-time campaign updates                     | Planned        |

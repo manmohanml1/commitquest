@@ -4,7 +4,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['.angular/**', 'dist/**', 'coverage/**'],
+    ignores: ['.angular/**', 'dist/**', 'coverage/**', 'src/app/api/generated/**'],
   },
   {
     files: ['**/*.ts'],

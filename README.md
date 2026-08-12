@@ -6,25 +6,26 @@ The product remains separate from GitHub: GitHub is the source of truth, and eve
 
 ## Current milestone
 
-Version `0.2.0` is in development as the expanded, fixture-driven Portfolio Citadel campaign:
+Version `0.3.0` is in development. It adds an ephemeral preview for any public GitHub repository while preserving the released, fixture-driven Portfolio Citadel campaign:
 
-- Product landing experience
-- Six-region interactive Portfolio Citadel world map
-- Dedicated views for candidate quests, verified encounters, and release chapters
-- Eight repository-authored roadmap candidates with explicit unverified state
-- Primary-source links for historical pull requests and releases
-- Independently versioned projection schema and mapping rules
-- Responsive, keyboard-accessible presentation
-- No authentication, persistence, GitHub availability, credentials, or AI required
+- Paste and validate one public GitHub repository URL
+- Fetch GitHub evidence only through a Java 25/Spring Boot 4 API
+- Return a deterministic, independently versioned campaign projection
+- Keep GitHub credentials and provider payloads out of the browser and domain model
+- Model invalid, unavailable, private, missing, and rate-limited repositories distinctly
+- Perform no authentication, persistence, background processing, GitHub App installation, or AI work
+- Keep the bundled Portfolio Citadel demo available when GitHub or the API is unavailable
 
-The released baseline remains `0.1.0`. See the [0.2.0 milestone contract](docs/milestones/0.2.0.md) for acceptance criteria and exclusions.
+The released baseline is `0.2.0`. See the [0.3.0 milestone contract](docs/milestones/0.3.0.md) for acceptance criteria and exclusions.
+
+The hosted v0.3 stack is constrained to zero-cost resources: Vercel Hobby for the static web and one explicitly pinned Render Free API service. Free-tier cold starts are expected; no database or other paid cloud resource is provisioned.
 
 ## Repository layout
 
 ```text
 apps/
   web/        Angular application and isolated Phaser map adapter
-  api/        Reserved boundary for the Spring Boot modular monolith
+  api/        Java 25/Spring Boot public-repository preview API
 docs/         Product, architecture, deployment, testing, and ADR records
 packages/     Future generated contracts, design tokens, and shared assets
 ```
@@ -33,13 +34,23 @@ packages/     Future generated contracts, design tokens, and shared assets
 
 ```powershell
 npm install
+# terminal 1
+cd apps/api
+./gradlew.bat bootRun
+
+# terminal 2, from the repository root
 npm start
 ```
+
+The Angular development server proxies `/api` to the API on port `8081`. A server-side
+`COMMITQUEST_GITHUB_TOKEN` is optional for public repositories and increases the provider rate limit.
 
 ## Verification
 
 ```powershell
 npm run verify
+cd apps/api
+./gradlew.bat check
 ```
 
 ## Documentation
@@ -52,6 +63,7 @@ npm run verify
 - [Testing](docs/TESTING.md)
 - [Versioning](docs/VERSIONING.md)
 - [0.2.0 milestone contract](docs/milestones/0.2.0.md)
+- [0.3.0 milestone contract](docs/milestones/0.3.0.md)
 - [Roadmap](ROADMAP.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)

@@ -28,10 +28,12 @@ The production system uses:
 - Java 25 and Spring Boot 4 modular monolith API
 - Separate worker runtime from the same backend codebase
 - PostgreSQL transactional inbox, outbox, projections, and reward ledger
-- SQS for asynchronous delivery when hosted
+- A durable queue only after a hard-capped zero-cost provider is accepted
 - Redis only when shared ephemeral coordination is demonstrated necessary
 - GitHub App with minimum read permissions
 - OpenTelemetry across API, worker, database, and outbound GitHub requests
+
+Later connected infrastructure remains an architectural design, not an authorized hosted resource. Under ADR 0004, it stays local-only until every selected provider has a hard zero-spend cap.
 
 ## Backend modules
 

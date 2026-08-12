@@ -1,0 +1,281 @@
+openapi: 3.1.0
+info:
+  title: CommitQuest API
+  version: 0.3.0
+  description: Ephemeral, read-only public GitHub repository campaign previews.
+servers:
+  - url: /
+    description: Same-origin web gateway; local development proxies this path to the API
+paths:
+  /api/v1/repository-previews:
+    post:
+      operationId: createRepositoryPreview
+      summary: Generate an ephemeral campaign from one public GitHub repository
+      tags: [Repository previews]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepositoryPreviewRequest'
+      responses:
+        '200':
+          description: Deterministic campaign projection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignProjection'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '404':
+          $ref: '#/components/responses/NotFoundOrPrivate'
+        '422':
+          $ref: '#/components/responses/UnprocessableRepository'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/ProviderUnavailable'
+components:
+  responses:
+    InvalidRequest:
+      description: Invalid GitHub repository URL or request body
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFoundOrPrivate:
+      description: GitHub cannot expose the repository; it may be missing or private
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    UnprocessableRepository:
+      description: The repository is known to be private or GitHub returned incomplete evidence
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    RateLimited:
+      description: GitHub provider rate limit exhausted
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    ProviderUnavailable:
+      description: GitHub is unavailable or exceeded the bounded request time
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  schemas:
+    RepositoryPreviewRequest:
+      type: object
+      additionalProperties: false
+      required: [repositoryUrl]
+      properties:
+        repositoryUrl:
+          type: string
+          format: uri
+          maxLength: 2048
+          examples: [https://github.com/manmohanml1/commitquest]
+    Problem:
+      type: object
+      required: [type, title, status, detail, code]
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        code:
+          type: string
+          enum:
+            - INVALID_REQUEST
+            - INVALID_REPOSITORY_URL
+            - PRIVATE_REPOSITORY
+            - NOT_FOUND_OR_PRIVATE
+            - RATE_LIMITED
+            - PROVIDER_UNAVAILABLE
+            - INCOMPLETE_REPOSITORY
+    CampaignProjection:
+      type: object
+      additionalProperties: false
+      required:
+        - schemaVersion
+        - mappingAlgorithmVersion
+        - scoringRulesetVersion
+        - slug
+        - title
+        - repository
+        - mode
+        - currentChapter
+        - metrics
+        - evidence
+        - quests
+        - encounters
+        - chapters
+      properties:
+        schemaVersion:
+          type: integer
+          const: 2
+        mappingAlgorithmVersion:
+          type: integer
+          const: 3
+        scoringRulesetVersion:
+          type: integer
+          const: 1
+        slug:
+          type: string
+        title:
+          type: string
+        repository:
+          type: string
+        mode:
+          type: string
+          const: preview
+        currentChapter:
+          type: string
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metric'
+        evidence:
+          type: array
+          minItems: 6
+          maxItems: 6
+          items:
+            $ref: '#/components/schemas/Region'
+        quests:
+          type: array
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/Quest'
+        encounters:
+          type: array
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/Encounter'
+        chapters:
+          type: array
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/Chapter'
+    Metric:
+      type: object
+      additionalProperties: false
+      required: [value, label]
+      properties:
+        value:
+          type: string
+        label:
+          type: string
+    Position:
+      type: object
+      additionalProperties: false
+      required: [x, y]
+      properties:
+        x:
+          type: integer
+        y:
+          type: integer
+    Region:
+      type: object
+      additionalProperties: false
+      required: [id, level, eyebrow, title, description, meta, evidenceUrl, status, tone, icon, position]
+      properties:
+        id:
+          type: string
+        level:
+          type: string
+          enum: [verified, repository-authored, inferred, owner-authored]
+        eyebrow:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        meta:
+          type: string
+        evidenceUrl:
+          type: string
+          format: uri
+        status:
+          type: string
+        tone:
+          type: string
+          enum: [mint, amber, blue]
+        icon:
+          type: string
+        position:
+          $ref: '#/components/schemas/Position'
+    Quest:
+      type: object
+      additionalProperties: false
+      required: [id, regionId, level, title, summary, status, sourceLabel, evidenceUrl]
+      properties:
+        id:
+          type: string
+        regionId:
+          type: string
+        level:
+          type: string
+          const: repository-authored
+        title:
+          type: string
+        summary:
+          type: string
+        status:
+          type: string
+          const: candidate
+        sourceLabel:
+          type: string
+        evidenceUrl:
+          type: string
+          format: uri
+    Encounter:
+      type: object
+      additionalProperties: false
+      required: [id, title, summary, status, pullRequest, release, evidenceUrl]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        summary:
+          type: string
+        status:
+          type: string
+          const: victory
+        pullRequest:
+          type: integer
+        release:
+          type: string
+        evidenceUrl:
+          type: string
+          format: uri
+    Chapter:
+      type: object
+      additionalProperties: false
+      required: [version, title, summary, status, evidenceUrl]
+      properties:
+        version:
+          type: string
+        title:
+          type: string
+        summary:
+          type: string
+        status:
+          type: string
+          enum: [current, unlocked]
+        evidenceUrl:
+          type: string
+          format: uri

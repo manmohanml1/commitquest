@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: commitquest-api-manmohanml1
+    runtime: docker
+    plan: free
+    region: virginia
+    dockerfilePath: ./apps/api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /actuator/health
+    autoDeployTrigger: checksPass
