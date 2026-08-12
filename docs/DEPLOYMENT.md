@@ -9,7 +9,7 @@ The Angular output in `apps/web/dist/commitquest-web/browser` is a static, provi
 The web and API are independent deployment units:
 
 - **Web:** a new Vercel project named `commitquest-web`, connected only to this repository. It must not reuse the existing portfolio or wearable projects.
-- **API:** a containerized Java 25/Spring Boot 4 service on AWS ECS Fargate when the public-repository endpoint is ready to host. GitHub credentials exist only in the API environment.
+- **API:** one containerized Java 25/Spring Boot 4 Render Free web service. The repository pins `plan: free`; GitHub credentials exist only in the API environment.
 
 The web remains provider-independent and retains the bundled Portfolio Citadel projection as an outage-safe demonstration. Its API base URL is supplied through environment-specific configuration; no GitHub token or other server secret may be exposed in a `NEXT_PUBLIC_`, `VITE_`, Angular environment file, or browser bundle.
 
@@ -36,19 +36,29 @@ Version 0.2 requires no runtime environment variables. Preview deployments are b
 
 The API listens on port `8081`; Angular proxies same-origin `/api` requests to it. Local CORS is restricted to the documented `localhost` and `127.0.0.1` Angular ports. The optional `COMMITQUEST_GITHUB_TOKEN` is read only by Spring Boot.
 
-The Vercel web project can deploy the v0.3 interface independently, but live repository generation remains unavailable there until the API is deployed to its new ECS service and the same-origin gateway route is configured. The bundled Portfolio Citadel campaign remains fully usable in that state.
+The Vercel project proxies `/api/*` to `commitquest-api-manmohanml1.onrender.com` through the repository-owned rewrite. The Render service sleeps after 15 idle minutes and can take approximately one minute to wake; the bundled Portfolio Citadel campaign remains usable during a cold start or provider outage.
+
+### Zero-cost contract
+
+- Vercel stays on Hobby. It caps or pauses included usage instead of billing overages.
+- Render is pinned to one `free` web service in `render.yaml`; databases, disks, workers, and paid preview environments are forbidden for v0.3.
+- `npm run check:free-hosting` fails if the free-plan pin or API proxy is removed or replaced.
+- No AWS, paid database, queue, cache, monitoring, domain, or AI service is provisioned.
+- Production is published on provider subdomains, avoiding domain-registration cost.
+
+Render Free is a hobby demonstration tier, not an availability guarantee. No payment method or paid upgrade is required by this repository contract.
 
 ## Environments
 
 - **Development:** local Angular server, Spring Boot API, and bundled fallback fixture.
 - **Staging:** immutable preview artifact with no production credentials.
-- **Production:** the exact artifact approved in staging.
+- **Production:** the exact approved web artifact on Vercel Hobby plus the stateless API container on Render Free.
 
 Environment names are deployment metadata and never part of the product version.
 
 ## Later milestones
 
-Public repository analysis adds a containerized Spring Boot API. Connected campaigns add PostgreSQL, SQS, a separately scalable worker, Secrets Manager, and OpenTelemetry. Development, staging, and production use separate GitHub Apps, credentials, and databases.
+Connected campaigns remain local-only until a later ADR selects persistence and asynchronous infrastructure with hard zero-spend limits. No paid cloud resource may be introduced implicitly.
 
 ## Promotion contract
 

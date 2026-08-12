@@ -18,6 +18,8 @@ Version `0.3.0` is in development. It adds an ephemeral preview for any public G
 
 The released baseline is `0.2.0`. See the [0.3.0 milestone contract](docs/milestones/0.3.0.md) for acceptance criteria and exclusions.
 
+The hosted v0.3 stack is constrained to zero-cost resources: Vercel Hobby for the static web and one explicitly pinned Render Free API service. Free-tier cold starts are expected; no database or other paid cloud resource is provisioned.
+
 ## Repository layout
 
 ```text

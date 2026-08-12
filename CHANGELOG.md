@@ -11,11 +11,13 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - Deterministic mapping from provider-neutral evidence into six source-linked campaign regions, quests, encounters, chapters, and metrics.
 - OpenAPI 3.1 contract validation and generated Angular API client.
 - API domain, adapter fixture, application-context, and architecture boundary tests plus a Java 25 CI gate.
+- A Java 25 container, Render Free blueprint, Vercel API proxy, and automated zero-cost hosting guard.
 
 ### Changed
 
 - Established an independent Git-connected Vercel project and pinned the web build runtime to Node 24.
 - Made campaign summary labels and repository evidence links reflect the active ephemeral or bundled campaign.
+- Superseded the payable AWS v0.3 deployment with a Vercel Hobby and Render Free hosting contract.
 
 ## [0.2.0] - 2026-08-12
 

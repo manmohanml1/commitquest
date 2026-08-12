@@ -1,0 +1,11 @@
+.git
+.github
+.angular
+node_modules
+apps/web
+apps/api/.gradle
+apps/api/build
+apps/api/api-dev*.log
+docs/**
+!docs/api/
+!docs/api/**

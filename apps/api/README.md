@@ -17,6 +17,10 @@ $env:COMMITQUEST_GITHUB_TOKEN = "..."
 
 The token remains server-side. Preview requests are bounded and are never persisted.
 
+## Free deployment
+
+The root `render.yaml` deploys this Dockerfile as exactly one Render Free web service. Vercel proxies same-origin `/api` requests to that service. Render Free sleeps when idle, so the first request after inactivity can take approximately one minute.
+
 ## Verify
 
 ```powershell
