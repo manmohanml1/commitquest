@@ -1,0 +1,18 @@
+# Changelog
+
+All notable changes follow Keep a Changelog and Semantic Versioning conventions.
+
+## [Unreleased]
+
+## [0.1.0] - 2026-08-11
+
+### Added
+
+- Product, MVP, architecture, versioning, security, and contribution contracts.
+- Branded CommitQuest landing experience.
+- Interactive, lazy-loaded Phaser Portfolio Citadel map.
+- Versioned fixture with exact GitHub primary-evidence links.
+- Accessible Angular evidence controls and detail presentation.
+- Responsive and reduced-motion behavior.
+- Project-specific social sharing artwork.
+- Node 24 CI quality gate for formatting, linting, tests, and production builds.

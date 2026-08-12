@@ -1,0 +1,70 @@
+:host {
+  display: block;
+}
+
+.game-host {
+  height: 410px;
+  margin-top: 16px;
+  overflow: hidden;
+  background: radial-gradient(circle at center, rgba(29, 81, 85, 0.23), transparent 55%);
+}
+
+.game-host canvas {
+  display: block;
+  max-width: 100%;
+}
+
+.region-controls {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line);
+}
+
+.region-controls button {
+  min-height: 62px;
+  padding: 10px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  background: #0b1927;
+  color: #8da4b3;
+  cursor: pointer;
+  font-size: 10px;
+  text-align: left;
+}
+
+.region-controls button:last-child {
+  border-right: 0;
+}
+.region-controls button:hover,
+.region-controls button:focus-visible,
+.region-controls button.active {
+  color: var(--paper);
+  background: #11283a;
+  box-shadow: inset 0 -2px var(--mint);
+}
+.region-controls button > span {
+  color: var(--mint);
+  font-family: var(--font-geist-mono);
+  margin-right: 7px;
+}
+.region-controls small {
+  display: block;
+  margin: 6px 0 0 21px;
+  color: #60798b;
+  text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+  .game-host {
+    height: 340px;
+  }
+  .region-controls {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .region-controls button:nth-child(2) {
+    border-right: 0;
+  }
+  .region-controls button:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--line);
+  }
+}

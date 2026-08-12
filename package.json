@@ -1,0 +1,23 @@
+{
+  "name": "commitquest",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "npm@11.17.0",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "npm --workspace @commitquest/web start",
+    "build": "npm --workspace @commitquest/web run build",
+    "test": "npm --workspace @commitquest/web test",
+    "lint": "npm --workspace @commitquest/web run lint",
+    "check": "npm --workspace @commitquest/web run check",
+    "format:check": "npm --workspace @commitquest/web run format:check",
+    "verify": "npm run format:check && npm run lint && npm run test && npm run build"
+  }
+}

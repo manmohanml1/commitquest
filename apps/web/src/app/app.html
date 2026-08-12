@@ -1,0 +1,159 @@
+<main>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="CommitQuest home">
+      <span class="brand-mark">CQ</span><span>COMMITQUEST</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="#campaign">Campaign</a>
+      <a href="#how-it-works">How it works</a>
+      <a class="nav-cta" href="https://github.com/manmohanml1/portfolio-website">View evidence ↗</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="hero-copy">
+      <p class="kicker"><span></span> LIVE PRODUCT CONCEPT · V0.1</p>
+      <h1>Your repository<br />has a story.</h1>
+      <p class="hero-lede">
+        CommitQuest turns issues, pull requests, tests, and releases into a playable engineering
+        campaign—without losing the evidence behind the work.
+      </p>
+      <div class="hero-actions">
+        <a class="primary-button" href="#campaign">Enter Portfolio Citadel</a>
+        <a class="text-button" href="#how-it-works">See how it works →</a>
+      </div>
+      <p class="trust-line">Read-only demo · Source-linked · No GitHub login required</p>
+    </div>
+
+    <div class="campaign-card" aria-label="Portfolio Citadel campaign summary">
+      <div class="card-topline">
+        <span>FLAGSHIP CAMPAIGN</span><span class="live-status"><i></i> SYNCHRONIZED</span>
+      </div>
+      <div class="citadel-art" aria-hidden="true">
+        <div class="moon"></div>
+        <div class="tower tower-left"><b></b></div>
+        <div class="tower tower-main"><b></b><i>⌘</i></div>
+        <div class="tower tower-right"><b></b></div>
+        <div class="path path-one"></div>
+        <div class="path path-two"></div>
+        <span class="map-point point-one"></span><span class="map-point point-two"></span
+        ><span class="map-point point-three"></span>
+      </div>
+      <div class="campaign-title">
+        <div>
+          <p>MANMOHANML1 / PORTFOLIO-WEBSITE</p>
+          <h2>Portfolio Citadel</h2>
+        </div>
+        <span class="level">LV. 13</span>
+      </div>
+      <div class="campaign-progress"><span></span></div>
+      <div class="campaign-stats">
+        <span><b>v1.8.1</b> Current chapter</span><span><b>Healthy</b> Defenses</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="metrics" aria-label="Campaign metrics">
+    @for (metric of campaign.metrics; track metric.label) {
+      <div>
+        <strong>{{ metric.value }}</strong
+        ><span>{{ metric.label }}</span>
+      </div>
+    }
+  </section>
+
+  <section class="campaign-section" id="campaign">
+    <div class="section-heading">
+      <div>
+        <p class="kicker">EXPLORE THE CAMPAIGN</p>
+        <h2>Portfolio Citadel</h2>
+      </div>
+      <p>
+        Generated from public repository structure, pull requests, releases, workflows, tests, and
+        owner-authored roadmap evidence.
+      </p>
+    </div>
+
+    <div class="map-shell">
+      <div class="map-panel">
+        <div class="map-toolbar">
+          <span>WORLD MAP · CHAPTER v1.8.1</span><span>4 / 4 REGIONS STABLE</span>
+        </div>
+        <div #gameHost class="game-host" aria-hidden="true"></div>
+        <div class="region-controls" aria-label="Interactive repository regions">
+          @for (item of campaign.evidence; track item.title; let index = $index) {
+            <button
+              type="button"
+              [class.active]="selectedIndex() === index"
+              [attr.aria-pressed]="selectedIndex() === index"
+              (click)="selectEvidence(index)"
+            >
+              <span>{{ index + 1 }}</span
+              >{{ item.title }}<small>{{ item.status }}</small>
+            </button>
+          }
+        </div>
+      </div>
+
+      <aside class="evidence-panel" aria-live="polite">
+        <p class="panel-eyebrow">{{ selectedEvidence().eyebrow }}</p>
+        <div class="panel-status">
+          <span [class]="selectedEvidence().tone"></span>{{ selectedEvidence().status }}
+        </div>
+        <h3>{{ selectedEvidence().title }}</h3>
+        <p class="panel-description">{{ selectedEvidence().description }}</p>
+        <div class="evidence-source">
+          <span>EVIDENCE</span>
+          <p>{{ selectedEvidence().meta }}</p>
+        </div>
+        <a [href]="selectedEvidence().evidenceUrl" target="_blank" rel="noreferrer">
+          Open primary evidence ↗
+        </a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="system-section" id="how-it-works">
+    <div class="section-heading compact">
+      <div>
+        <p class="kicker">THE SYSTEM</p>
+        <h2>GitHub activity, translated—not invented.</h2>
+      </div>
+    </div>
+    <div class="system-grid">
+      <article>
+        <span>01</span>
+        <p>ISSUES + ROADMAP</p>
+        <h3>Become quests</h3>
+        <small>Verified work and candidate plans remain visibly distinct.</small>
+      </article>
+      <article>
+        <span>02</span>
+        <p>PULL REQUESTS</p>
+        <h3>Become encounters</h3>
+        <small>Reviews, checks, and merges determine the outcome.</small>
+      </article>
+      <article>
+        <span>03</span>
+        <p>TESTS + CI</p>
+        <h3>Become defenses</h3>
+        <small>Quality signals strengthen the world without rewarding volume.</small>
+      </article>
+      <article>
+        <span>04</span>
+        <p>RELEASES</p>
+        <h3>Unlock chapters</h3>
+        <small>Each published version becomes a traceable campaign milestone.</small>
+      </article>
+    </div>
+  </section>
+
+  <section class="closing">
+    <p class="kicker">BUILT FOR REAL REPOSITORIES</p>
+    <h2>Every codebase deserves a world worth exploring.</h2>
+    <p>Public preview first. Live GitHub campaigns next.</p>
+    <a class="primary-button" href="https://github.com/manmohanml1">Follow the build on GitHub ↗</a>
+  </section>
+
+  <footer><span>COMMITQUEST · v0.1.0</span><span>Evidence over vanity metrics.</span></footer>
+</main>
