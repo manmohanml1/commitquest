@@ -17,6 +17,10 @@ The web remains provider-independent and retains the bundled Portfolio Citadel p
 
 Create the project from the repository root because the npm workspace and lockfile live there. The repository-owned `vercel.json` defines the build contract:
 
+- **Production URL:** <https://commitquest-web.vercel.app>
+- **Vercel project ID:** `prj_wVva1V8Vp8MC8HUzJJvf3aHkgOGx`
+- **Git source:** `manmohanml1/commitquest`
+
 | Setting | Value |
 | --- | --- |
 | Project name | `commitquest-web` |

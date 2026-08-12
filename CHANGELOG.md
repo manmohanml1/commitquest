@@ -4,6 +4,10 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 
 ## [Unreleased]
 
+### Changed
+
+- Established an independent Git-connected Vercel project and pinned the web build runtime to Node 24.
+
 ## [0.2.0] - 2026-08-12
 
 ### Added
