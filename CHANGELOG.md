@@ -12,6 +12,7 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - Expanded Portfolio Citadel projection with six regions, candidate quests, verified encounters, and release chapters.
 - Keyboard-accessible campaign navigation and explicit history-campaign evidence states.
 - Responsive region navigator and fully scaled Phaser overview for readable world-map exploration.
+- Distinct landmark architecture, layered terrain, animated beacons, and crisp HTML map labeling for the Portfolio Citadel north-star experience.
 
 ## [0.1.0] - 2026-08-11
 

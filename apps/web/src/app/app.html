@@ -108,14 +108,19 @@
         </div>
         <div class="map-guide">
           <div>
-            <strong>Choose a repository region</strong>
-            <span
-              >The buttons remain readable at every screen size and control the evidence
-              panel.</span
-            >
+            <strong>The repository, rebuilt as a world</strong>
+            <span>Every landmark represents a verified engineering responsibility.</span>
           </div>
-          <span>ROUTES BELOW ARE A VISUAL OVERVIEW</span>
+          <span>SELECT A LANDMARK OR REGION</span>
         </div>
+        <div class="map-stage">
+          <div class="map-stage-label" aria-hidden="true">
+            <span>R0{{ selectedIndex() + 1 }} · {{ selectedEvidence().status }}</span>
+            <strong>{{ selectedEvidence().title }}</strong>
+          </div>
+          <div #gameHost class="game-host" aria-hidden="true"></div>
+        </div>
+        <div class="map-caption"><span></span> CITADEL OVERVIEW · SIX VERIFIED REGIONS</div>
         <div class="region-controls" aria-label="Interactive repository regions">
           @for (item of campaign.evidence; track item.title; let index = $index) {
             <button
@@ -131,8 +136,6 @@
             </button>
           }
         </div>
-        <div class="map-caption"><span></span> VISUAL ROUTE OVERVIEW · SELECT REGIONS ABOVE</div>
-        <div #gameHost class="game-host" aria-hidden="true"></div>
       </div>
 
       <aside class="evidence-panel" aria-live="polite">

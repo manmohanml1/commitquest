@@ -28,6 +28,9 @@ describe('App', () => {
     );
     buttons[1].click();
     fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.map-stage-label strong')?.textContent).toContain(
+      'Gateway Keep',
+    );
     expect(fixture.nativeElement.querySelector('.evidence-panel h3')?.textContent).toContain(
       'Gateway Keep',
     );

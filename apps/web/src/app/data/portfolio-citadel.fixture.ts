@@ -30,7 +30,7 @@ export const PORTFOLIO_CITADEL: CampaignProjection = {
       status: 'Restored',
       tone: 'mint',
       icon: '⌂',
-      position: { x: 115, y: 125 },
+      position: { x: 125, y: 190 },
     },
     {
       id: 'gateway-keep',
@@ -44,7 +44,7 @@ export const PORTFOLIO_CITADEL: CampaignProjection = {
       status: 'Guarded',
       tone: 'blue',
       icon: '↔',
-      position: { x: 365, y: 90 },
+      position: { x: 365, y: 135 },
     },
     {
       id: 'neon-vault',
@@ -58,7 +58,7 @@ export const PORTFOLIO_CITADEL: CampaignProjection = {
       status: 'Fortified',
       tone: 'blue',
       icon: '◉',
-      position: { x: 635, y: 125 },
+      position: { x: 625, y: 185 },
     },
     {
       id: 'guardian-barracks',
@@ -72,7 +72,7 @@ export const PORTFOLIO_CITADEL: CampaignProjection = {
       status: 'Online',
       tone: 'mint',
       icon: '✓',
-      position: { x: 175, y: 345 },
+      position: { x: 165, y: 355 },
     },
     {
       id: 'control-spire',
@@ -86,7 +86,7 @@ export const PORTFOLIO_CITADEL: CampaignProjection = {
       status: 'Watching',
       tone: 'mint',
       icon: '⌁',
-      position: { x: 415, y: 315 },
+      position: { x: 400, y: 330 },
     },
     {
       id: 'evidence-forge',
@@ -100,7 +100,7 @@ export const PORTFOLIO_CITADEL: CampaignProjection = {
       status: 'Kindled',
       tone: 'amber',
       icon: '◆',
-      position: { x: 650, y: 350 },
+      position: { x: 635, y: 350 },
     },
   ],
   quests: [
