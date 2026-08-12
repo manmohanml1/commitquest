@@ -16,7 +16,7 @@
 
 .region-controls {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   border-top: 1px solid var(--line);
 }
 
@@ -32,7 +32,7 @@
   text-align: left;
 }
 
-.region-controls button:last-child {
+.region-controls button:nth-child(3n) {
   border-right: 0;
 }
 .region-controls button:hover,
@@ -61,10 +61,13 @@
   .region-controls {
     grid-template-columns: repeat(2, 1fr);
   }
-  .region-controls button:nth-child(2) {
+  .region-controls button:nth-child(3n) {
+    border-right: 1px solid var(--line);
+  }
+  .region-controls button:nth-child(2n) {
     border-right: 0;
   }
-  .region-controls button:nth-child(-n + 2) {
+  .region-controls button:nth-child(-n + 4) {
     border-bottom: 1px solid var(--line);
   }
 }

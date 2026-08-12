@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, signal } fr
 import type Phaser from 'phaser';
 
 import { PORTFOLIO_CITADEL } from './data/portfolio-citadel.fixture';
-import { CampaignEvidence } from './domain/campaign';
+import { CampaignEvidence, CampaignView } from './domain/campaign';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +13,13 @@ export class App implements AfterViewInit, OnDestroy {
   @ViewChild('gameHost') private gameHost?: ElementRef<HTMLDivElement>;
 
   protected readonly campaign = PORTFOLIO_CITADEL;
+  protected readonly campaignViews: ReadonlyArray<{ id: CampaignView; label: string }> = [
+    { id: 'map', label: 'World map' },
+    { id: 'quests', label: 'Candidate quests' },
+    { id: 'encounters', label: 'Encounters' },
+    { id: 'chapters', label: 'Chapters' },
+  ];
+  protected readonly activeView = signal<CampaignView>('map');
   protected readonly selectedIndex = signal(0);
   protected readonly selectedEvidence = signal<CampaignEvidence>(PORTFOLIO_CITADEL.evidence[0]);
   private game?: Phaser.Game;
@@ -57,5 +64,28 @@ export class App implements AfterViewInit, OnDestroy {
     this.selectedIndex.set(index);
     this.selectedEvidence.set(evidence);
     this.game?.events.emit('commitquest:select-region', index);
+  }
+
+  protected selectView(view: CampaignView): void {
+    this.activeView.set(view);
+  }
+
+  protected handleViewKey(event: KeyboardEvent, index: number): void {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+
+    event.preventDefault();
+    const lastIndex = this.campaignViews.length - 1;
+    const nextIndex =
+      event.key === 'Home'
+        ? 0
+        : event.key === 'End'
+          ? lastIndex
+          : event.key === 'ArrowRight'
+            ? (index + 1) % this.campaignViews.length
+            : (index - 1 + this.campaignViews.length) % this.campaignViews.length;
+    this.selectView(this.campaignViews[nextIndex].id);
+
+    const tabList = (event.currentTarget as HTMLElement).parentElement;
+    (tabList?.querySelectorAll<HTMLButtonElement>('[role="tab"]')[nextIndex] ?? null)?.focus();
   }
 }

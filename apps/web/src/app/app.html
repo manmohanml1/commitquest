@@ -12,7 +12,7 @@
 
   <section class="hero" id="top">
     <div class="hero-copy">
-      <p class="kicker"><span></span> LIVE PRODUCT CONCEPT · V0.1</p>
+      <p class="kicker"><span></span> PLAYABLE CAMPAIGN · V0.2</p>
       <h1>Your repository<br />has a story.</h1>
       <p class="hero-lede">
         CommitQuest turns issues, pull requests, tests, and releases into a playable engineering
@@ -74,10 +74,37 @@
       </p>
     </div>
 
-    <div class="map-shell">
+    <div class="campaign-tabs" role="tablist" aria-label="Portfolio Citadel views">
+      @for (view of campaignViews; track view.id; let index = $index) {
+        <button
+          type="button"
+          role="tab"
+          [id]="'campaign-tab-' + view.id"
+          [attr.aria-controls]="'campaign-panel-' + view.id"
+          [attr.aria-selected]="activeView() === view.id"
+          [attr.tabindex]="activeView() === view.id ? 0 : -1"
+          (click)="selectView(view.id)"
+          (keydown)="handleViewKey($event, index)"
+        >
+          <span>0{{ index + 1 }}</span
+          >{{ view.label }}
+        </button>
+      }
+    </div>
+
+    <div
+      class="map-shell"
+      role="tabpanel"
+      id="campaign-panel-map"
+      aria-labelledby="campaign-tab-map"
+      [hidden]="activeView() !== 'map'"
+    >
       <div class="map-panel">
         <div class="map-toolbar">
-          <span>WORLD MAP · CHAPTER v1.8.1</span><span>4 / 4 REGIONS STABLE</span>
+          <span>WORLD MAP · CHAPTER {{ campaign.currentChapter }}</span
+          ><span
+            >{{ campaign.evidence.length }} / {{ campaign.evidence.length }} REGIONS MAPPED</span
+          >
         </div>
         <div #gameHost class="game-host" aria-hidden="true"></div>
         <div class="region-controls" aria-label="Interactive repository regions">
@@ -111,6 +138,99 @@
         </a>
       </aside>
     </div>
+
+    <section
+      class="campaign-ledger"
+      role="tabpanel"
+      id="campaign-panel-quests"
+      aria-labelledby="campaign-tab-quests"
+      [hidden]="activeView() !== 'quests'"
+    >
+      <header class="ledger-heading">
+        <div>
+          <p class="panel-eyebrow">REPOSITORY-AUTHORED · NOT YET VERIFIED</p>
+          <h3>Candidate quest board</h3>
+        </div>
+        <p>
+          Roadmap entries become candidates, never completed achievements. GitHub issues will become
+          verified quests when live ingestion arrives.
+        </p>
+      </header>
+      <div class="quest-grid">
+        @for (quest of campaign.quests; track quest.id; let index = $index) {
+          <article class="quest-card">
+            <div class="card-label">
+              <span>Q{{ index + 1 }}</span
+              ><b>{{ quest.status }}</b>
+            </div>
+            <h4>{{ quest.title }}</h4>
+            <p>{{ quest.summary }}</p>
+            <small>{{ quest.sourceLabel }}</small>
+            <a [href]="quest.evidenceUrl" target="_blank" rel="noreferrer">Inspect roadmap ↗</a>
+          </article>
+        }
+      </div>
+    </section>
+
+    <section
+      class="campaign-ledger"
+      role="tabpanel"
+      id="campaign-panel-encounters"
+      aria-labelledby="campaign-tab-encounters"
+      [hidden]="activeView() !== 'encounters'"
+    >
+      <header class="ledger-heading">
+        <div>
+          <p class="panel-eyebrow">VERIFIED · MERGED PULL REQUESTS</p>
+          <h3>Encounter archive</h3>
+        </div>
+        <p>
+          Each encounter is a source-linked outcome. Commit volume and comment count award nothing.
+        </p>
+      </header>
+      <div class="encounter-list">
+        @for (encounter of campaign.encounters; track encounter.id) {
+          <article>
+            <span class="encounter-rank">PR #{{ encounter.pullRequest }}</span>
+            <div>
+              <p>{{ encounter.release }} · {{ encounter.status }}</p>
+              <h4>{{ encounter.title }}</h4>
+              <small>{{ encounter.summary }}</small>
+            </div>
+            <a [href]="encounter.evidenceUrl" target="_blank" rel="noreferrer">Open encounter ↗</a>
+          </article>
+        }
+      </div>
+    </section>
+
+    <section
+      class="campaign-ledger"
+      role="tabpanel"
+      id="campaign-panel-chapters"
+      aria-labelledby="campaign-tab-chapters"
+      [hidden]="activeView() !== 'chapters'"
+    >
+      <header class="ledger-heading">
+        <div>
+          <p class="panel-eyebrow">VERIFIED · GITHUB RELEASES</p>
+          <h3>Chapter chronicle</h3>
+        </div>
+        <p>Releases preserve meaningful campaign milestones instead of rewarding raw activity.</p>
+      </header>
+      <ol class="chapter-timeline">
+        @for (chapter of campaign.chapters; track chapter.version) {
+          <li [class.current]="chapter.status === 'current'">
+            <span class="chapter-marker" aria-hidden="true"></span>
+            <div>
+              <p>{{ chapter.version }} · {{ chapter.status }}</p>
+              <h4>{{ chapter.title }}</h4>
+              <small>{{ chapter.summary }}</small>
+              <a [href]="chapter.evidenceUrl" target="_blank" rel="noreferrer">Open release ↗</a>
+            </div>
+          </li>
+        }
+      </ol>
+    </section>
   </section>
 
   <section class="system-section" id="how-it-works">
@@ -155,5 +275,5 @@
     <a class="primary-button" href="https://github.com/manmohanml1">Follow the build on GitHub ↗</a>
   </section>
 
-  <footer><span>COMMITQUEST · v0.1.0</span><span>Evidence over vanity metrics.</span></footer>
+  <footer><span>COMMITQUEST · v0.2.0</span><span>Evidence over vanity metrics.</span></footer>
 </main>

@@ -6,6 +6,7 @@ const COLORS = { mint: 0x65f4c5, amber: 0xf5b942, blue: 0x78bfff } as const;
 
 export class PortfolioCitadelScene extends Phaser.Scene {
   private readonly nodes: Phaser.GameObjects.Container[] = [];
+  private selectedIndex = 0;
 
   constructor(
     private readonly evidence: ReadonlyArray<CampaignEvidence>,
@@ -51,7 +52,13 @@ export class PortfolioCitadelScene extends Phaser.Scene {
         points[index + 1].y,
       );
     }
-    graphics.lineBetween(points[0].x, points[0].y, points[2].x, points[2].y);
+    [
+      [0, 3],
+      [1, 4],
+      [2, 5],
+    ].forEach(([from, to]) =>
+      graphics.lineBetween(points[from].x, points[from].y, points[to].x, points[to].y),
+    );
   }
 
   private createRegion(item: CampaignEvidence, index: number): void {
@@ -61,7 +68,7 @@ export class PortfolioCitadelScene extends Phaser.Scene {
       .setStrokeStyle(2, color, 0.85)
       .setAngle(45);
     const icon = this.add
-      .text(0, -2, index === 2 ? '✓' : index === 3 ? '◆' : '⌂', {
+      .text(0, -2, item.icon, {
         color: `#${color.toString(16).padStart(6, '0')}`,
         fontFamily: 'Consolas, monospace',
         fontSize: '22px',
@@ -72,7 +79,7 @@ export class PortfolioCitadelScene extends Phaser.Scene {
       .text(0, 56, item.title, {
         color: '#dce8e7',
         fontFamily: 'Segoe UI, sans-serif',
-        fontSize: '13px',
+        fontSize: '11px',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
@@ -89,18 +96,23 @@ export class PortfolioCitadelScene extends Phaser.Scene {
       label,
       status,
     ]);
-    container.setSize(140, 125).setInteractive({ useHandCursor: true });
+    container.setSize(120, 118).setInteractive({ useHandCursor: true });
     container.on('pointerdown', () => this.onSelect(index));
     container.on('pointerover', () =>
       this.tweens.add({ targets: container, scale: 1.06, duration: 120 }),
     );
     container.on('pointerout', () =>
-      this.tweens.add({ targets: container, scale: index === 0 ? 1.08 : 1, duration: 120 }),
+      this.tweens.add({
+        targets: container,
+        scale: index === this.selectedIndex ? 1.08 : 1,
+        duration: 120,
+      }),
     );
     this.nodes.push(container);
   }
 
   private highlightRegion(index: number): void {
+    this.selectedIndex = index;
     this.nodes.forEach((node, nodeIndex) => {
       this.tweens.add({
         targets: node,

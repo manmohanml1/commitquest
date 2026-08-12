@@ -9,6 +9,8 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - Canonical project guide and repository contributor instructions derived from initial planning.
 - Accepted production-stack ADR.
 - Pull-request template, code ownership, dependency automation, release packaging, and stronger CI governance.
+- Expanded Portfolio Citadel projection with six regions, candidate quests, verified encounters, and release chapters.
+- Keyboard-accessible campaign navigation and explicit history-campaign evidence states.
 
 ## [0.1.0] - 2026-08-11
 
