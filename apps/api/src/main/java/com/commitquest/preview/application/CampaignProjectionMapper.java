@@ -26,7 +26,7 @@ public final class CampaignProjectionMapper {
 
         return new CampaignProjection(
                 3,
-                4,
+                5,
                 1,
                 slug(repository.fullName()),
                 title,
@@ -74,6 +74,7 @@ public final class CampaignProjectionMapper {
         var roadmapUrl = source.roadmapItems().isEmpty()
                 ? repositoryUrl + "/issues"
                 : source.roadmapItems().getFirst().url();
+        var hasCandidateSources = candidates > 0;
 
         return List.of(
                 new Region(
@@ -102,14 +103,20 @@ public final class CampaignProjectionMapper {
                         new Position(365, 135)),
                 new Region(
                         "quest-board",
-                        source.issues().isEmpty() ? "repository-authored" : "verified",
+                        hasCandidateSources
+                                ? (source.issues().isEmpty() ? "repository-authored" : "verified")
+                                : "inferred",
                         "REGION · ISSUES + ROADMAP",
-                        "Quest Board",
-                        countDescription(candidates, "candidate quest", "candidate quests"),
-                        "Up to 10 open issues plus 10 repository-authored roadmap candidates",
+                        hasCandidateSources ? "Quest Board" : "Quest Starter",
+                        hasCandidateSources
+                                ? countDescription(candidates, "candidate quest", "candidate quests")
+                                : "No open issue or ROADMAP.md candidate was observed; one clearly labelled CommitQuest recommendation keeps the campaign actionable.",
+                        hasCandidateSources
+                                ? "Up to 10 open issues plus 10 repository-authored roadmap candidates"
+                                : "Recommendation inferred from the absence of tracked candidate work",
                         roadmapUrl,
-                        candidates == 0 ? "Quiet" : "Calling",
-                        candidates == 0 ? "amber" : "blue",
+                        hasCandidateSources ? "Calling" : "Recommended",
+                        hasCandidateSources ? "blue" : "amber",
                         "?",
                         new Position(625, 185)),
                 new Region(
@@ -186,6 +193,17 @@ public final class CampaignProjectionMapper {
                 "candidate",
                 item.sourceLabel(),
                 item.url())));
+        if (quests.isEmpty()) {
+            quests.add(new Quest(
+                    "recommendation-establish-quest-board",
+                    "quest-board",
+                    "inferred",
+                    "Define the next repository milestone",
+                    "No open GitHub issue or ROADMAP.md candidate was observed. CommitQuest recommends publishing the next concrete piece of work so future previews can link to repository-authored evidence.",
+                    "recommended",
+                    "CommitQuest recommendation",
+                    source.repository().webUrl() + "/issues"));
+        }
         return List.copyOf(quests);
     }
 

@@ -220,12 +220,12 @@
     >
       <header class="ledger-heading">
         <div>
-          <p class="panel-eyebrow">VERIFIED ISSUES · REPOSITORY-AUTHORED ROADMAP</p>
+          <p class="panel-eyebrow">OPEN ISSUES · ROADMAP ITEMS · RECOMMENDED NEXT STEP</p>
           <h3>Candidate quest board</h3>
         </div>
         <p>
-          Open GitHub issues and roadmap entries become candidates, never completed achievements.
-          Their evidence level remains visible on every quest.
+          GitHub issues and roadmap entries remain source-linked candidates. When neither exists,
+          CommitQuest provides one explicit recommendation instead of leaving the campaign empty.
         </p>
       </header>
       <div class="quest-grid">
@@ -233,18 +233,29 @@
           <article class="quest-card">
             <div class="card-label">
               <span>Q{{ index + 1 }}</span
-              ><b>{{ quest.level }} · {{ quest.status }}</b>
+              ><b>
+                @if (quest.level === 'repository-authored') {
+                  ROADMAP SOURCE
+                } @else if (quest.level === 'inferred') {
+                  COMMITQUEST SUGGESTION
+                } @else {
+                  VERIFIED GITHUB ISSUE
+                }
+                · {{ quest.status }}
+              </b>
             </div>
             <h4>{{ quest.title }}</h4>
             <p>{{ quest.summary }}</p>
             <small>{{ quest.sourceLabel }}</small>
-            <a [href]="quest.evidenceUrl" target="_blank" rel="noreferrer">Inspect roadmap ↗</a>
+            <a [href]="quest.evidenceUrl" target="_blank" rel="noreferrer"
+              >Open supporting source ↗</a
+            >
           </article>
         }
         @if (campaign().quests.length === 0) {
           <p class="ledger-empty">
-            No open GitHub issues or repository-authored ROADMAP.md candidates were observed. A
-            quiet quest board is valid evidence, not failed engineering.
+            No candidate or recommendation could be projected from the available repository
+            evidence.
           </p>
         }
       </div>

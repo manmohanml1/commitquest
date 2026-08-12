@@ -65,7 +65,7 @@ describe('App', () => {
     expect(questTab?.getAttribute('aria-selected')).toBe('true');
     expect(element.querySelector('#campaign-panel-quests')?.hasAttribute('hidden')).toBe(false);
     expect(element.textContent).toContain('Candidate quest board');
-    expect(element.textContent).toContain('VERIFIED ISSUES · REPOSITORY-AUTHORED ROADMAP');
+    expect(element.textContent).toContain('OPEN ISSUES · ROADMAP ITEMS · RECOMMENDED NEXT STEP');
   });
 
   it('supports arrow-key movement between campaign tabs', () => {
@@ -92,7 +92,7 @@ describe('App', () => {
     const preview: CampaignProjection = {
       ...PORTFOLIO_CITADEL,
       schemaVersion: 3,
-      mappingAlgorithmVersion: 4,
+      mappingAlgorithmVersion: 5,
       mode: 'foundation',
       repository: 'openai/openai-java',
       slug: 'openai-openai-java',
@@ -130,7 +130,7 @@ describe('App', () => {
     const preview: CampaignProjection = {
       ...PORTFOLIO_CITADEL,
       schemaVersion: 3,
-      mappingAlgorithmVersion: 4,
+      mappingAlgorithmVersion: 5,
       mode: 'foundation',
       quests: [],
       encounters: [],
@@ -148,7 +148,9 @@ describe('App', () => {
       fixture.detectChanges();
     }
 
-    expect(element.textContent).toContain('A quiet quest board is valid evidence');
+    expect(element.textContent).toContain(
+      'No candidate or recommendation could be projected from the available repository evidence',
+    );
     expect(element.textContent).toContain('CommitQuest does not invent an encounter');
   });
 

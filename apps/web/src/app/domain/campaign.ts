@@ -19,10 +19,10 @@ export interface CampaignEvidence {
 export interface CampaignQuest {
   id: string;
   regionId: string;
-  level: 'verified' | 'repository-authored';
+  level: 'verified' | 'repository-authored' | 'inferred';
   title: string;
   summary: string;
-  status: 'candidate';
+  status: 'candidate' | 'recommended';
   sourceLabel: string;
   evidenceUrl: string;
 }
@@ -52,7 +52,7 @@ export interface CampaignChapter {
 
 export interface CampaignProjection {
   schemaVersion: 2 | 3;
-  mappingAlgorithmVersion: 2 | 3 | 4;
+  mappingAlgorithmVersion: 2 | 3 | 4 | 5;
   scoringRulesetVersion: 1;
   slug: string;
   title: string;

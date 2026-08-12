@@ -68,7 +68,11 @@ class PublicPortfolioCompatibilityTest {
         assertThat(projection.mode()).as(repositoryName).isEqualTo(shape.expectedMode());
         assertThat(projection.chapters()).isNotEmpty();
         assertThat(projection.encounters()).isNotEmpty();
-        assertThat(projection.quests()).hasSize(hasRoadmap ? 1 : 0);
+        assertThat(projection.quests()).hasSize(1);
+        if (!hasRoadmap) {
+            assertThat(projection.quests().getFirst().level()).isEqualTo("inferred");
+            assertThat(projection.quests().getFirst().status()).isEqualTo("recommended");
+        }
     }
 
     private record Shape(

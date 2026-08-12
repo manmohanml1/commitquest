@@ -36,11 +36,12 @@ for (const [repository, expectedMode, expectsRoadmap] of repositories) {
   const campaign = await response.json();
   const failures = [];
   if (campaign.schemaVersion !== 3) failures.push(`schema ${campaign.schemaVersion}`);
-  if (campaign.mappingAlgorithmVersion !== 4)
+  if (campaign.mappingAlgorithmVersion !== 5)
     failures.push(`mapping ${campaign.mappingAlgorithmVersion}`);
   if (campaign.mode !== expectedMode)
     failures.push(`mode ${campaign.mode}, expected ${expectedMode}`);
   if (campaign.evidence?.length !== 6) failures.push(`regions ${campaign.evidence?.length ?? 0}`);
+  if (!campaign.quests?.length) failures.push('no candidate or clearly labelled recommendation');
   if (!campaign.encounters?.length) failures.push('no encounter or inferred expedition');
   if (!campaign.chapters?.length) failures.push('no release, tag, or foundation chapter');
   if (expectsRoadmap && !campaign.quests?.some((quest) => quest.sourceLabel === 'ROADMAP.md')) {

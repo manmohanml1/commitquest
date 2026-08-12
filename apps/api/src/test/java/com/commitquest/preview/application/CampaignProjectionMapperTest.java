@@ -54,7 +54,7 @@ class CampaignProjectionMapperTest {
         var projection = mapper.map(source);
 
         assertThat(projection.schemaVersion()).isEqualTo(3);
-        assertThat(projection.mappingAlgorithmVersion()).isEqualTo(4);
+        assertThat(projection.mappingAlgorithmVersion()).isEqualTo(5);
         assertThat(projection.scoringRulesetVersion()).isEqualTo(1);
         assertThat(projection.mode()).isEqualTo("full");
         assertThat(projection.repository()).isEqualTo("owner/sample-repo");
@@ -94,7 +94,11 @@ class CampaignProjectionMapperTest {
         var projection = mapper.map(source);
 
         assertThat(projection.mode()).isEqualTo("foundation");
-        assertThat(projection.quests()).isEmpty();
+        assertThat(projection.quests()).singleElement().satisfies(quest -> {
+            assertThat(quest.level()).isEqualTo("inferred");
+            assertThat(quest.status()).isEqualTo("recommended");
+            assertThat(quest.sourceLabel()).isEqualTo("CommitQuest recommendation");
+        });
         assertThat(projection.encounters()).singleElement().satisfies(encounter -> {
             assertThat(encounter.level()).isEqualTo("inferred");
             assertThat(encounter.status()).isEqualTo("observed");

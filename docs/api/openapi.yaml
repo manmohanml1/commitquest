@@ -229,14 +229,14 @@ components:
           type: string
         level:
           type: string
-          enum: [verified, repository-authored]
+          enum: [verified, repository-authored, inferred]
         title:
           type: string
         summary:
           type: string
         status:
           type: string
-          const: candidate
+          enum: [candidate, recommended]
         sourceLabel:
           type: string
         evidenceUrl:
