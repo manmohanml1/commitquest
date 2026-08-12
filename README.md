@@ -6,15 +6,18 @@ The product remains separate from GitHub: GitHub is the source of truth, and eve
 
 ## Current milestone
 
-Version `0.1.0` is the demo-first vertical slice:
+Version `0.2.0` is in development as the expanded, fixture-driven Portfolio Citadel campaign:
 
 - Product landing experience
-- Interactive Portfolio Citadel campaign
-- Repository regions and evidence detail panel
-- Historical encounter and release metrics
+- Six-region interactive Portfolio Citadel world map
+- Dedicated views for candidate quests, verified encounters, and release chapters
+- Eight repository-authored roadmap candidates with explicit unverified state
+- Primary-source links for historical pull requests and releases
+- Independently versioned projection schema and mapping rules
 - Responsive, keyboard-accessible presentation
-- Social sharing artwork
-- No authentication, persistence, GitHub credentials, or AI required
+- No authentication, persistence, GitHub availability, credentials, or AI required
+
+The released baseline remains `0.1.0`. See the [0.2.0 milestone contract](docs/milestones/0.2.0.md) for acceptance criteria and exclusions.
 
 ## Repository layout
 
@@ -48,6 +51,7 @@ npm run verify
 - [Deployment](docs/DEPLOYMENT.md)
 - [Testing](docs/TESTING.md)
 - [Versioning](docs/VERSIONING.md)
+- [0.2.0 milestone contract](docs/milestones/0.2.0.md)
 - [Roadmap](ROADMAP.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)

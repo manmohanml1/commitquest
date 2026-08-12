@@ -15,6 +15,9 @@
 * {
   box-sizing: border-box;
 }
+[hidden] {
+  display: none !important;
+}
 html {
   scroll-behavior: smooth;
 }
@@ -31,6 +34,13 @@ a {
 }
 button {
   font: inherit;
+}
+
+/* Phaser inserts this canvas dynamically, outside Angular's scoped style attributes. */
+.game-host canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 main {
@@ -423,6 +433,188 @@ nav a:focus-visible {
   border: 1px solid var(--line);
   background: #091522;
 }
+.campaign-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  background: #08131f;
+}
+.campaign-tabs button {
+  min-height: 58px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  padding: 0 20px;
+  color: #768d9d;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-size: 12px;
+}
+.campaign-tabs button:last-child {
+  border-right: 0;
+}
+.campaign-tabs button span {
+  margin-right: 10px;
+  color: var(--mint);
+  font: 700 9px/1 var(--font-geist-mono);
+}
+.campaign-tabs button:hover,
+.campaign-tabs button:focus-visible,
+.campaign-tabs button[aria-selected='true'] {
+  color: var(--paper);
+  background: #102237;
+  box-shadow: inset 0 -2px var(--mint);
+}
+.campaign-ledger {
+  min-height: 600px;
+  border: 1px solid var(--line);
+  padding: 38px;
+  background: linear-gradient(180deg, rgba(20, 42, 66, 0.6), transparent 65%), #091522;
+}
+.ledger-heading {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: end;
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--line);
+}
+.ledger-heading h3 {
+  margin: 7px 0 0;
+  font-size: 34px;
+  letter-spacing: -0.04em;
+}
+.ledger-heading > p {
+  margin: 0;
+  color: #8299a8;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.quest-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  margin-top: 30px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.quest-card {
+  min-height: 260px;
+  padding: 24px;
+  background: #0a1725;
+  display: flex;
+  flex-direction: column;
+}
+.card-label {
+  display: flex;
+  justify-content: space-between;
+  color: var(--amber);
+  font: 700 9px/1 var(--font-geist-mono);
+  text-transform: uppercase;
+}
+.card-label b {
+  color: #8da0ad;
+  font-weight: 600;
+}
+.quest-card h4,
+.encounter-list h4,
+.chapter-timeline h4 {
+  margin: 25px 0 10px;
+  font-size: 18px;
+}
+.quest-card p {
+  margin: 0;
+  color: #8ea3b1;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.quest-card small {
+  display: block;
+  margin-top: auto;
+  padding-top: 20px;
+  color: #627b8c;
+  font: 500 9px/1.5 var(--font-geist-mono);
+}
+.quest-card a,
+.encounter-list a,
+.chapter-timeline a {
+  margin-top: 12px;
+  color: var(--mint);
+  font-size: 11px;
+  font-weight: 700;
+}
+.encounter-list {
+  margin-top: 30px;
+  border: 1px solid var(--line);
+}
+.encounter-list article {
+  min-height: 118px;
+  display: grid;
+  grid-template-columns: 105px minmax(0, 1fr) auto;
+  gap: 25px;
+  align-items: center;
+  padding: 22px;
+  border-bottom: 1px solid var(--line);
+  background: #0a1725;
+}
+.encounter-list article:last-child {
+  border-bottom: 0;
+}
+.encounter-rank {
+  color: var(--amber);
+  font: 800 11px/1 var(--font-geist-mono);
+}
+.encounter-list p,
+.chapter-timeline p {
+  margin: 0;
+  color: var(--mint);
+  font: 700 9px/1 var(--font-geist-mono);
+  text-transform: uppercase;
+}
+.encounter-list h4 {
+  margin: 8px 0;
+}
+.encounter-list small,
+.chapter-timeline small {
+  color: #8299a8;
+  line-height: 1.5;
+}
+.encounter-list a {
+  margin: 0;
+}
+.chapter-timeline {
+  list-style: none;
+  margin: 35px 0 0 20px;
+  padding: 0;
+  border-left: 1px solid #2d5161;
+}
+.chapter-timeline li {
+  position: relative;
+  padding: 0 0 38px 38px;
+}
+.chapter-marker {
+  position: absolute;
+  left: -8px;
+  top: 0;
+  width: 15px;
+  height: 15px;
+  border: 2px solid var(--blue);
+  background: #091522;
+  transform: rotate(45deg);
+}
+.chapter-timeline li.current .chapter-marker {
+  border-color: var(--amber);
+  background: var(--amber);
+  box-shadow: 0 0 15px rgba(245, 185, 66, 0.6);
+}
+.chapter-timeline h4 {
+  margin: 9px 0;
+  font-size: 24px;
+}
+.chapter-timeline a {
+  display: block;
+}
 .map-panel {
   min-height: 540px;
   padding: 20px;
@@ -726,6 +918,9 @@ footer {
   .system-grid article:nth-child(-n + 2) {
     border-bottom: 1px solid var(--line);
   }
+  .quest-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 @media (max-width: 600px) {
   .site-header {
@@ -787,6 +982,36 @@ footer {
   .map-panel {
     min-height: 470px;
     padding: 13px;
+  }
+  .campaign-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .campaign-tabs button:nth-child(2) {
+    border-right: 0;
+  }
+  .campaign-tabs button:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--line);
+  }
+  .campaign-ledger {
+    min-height: 0;
+    padding: 26px 18px;
+  }
+  .ledger-heading {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .quest-grid {
+    grid-template-columns: 1fr;
+  }
+  .quest-card {
+    min-height: 225px;
+  }
+  .encounter-list article {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .encounter-list a {
+    margin-top: 5px;
   }
   .world-map {
     height: 405px;
