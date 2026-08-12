@@ -13,7 +13,7 @@ Keep the accepted Angular, Java 25, Spring Boot 4, Phaser, Gradle, OpenAPI, and 
 - the static Angular site on Vercel Hobby, whose included usage is capped rather than billed for overage;
 - one Docker-based Render Free web service for the Spring Boot API, pinned with `plan: free` in `render.yaml`.
 
-Vercel proxies `/api/*` to the Render service so the browser retains a same-origin contract. No database, disk, worker, queue, cache, paid preview environment, or paid observability service is provisioned. CI verifies the free-plan pin and proxy destination.
+Vercel proxies `/api/*` to the Render service so the browser retains a same-origin contract. The hosted demo uses GitHub's unauthenticated public allowance and stores no provider secret. No database, disk, worker, queue, cache, paid preview environment, or paid observability service is provisioned. CI verifies the free-plan pin and proxy destination.
 
 This ADR supersedes the AWS ECS hosting decision in ADR 0003 and the AWS resource choices in ADR 0002. It does not replace the application architecture. Later milestones may introduce persistence or asynchronous processing only after a separate ADR identifies a provider with a hard zero-spend cap; otherwise those milestones remain local-only.
 

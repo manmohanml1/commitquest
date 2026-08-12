@@ -13,6 +13,10 @@ if (/^\s*(databases|disks|previews):\s*$/m.test(renderBlueprint)) {
   failures.push('The v0.3 free-hosting blueprint must not provision databases, disks, or previews.');
 }
 
+if (/^\s*envVars:\s*$/m.test(renderBlueprint)) {
+  failures.push('The v0.3 hosted demo must not require provider secrets or environment add-ons.');
+}
+
 const apiRewrite = vercelConfig.rewrites?.find((rewrite) => rewrite.source === '/api/:path*');
 if (apiRewrite?.destination !== 'https://commitquest-api-manmohanml1.onrender.com/api/:path*') {
   failures.push('Vercel must proxy /api to the pinned Render Free API origin.');
