@@ -23,7 +23,7 @@ The released baseline is `0.2.0`. See the [0.3.0 milestone contract](docs/milest
 ```text
 apps/
   web/        Angular application and isolated Phaser map adapter
-  api/        Reserved boundary for the Spring Boot modular monolith
+  api/        Java 25/Spring Boot public-repository preview API
 docs/         Product, architecture, deployment, testing, and ADR records
 packages/     Future generated contracts, design tokens, and shared assets
 ```
@@ -32,13 +32,23 @@ packages/     Future generated contracts, design tokens, and shared assets
 
 ```powershell
 npm install
+# terminal 1
+cd apps/api
+./gradlew.bat bootRun
+
+# terminal 2, from the repository root
 npm start
 ```
+
+The Angular development server proxies `/api` to the API on port `8081`. A server-side
+`COMMITQUEST_GITHUB_TOKEN` is optional for public repositories and increases the provider rate limit.
 
 ## Verification
 
 ```powershell
 npm run verify
+cd apps/api
+./gradlew.bat check
 ```
 
 ## Documentation

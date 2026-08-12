@@ -4,9 +4,18 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 
 ## [Unreleased]
 
+### Added
+
+- Public GitHub repository URL input with accessible loading, result, failure, retry, and bundled-fixture fallback states.
+- Java 25/Spring Boot 4 public-repository preview API with bounded GitHub reads and no persistence.
+- Deterministic mapping from provider-neutral evidence into six source-linked campaign regions, quests, encounters, chapters, and metrics.
+- OpenAPI 3.1 contract validation and generated Angular API client.
+- API domain, adapter fixture, application-context, and architecture boundary tests plus a Java 25 CI gate.
+
 ### Changed
 
 - Established an independent Git-connected Vercel project and pinned the web build runtime to Node 24.
+- Made campaign summary labels and repository evidence links reflect the active ephemeral or bundled campaign.
 
 ## [0.2.0] - 2026-08-12
 

@@ -32,9 +32,15 @@ Create the project from the repository root because the npm workspace and lockfi
 
 Version 0.2 requires no runtime environment variables. Preview deployments are branch-scoped; production deploys from the protected release branch after verification.
 
+### Local v0.3 integration
+
+The API listens on port `8081`; Angular proxies same-origin `/api` requests to it. Local CORS is restricted to the documented `localhost` and `127.0.0.1` Angular ports. The optional `COMMITQUEST_GITHUB_TOKEN` is read only by Spring Boot.
+
+The Vercel web project can deploy the v0.3 interface independently, but live repository generation remains unavailable there until the API is deployed to its new ECS service and the same-origin gateway route is configured. The bundled Portfolio Citadel campaign remains fully usable in that state.
+
 ## Environments
 
-- **Development:** local Angular server and bundled fixture.
+- **Development:** local Angular server, Spring Boot API, and bundled fallback fixture.
 - **Staging:** immutable preview artifact with no production credentials.
 - **Production:** the exact artifact approved in staging.
 

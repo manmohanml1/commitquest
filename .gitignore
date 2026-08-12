@@ -17,6 +17,11 @@
 **/.angular/
 **/dist/
 /out-tsc/
+/apps/api/.gradle/
+/apps/api/build/
+/apps/api/api-dev.*.log
+/apps/web/src/app/api/generated/.openapi-generator/
+/apps/web/src/app/api/generated/.gitignore
 
 # misc
 .DS_Store

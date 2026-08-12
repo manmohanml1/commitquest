@@ -47,12 +47,12 @@ export interface CampaignChapter {
 
 export interface CampaignProjection {
   schemaVersion: 2;
-  mappingAlgorithmVersion: 2;
+  mappingAlgorithmVersion: 2 | 3;
   scoringRulesetVersion: 1;
   slug: string;
   title: string;
   repository: string;
-  mode: 'history';
+  mode: 'history' | 'preview';
   currentChapter: string;
   metrics: ReadonlyArray<{ value: string; label: string }>;
   evidence: ReadonlyArray<CampaignEvidence>;

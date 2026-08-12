@@ -1,5 +1,24 @@
 # CommitQuest API
 
-This boundary is intentionally reserved for milestone `0.3.0`, when public repository analysis requires a trusted server-side GitHub adapter.
+Java 25 and Spring Boot 4 boundary for the ephemeral public-repository preview introduced in milestone `0.3.0`.
 
-The planned implementation uses Java 25 LTS, Spring Boot 4, Spring Modulith, Spring Security, jOOQ, Flyway, Bean Validation, OpenAPI 3.1, Testcontainers, ArchUnit, and OpenTelemetry. No placeholder service is shipped in `0.1.0` because the demo has no server responsibility.
+## Run locally
+
+```powershell
+./gradlew.bat bootRun
+```
+
+The service listens on `http://localhost:8081`. A GitHub token is optional for public repositories but recommended to increase the provider rate limit:
+
+```powershell
+$env:COMMITQUEST_GITHUB_TOKEN = "..."
+./gradlew.bat bootRun
+```
+
+The token remains server-side. Preview requests are bounded and are never persisted.
+
+## Verify
+
+```powershell
+./gradlew.bat check
+```

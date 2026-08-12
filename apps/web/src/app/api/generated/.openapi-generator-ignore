@@ -1,0 +1,3 @@
+# Keep generated transport code only; repository publishing helpers and generic docs are noise here.
+git_push.sh
+README.md
