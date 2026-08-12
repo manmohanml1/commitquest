@@ -24,12 +24,12 @@ CommitQuest makes repository maintenance understandable, motivating, and shareab
 
 ## Evidence levels
 
-| Level | Source | Product treatment |
-| --- | --- | --- |
-| Verified | GitHub issue, PR, review, check, workflow, release | Eligible for normal progression |
+| Level               | Source                                               | Product treatment                                 |
+| ------------------- | ---------------------------------------------------- | ------------------------------------------------- |
+| Verified            | GitHub issue, PR, review, check, workflow, release   | Eligible for normal progression                   |
 | Repository-authored | Roadmap, changelog, architecture or testing document | Source-linked; owner confirmation may be required |
-| Inferred | Commit grouping or detected structural change | Suggestion only |
-| Owner-authored | Manual milestone or external work | Clearly labeled self-reported |
+| Inferred            | Commit grouping or detected structural change        | Suggestion only                                   |
+| Owner-authored      | Manual milestone or external work                    | Clearly labeled self-reported                     |
 
 The interface distinguishes failed, unavailable, private, not configured, not applicable, and unknown signals.
 

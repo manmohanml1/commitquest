@@ -4,6 +4,12 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 
 ## [Unreleased]
 
+### Added
+
+- Canonical project guide and repository contributor instructions derived from initial planning.
+- Accepted production-stack ADR.
+- Pull-request template, code ownership, dependency automation, release packaging, and stronger CI governance.
+
 ## [0.1.0] - 2026-08-11
 
 ### Added

@@ -41,6 +41,7 @@ npm run verify
 
 ## Documentation
 
+- [Canonical project guide](docs/PROJECT_GUIDE.md)
 - [Product definition](docs/product/PRODUCT.md)
 - [MVP boundary](docs/product/MVP.md)
 - [Architecture](docs/ARCHITECTURE.md)
@@ -51,6 +52,8 @@ npm run verify
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)
 - [Changelog](CHANGELOG.md)
+
+The canonical guide records the product, stack, sequencing, coding patterns, quality gates, and source-precedence rules established during initial planning. Repository records supersede chat history for future decisions.
 
 ## Planned architecture
 

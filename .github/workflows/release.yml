@@ -1,0 +1,46 @@
+name: CommitQuest Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Verify release source
+        run: npm run verify
+
+      - name: Package immutable web artifact
+        run: |
+          cd apps/web/dist/commitquest-web
+          zip -r "../../../../commitquest-web-${GITHUB_REF_NAME}.zip" browser 3rdpartylicenses.txt
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "$GITHUB_REF_NAME"
+          "commitquest-web-${GITHUB_REF_NAME}.zip"
+          --verify-tag
+          --title "CommitQuest ${GITHUB_REF_NAME}"
+          --generate-notes
