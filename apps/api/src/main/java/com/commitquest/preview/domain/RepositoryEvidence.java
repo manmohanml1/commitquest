@@ -5,6 +5,7 @@ import java.util.List;
 public record RepositoryEvidence(
         RepositoryRef repository,
         String description,
+        String descriptionSource,
         String defaultBranch,
         String primaryLanguage,
         boolean archived,
@@ -22,6 +23,9 @@ public record RepositoryEvidence(
         description = description == null || description.isBlank()
                 ? "No repository description is available."
                 : description;
+        descriptionSource = descriptionSource == null || descriptionSource.isBlank()
+                ? "Unavailable"
+                : descriptionSource;
         primaryLanguage = primaryLanguage == null || primaryLanguage.isBlank()
                 ? "Not reported"
                 : primaryLanguage;

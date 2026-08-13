@@ -4,6 +4,8 @@
 
 CommitQuest makes repository maintenance understandable, motivating, and shareable by translating engineering evidence into a persistent RPG campaign.
 
+The campaign crest, interactive world, and future scored progression are separate product concepts. Their current and planned behavior is defined in [World map and progression](WORLD_MAP.md).
+
 ## Primary users
 
 - Individual developers presenting and maintaining real projects

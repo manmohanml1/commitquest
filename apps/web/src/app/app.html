@@ -32,7 +32,8 @@
         <span>{{ isEphemeralCampaign() ? 'EPHEMERAL CAMPAIGN' : 'FLAGSHIP CAMPAIGN' }}</span
         ><span class="live-status"><i></i> SYNCHRONIZED</span>
       </div>
-      <div class="citadel-art" aria-hidden="true">
+      <div class="citadel-art" [attr.data-mode]="campaign().mode" aria-hidden="true">
+        <span class="crest-label">CAMPAIGN CREST · WORLD MAP BELOW</span>
         <div class="moon"></div>
         <div class="tower tower-left"><b></b></div>
         <div class="tower tower-main"><b></b><i>⌘</i></div>
@@ -47,9 +48,11 @@
           <p>{{ campaign().repository }}</p>
           <h2>{{ campaign().title }}</h2>
         </div>
-        <span class="level">MAP V{{ campaign().mappingAlgorithmVersion }}</span>
+        <span class="level">MAPPING MODEL V{{ campaign().mappingAlgorithmVersion }}</span>
       </div>
-      <div class="campaign-progress"><span></span></div>
+      <p class="campaign-model-note">
+        Evidence projection only · progression scoring and unlocks begin in a later milestone
+      </p>
       <div class="campaign-stats">
         <span
           ><b>{{ campaign().currentChapter }}</b> Current chapter</span

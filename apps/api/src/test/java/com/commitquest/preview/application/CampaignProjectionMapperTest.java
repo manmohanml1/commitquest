@@ -17,6 +17,7 @@ class CampaignProjectionMapperTest {
         var source = new RepositoryEvidence(
                 new RepositoryRef("owner", "sample-repo"),
                 "A sample repository",
+                "GitHub repository metadata",
                 "main",
                 "Java",
                 false,
@@ -74,6 +75,7 @@ class CampaignProjectionMapperTest {
         var source = new RepositoryEvidence(
                 new RepositoryRef("owner", "small-repo"),
                 "Small project",
+                "README.md introduction",
                 "main",
                 "JavaScript",
                 false,
@@ -124,6 +126,7 @@ class CampaignProjectionMapperTest {
         return new RepositoryEvidence(
                 new RepositoryRef("owner", "sample"),
                 "Sample",
+                "Verified repository facts",
                 "main",
                 "Java",
                 archived,

@@ -83,7 +83,8 @@ public final class CampaignProjectionMapper {
                         "REGION · " + campaignMode(source).toUpperCase(Locale.ROOT) + " CAMPAIGN",
                         source.archived() ? "Archive Gate" : "Repository Gate",
                         source.description(),
-                        "Default branch: " + source.defaultBranch() + " · Primary language: " + source.primaryLanguage(),
+                        "Default branch: " + source.defaultBranch() + " · Primary language: "
+                                + source.primaryLanguage() + " · Description source: " + source.descriptionSource(),
                         repositoryUrl,
                         source.archived() ? "Archived" : titleCase(campaignMode(source)),
                         source.archived() ? "amber" : "mint",

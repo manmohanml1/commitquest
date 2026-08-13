@@ -4,10 +4,10 @@ import com.commitquest.preview.application.PreviewFailure;
 import com.commitquest.preview.application.RepositoryEvidencePort;
 import com.commitquest.preview.domain.RepositoryEvidence;
 import com.commitquest.preview.domain.RepositoryRef;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
-import java.nio.charset.StandardCharsets;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
@@ -18,13 +18,18 @@ import org.springframework.web.client.RestClientResponseException;
 final class GitHubRepositoryEvidenceAdapter implements RepositoryEvidencePort {
 
     private static final int SAMPLE_LIMIT = 10;
-    private static final int MAX_ENCODED_ROADMAP_LENGTH = 180_000;
+    private static final int MAX_ENCODED_DOCUMENT_LENGTH = 180_000;
     private final RestClient client;
     private final RoadmapParser roadmapParser;
+    private final ReadmeSummaryParser readmeSummaryParser;
 
-    GitHubRepositoryEvidenceAdapter(RestClient gitHubRestClient, RoadmapParser roadmapParser) {
+    GitHubRepositoryEvidenceAdapter(
+            RestClient gitHubRestClient,
+            RoadmapParser roadmapParser,
+            ReadmeSummaryParser readmeSummaryParser) {
         this.client = gitHubRestClient;
         this.roadmapParser = roadmapParser;
+        this.readmeSummaryParser = readmeSummaryParser;
     }
 
     @Override
@@ -44,6 +49,7 @@ final class GitHubRepositoryEvidenceAdapter implements RepositoryEvidencePort {
             var rootEntries = allRootEntries.stream()
                     .limit(8)
                     .toList();
+            var description = loadDescription(path, repository, metadata, allRootEntries);
             var roadmapItems = loadRoadmap(path, repository, allRootEntries);
             var issues = getList(
                             path + "/issues?state=open&sort=updated&direction=desc&per_page=" + SAMPLE_LIMIT,
@@ -110,7 +116,8 @@ final class GitHubRepositoryEvidenceAdapter implements RepositoryEvidencePort {
 
             return new RepositoryEvidence(
                     repository,
-                    metadata.description(),
+                    description.text(),
+                    description.source(),
                     metadata.defaultBranch(),
                     metadata.language(),
                     metadata.archived(),
@@ -160,15 +167,65 @@ final class GitHubRepositoryEvidenceAdapter implements RepositoryEvidencePort {
         var detail = get(path + "/contents/" + roadmapName.get(), GitHubDtos.ContentDetail.class, repository);
         if (!"base64".equalsIgnoreCase(detail.encoding())
                 || detail.content() == null
-                || detail.content().length() > MAX_ENCODED_ROADMAP_LENGTH) return List.of();
-        var markdown = new String(
-                Base64.getMimeDecoder().decode(detail.content()), StandardCharsets.UTF_8);
+                || detail.content().length() > MAX_ENCODED_DOCUMENT_LENGTH) return List.of();
+        var markdown = decode(detail.content());
         return roadmapParser.parse(markdown, detail.htmlUrl());
+    }
+
+    private Description loadDescription(
+            String path,
+            RepositoryRef repository,
+            GitHubDtos.Repository metadata,
+            List<String> rootEntries) {
+        if (metadata.description() != null && !metadata.description().isBlank()) {
+            return new Description(metadata.description().trim(), "GitHub repository metadata");
+        }
+
+        var readmeName = rootEntries.stream()
+                .filter(name -> name.equalsIgnoreCase("README.md") || name.equalsIgnoreCase("README"))
+                .findFirst();
+        if (readmeName.isPresent()) {
+            try {
+                var detail = get(path + "/contents/" + readmeName.get(), GitHubDtos.ContentDetail.class, repository);
+                if ("base64".equalsIgnoreCase(detail.encoding())
+                        && detail.content() != null
+                        && detail.content().length() <= MAX_ENCODED_DOCUMENT_LENGTH) {
+                    var summary = readmeSummaryParser.parse(decode(detail.content()));
+                    if (!summary.isBlank()) return new Description(summary, detail.name() + " introduction");
+                }
+            } catch (IllegalArgumentException ignored) {
+                // A malformed or racing README must not prevent a verified-facts fallback.
+            } catch (RestClientResponseException failure) {
+                if (failure.getStatusCode() != HttpStatus.NOT_FOUND) throw failure;
+            }
+        }
+
+        var language = metadata.language() == null || metadata.language().isBlank()
+                ? "public"
+                : metadata.language();
+        return new Description(
+                titleCase(repository.name()) + " is a " + language + " repository using "
+                        + metadata.defaultBranch() + " as its default branch.",
+                "Verified repository facts");
+    }
+
+    private static String decode(String content) {
+        return new String(Base64.getMimeDecoder().decode(content), StandardCharsets.UTF_8);
     }
 
     private static String firstLine(String value) {
         return value == null ? "Repository commit" : value.lines().findFirst().orElse("Repository commit");
     }
+
+    private static String titleCase(String value) {
+        return Arrays.stream(value.replace('-', ' ').replace('_', ' ').split("\\s+"))
+                .filter(word -> !word.isBlank())
+                .map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1))
+                .reduce((left, right) -> left + " " + right)
+                .orElse("Repository");
+    }
+
+    private record Description(String text, String source) {}
 
     private static PreviewFailure translate(RestClientResponseException failure) {
         if (failure.getStatusCode() == HttpStatus.NOT_FOUND) {

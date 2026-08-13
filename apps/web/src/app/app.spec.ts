@@ -25,6 +25,8 @@ describe('App', () => {
     const element = fixture.nativeElement as HTMLElement;
     expect(element.textContent).toContain('Your repository');
     expect(element.textContent).toContain('Portfolio Citadel');
+    expect(element.textContent).toContain('MAPPING MODEL V2');
+    expect(element.textContent).toContain('progression scoring and unlocks begin');
     expect(element.textContent).toContain('13');
     expect(element.textContent).toContain('GitHub activity, translated');
   });
