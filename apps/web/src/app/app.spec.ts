@@ -94,7 +94,7 @@ describe('App', () => {
     const preview: CampaignProjection = {
       ...PORTFOLIO_CITADEL,
       schemaVersion: 3,
-      mappingAlgorithmVersion: 5,
+      mappingAlgorithmVersion: 6,
       mode: 'foundation',
       repository: 'openai/openai-java',
       slug: 'openai-openai-java',
@@ -111,6 +111,10 @@ describe('App', () => {
     expect(request.request.body).toEqual({
       repositoryUrl: 'https://github.com/openai/openai-java',
     });
+    fixture.detectChanges();
+    expect(element.querySelector('.campaign-transformation')?.textContent).toContain(
+      'READING SIGNALS',
+    );
     request.flush(preview);
     await fixture.whenStable();
     fixture.detectChanges();
@@ -123,6 +127,7 @@ describe('App', () => {
     );
     expect(element.textContent).toContain('Restore Portfolio Citadel');
     expect(element.textContent).toContain('Foundation');
+    expect(element.querySelector('.campaign-transformation')).toBeNull();
   });
 
   it('explains absent repository evidence instead of rendering blank ledgers', async () => {
@@ -132,7 +137,7 @@ describe('App', () => {
     const preview: CampaignProjection = {
       ...PORTFOLIO_CITADEL,
       schemaVersion: 3,
-      mappingAlgorithmVersion: 5,
+      mappingAlgorithmVersion: 6,
       mode: 'foundation',
       quests: [],
       encounters: [],

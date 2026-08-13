@@ -36,7 +36,7 @@ for (const [repository, expectedMode, expectsRoadmap] of repositories) {
   const campaign = await response.json();
   const failures = [];
   if (campaign.schemaVersion !== 3) failures.push(`schema ${campaign.schemaVersion}`);
-  if (campaign.mappingAlgorithmVersion !== 5)
+  if (campaign.mappingAlgorithmVersion !== 6)
     failures.push(`mapping ${campaign.mappingAlgorithmVersion}`);
   if (campaign.mode !== expectedMode)
     failures.push(`mode ${campaign.mode}, expected ${expectedMode}`);
@@ -46,6 +46,12 @@ for (const [repository, expectedMode, expectsRoadmap] of repositories) {
   if (!campaign.chapters?.length) failures.push('no release, tag, or foundation chapter');
   if (expectsRoadmap && !campaign.quests?.some((quest) => quest.sourceLabel === 'ROADMAP.md')) {
     failures.push('ROADMAP.md candidates missing');
+  }
+  if (
+    repository === 'Scalable-Data-Processing-System-for-High-Volume-Workloads' &&
+    campaign.title !== 'Dataflow Foundry'
+  ) {
+    failures.push(`campaign title ${campaign.title}, expected Dataflow Foundry`);
   }
   if (failures.length) throw new Error(`${repository}: ${failures.join('; ')}`);
   results.push({

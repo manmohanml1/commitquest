@@ -8,7 +8,7 @@ CommitQuest deliberately separates three things that currently look similar:
 2. **World map:** the Phaser surface is the navigable repository projection. Angular owns its authoritative labels, keyboard controls, selected evidence, and mobile layout.
 3. **Campaign ledgers:** quests, encounters, and chapters explain the evidence behind each region. They remain useful when canvas rendering is unavailable.
 
-`MAPPING MODEL V5` identifies the deterministic evidence-to-campaign algorithm. It does not mean map level five, player level five, or a score of five.
+`MAPPING MODEL V6` identifies the deterministic evidence-to-campaign algorithm. It does not mean map level six, player level six, or a score of six. V6 adds concise campaign-name composition; scoring remains independently versioned.
 
 ## What v0.3 has
 
@@ -16,6 +16,8 @@ CommitQuest deliberately separates three things that currently look similar:
 - Repository-specific titles, descriptions, evidence links, language, modes, statuses, tones, quests, encounters, and chapters.
 - Distinct full, history, foundation, and archive interpretations.
 - Mode-accented campaign crests and a rebuilt Phaser scene for each pasted repository.
+- Concise deterministic campaign names derived from repository and README vocabulary, with a bounded repository-name fallback.
+- A transformation state that visibly translates repository signals into regions while a preview is being generated.
 - No persistent state, cumulative score, inventory, or unlock economy.
 
 The v0.3 world reuses one readable topology because the product is proving evidence classification first. This is why two repositories can have different content while retaining a recognizably similar silhouette.

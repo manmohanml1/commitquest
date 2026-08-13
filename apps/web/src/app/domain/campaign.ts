@@ -52,7 +52,7 @@ export interface CampaignChapter {
 
 export interface CampaignProjection {
   schemaVersion: 2 | 3;
-  mappingAlgorithmVersion: 2 | 3 | 4 | 5;
+  mappingAlgorithmVersion: 2 | 3 | 4 | 5 | 6;
   scoringRulesetVersion: 1;
   slug: string;
   title: string;

@@ -20,13 +20,13 @@ public final class CampaignProjectionMapper {
     public CampaignProjection map(RepositoryEvidence source) {
         var repository = source.repository();
         var repositoryUrl = repository.webUrl();
-        var title = titleCase(repository.name()) + " Frontier";
+        var title = campaignTitle(repository.name(), source.description(), source.primaryLanguage());
         var chapters = chapters(source);
         var currentChapter = chapters.isEmpty() ? source.defaultBranch() : chapters.getFirst().version();
 
         return new CampaignProjection(
                 3,
-                5,
+                6,
                 1,
                 slug(repository.fullName()),
                 title,
@@ -47,6 +47,49 @@ public final class CampaignProjectionMapper {
         if (hasCandidates && hasHistory) return "full";
         if (hasHistory) return "history";
         return "foundation";
+    }
+
+    private static String campaignTitle(String repositoryName, String description, String language) {
+        var identity = (repositoryName + " " + description).toLowerCase(Locale.ROOT);
+        if (containsAny(identity, "data processing", "data pipeline", "kafka", "kinesis", "streaming")) {
+            return "Dataflow Foundry";
+        }
+        if (containsAll(identity, "novel", "browser") || containsAny(identity, "novel reader", "chapter reader")) {
+            return "Storyglass Library";
+        }
+        if (containsAny(identity, "portfolio", "personal website")) return "Portfolio Citadel";
+        if (containsAny(identity, "travel guide", "trip planner", "wayfinding")) return "Wayfinder Atlas";
+        if (containsAny(identity, "video player", "video browser", "youtube")) return "Prism Theater";
+        if (containsAny(identity, "search engine", "web search", "search app")) return "Discovery Observatory";
+        if (containsAny(identity, "fitness", "exercise", "workout")) return "Vitality Grounds";
+        if (containsAny(identity, "research paper", "academic paper")) return "Scholar Archive";
+        if (containsAny(identity, "design pattern", "software pattern")) return "Pattern Forge";
+        if (containsAny(identity, "game", "opengl", "arcade")) return "Arcade Bastion";
+
+        var words = List.of(repositoryName.replace('-', ' ').replace('_', ' ').split("\\s+"));
+        var base = words.stream()
+                .filter(word -> !word.isBlank())
+                .filter(word -> !List.of("project", "application", "system", "repository").contains(word.toLowerCase(Locale.ROOT)))
+                .limit(3)
+                .map(CampaignProjectionMapper::titleCase)
+                .reduce((left, right) -> left + " " + right)
+                .orElse("Repository");
+        var suffix = switch (language.toLowerCase(Locale.ROOT)) {
+            case "java", "kotlin" -> "Forge";
+            case "javascript", "typescript" -> "Nexus";
+            case "python" -> "Observatory";
+            case "c", "c++", "c#" -> "Bastion";
+            default -> "Frontier";
+        };
+        return base + " " + suffix;
+    }
+
+    private static boolean containsAny(String value, String... candidates) {
+        return List.of(candidates).stream().anyMatch(value::contains);
+    }
+
+    private static boolean containsAll(String value, String... candidates) {
+        return List.of(candidates).stream().allMatch(value::contains);
     }
 
     private static List<Metric> metrics(RepositoryEvidence source) {
