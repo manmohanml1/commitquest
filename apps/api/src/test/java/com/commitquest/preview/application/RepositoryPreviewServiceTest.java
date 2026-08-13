@@ -30,6 +30,7 @@ class RepositoryPreviewServiceTest {
         return new RepositoryEvidence(
                 repository,
                 "Cached repository",
+                "GitHub repository metadata",
                 "main",
                 "Java",
                 false,

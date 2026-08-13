@@ -215,6 +215,27 @@ nav a:focus-visible {
     linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.3));
   border-bottom: 1px solid var(--line);
 }
+.citadel-art[data-mode='full'] {
+  box-shadow: inset 0 -28px 48px rgba(101, 244, 197, 0.08);
+}
+.citadel-art[data-mode='history'] {
+  box-shadow: inset 0 -28px 48px rgba(120, 191, 255, 0.1);
+}
+.citadel-art[data-mode='foundation'] {
+  box-shadow: inset 0 -28px 48px rgba(245, 185, 66, 0.1);
+}
+.citadel-art[data-mode='archive'] {
+  filter: saturate(0.55);
+}
+.crest-label {
+  position: absolute;
+  z-index: 4;
+  top: 12px;
+  left: 12px;
+  color: #7991a3;
+  font: 700 9px/1 var(--font-geist-mono);
+  letter-spacing: 0.1em;
+}
 .citadel-art::before {
   content: '';
   position: absolute;
@@ -351,18 +372,13 @@ nav a:focus-visible {
   color: var(--amber);
   border: 1px solid rgba(245, 185, 66, 0.35);
   padding: 7px 9px;
+  white-space: nowrap;
 }
-.campaign-progress {
-  margin: 20px 0 13px;
-  height: 3px;
-  background: #25384a;
-}
-.campaign-progress span {
-  display: block;
-  width: 82%;
-  height: 100%;
-  background: linear-gradient(90deg, var(--mint), var(--blue));
-  box-shadow: 0 0 10px rgba(101, 244, 197, 0.5);
+.campaign-model-note {
+  margin: 18px 0 13px;
+  color: #7890a1;
+  font: 600 9px/1.5 var(--font-geist-mono);
+  letter-spacing: 0.04em;
 }
 .campaign-stats {
   display: flex;

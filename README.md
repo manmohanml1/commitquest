@@ -59,6 +59,8 @@ cd apps/api
 - [Product definition](docs/product/PRODUCT.md)
 - [MVP boundary](docs/product/MVP.md)
 - [Architecture](docs/ARCHITECTURE.md)
+- [World map and progression](docs/product/WORLD_MAP.md)
+- [Component and regression contracts](docs/engineering/COMPONENT_CONTRACTS.md)
 - [Deployment](docs/DEPLOYMENT.md)
 - [Testing](docs/TESTING.md)
 - [Versioning](docs/VERSIONING.md)

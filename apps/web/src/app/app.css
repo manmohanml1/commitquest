@@ -145,6 +145,122 @@
   font-size: 11px;
 }
 
+.campaign-transformation {
+  margin-top: 8px;
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(101, 244, 197, 0.22);
+  background:
+    linear-gradient(90deg, rgba(101, 244, 197, 0.08), transparent 48%),
+    repeating-linear-gradient(90deg, transparent 0 26px, rgba(120, 191, 255, 0.035) 26px 27px),
+    #071522;
+}
+
+.transformation-sigil {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  color: var(--mint);
+  font: 800 10px/1 var(--font-geist-mono);
+}
+
+.transformation-sigil::before,
+.transformation-sigil i {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(120, 191, 255, 0.65);
+  transform: rotate(45deg);
+  animation: map-sigil 2.4s linear infinite;
+}
+
+.transformation-sigil i {
+  inset: 7px;
+  border-color: rgba(101, 244, 197, 0.75);
+  animation-direction: reverse;
+  animation-duration: 1.6s;
+}
+
+.transformation-sigil b {
+  position: relative;
+  z-index: 1;
+}
+
+.transformation-copy {
+  min-width: 0;
+  display: grid;
+  gap: 7px;
+}
+
+.transformation-copy > strong {
+  color: #b9d8e1;
+  font: 700 9px/1.3 var(--font-geist-mono);
+  letter-spacing: 0.1em;
+}
+
+.transformation-steps {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: #678090;
+  font: 700 8px/1.4 var(--font-geist-mono);
+  letter-spacing: 0.06em;
+}
+
+.transformation-steps span {
+  animation: map-stage-pulse 2.4s ease-in-out infinite;
+}
+
+.transformation-steps span:nth-of-type(2) {
+  animation-delay: 0.8s;
+}
+
+.transformation-steps span:nth-of-type(3) {
+  animation-delay: 1.6s;
+}
+
+.transformation-steps i {
+  color: rgba(120, 191, 255, 0.45);
+  font-style: normal;
+}
+
+@keyframes map-sigil {
+  50% {
+    border-color: var(--mint);
+    transform: rotate(225deg) scale(0.82);
+  }
+  100% {
+    transform: rotate(405deg);
+  }
+}
+
+@keyframes map-stage-pulse {
+  0%,
+  65%,
+  100% {
+    color: #678090;
+  }
+  20%,
+  45% {
+    color: var(--mint);
+    text-shadow: 0 0 10px rgba(101, 244, 197, 0.45);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .transformation-sigil::before,
+  .transformation-sigil i,
+  .transformation-steps span {
+    animation: none;
+  }
+}
+
 .game-host {
   width: 100%;
   aspect-ratio: 760 / 470;
@@ -324,6 +440,22 @@
   .preview-feedback button {
     grid-column: 2;
     justify-self: start;
+  }
+  .campaign-transformation {
+    grid-template-columns: 34px minmax(0, 1fr);
+    padding: 12px;
+  }
+  .transformation-sigil {
+    width: 30px;
+    height: 30px;
+  }
+  .transformation-steps {
+    flex-wrap: wrap;
+    column-gap: 6px;
+    row-gap: 3px;
+  }
+  .transformation-steps i {
+    display: none;
   }
   .map-guide {
     align-items: start;

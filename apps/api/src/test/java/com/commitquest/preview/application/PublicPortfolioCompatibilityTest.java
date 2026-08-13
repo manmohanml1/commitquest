@@ -43,6 +43,7 @@ class PublicPortfolioCompatibilityTest {
         var evidence = new RepositoryEvidence(
                 new RepositoryRef("manmohanml1", repositoryName),
                 "Compatibility fixture",
+                "GitHub repository metadata",
                 "main",
                 "JavaScript",
                 false,

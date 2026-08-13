@@ -16,18 +16,25 @@ class GitHubRepositoryEvidenceAdapterTest {
     void normalizesBoundedGitHubResponsesWithoutLeakingProviderDtos() {
         var builder = RestClient.builder().baseUrl("https://api.github.test");
         var server = MockRestServiceServer.bindTo(builder).build();
-        var adapter = new GitHubRepositoryEvidenceAdapter(builder.build(), new RoadmapParser());
+        var adapter = new GitHubRepositoryEvidenceAdapter(
+                builder.build(), new RoadmapParser(), new ReadmeSummaryParser());
 
         server.expect(requestTo("https://api.github.test/repos/owner/repository"))
                 .andRespond(withSuccess(
                         """
-                        {"description":"Evidence source","default_branch":"main","language":"Java","archived":false,"private":false,"pushed_at":"2026-08-11T12:00:00Z"}
+                        {"description":null,"default_branch":"main","language":"Java","archived":false,"private":false,"pushed_at":"2026-08-11T12:00:00Z"}
                         """,
                         MediaType.APPLICATION_JSON));
         server.expect(requestTo("https://api.github.test/repos/owner/repository/contents"))
                 .andRespond(withSuccess(
                         """
                         [{"name":"src","type":"dir"},{"name":"README.md","type":"file"},{"name":"ROADMAP.md","type":"file"}]
+                        """,
+                        MediaType.APPLICATION_JSON));
+        server.expect(requestTo("https://api.github.test/repos/owner/repository/contents/README.md"))
+                .andRespond(withSuccess(
+                        """
+                        {"name":"README.md","path":"README.md","html_url":"https://github.com/owner/repository/blob/main/README.md","encoding":"base64","content":"IyBSZXBvc2l0b3J5CgpSRUFETUUtZGVyaXZlZCBldmlkZW5jZSBzb3VyY2UuCg=="}
                         """,
                         MediaType.APPLICATION_JSON));
         server.expect(requestTo("https://api.github.test/repos/owner/repository/contents/ROADMAP.md"))
@@ -69,6 +76,8 @@ class GitHubRepositoryEvidenceAdapterTest {
         var evidence = adapter.load(new RepositoryRef("owner", "repository"));
 
         assertThat(evidence.repository().fullName()).isEqualTo("owner/repository");
+        assertThat(evidence.description()).isEqualTo("README-derived evidence source.");
+        assertThat(evidence.descriptionSource()).isEqualTo("README.md introduction");
         assertThat(evidence.rootEntries()).containsExactly("src", "README.md", "ROADMAP.md");
         assertThat(evidence.issues()).singleElement().satisfies(issue ->
                 assertThat(issue.number()).isEqualTo(8));

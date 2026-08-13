@@ -4,6 +4,13 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 
 ## [Unreleased]
 
+### Changed
+
+- Advance the mapping model to v6, compose concise theme-aware campaign names, and show a staged repository-to-world transformation while previews load.
+- Clarified that the hero illustration is a campaign crest and mapping algorithm versions are not progression scores.
+- Added bounded README-derived repository descriptions when GitHub metadata is empty.
+- Formalized component ownership, pre-edit baselines, focused regression tests, full affected-application gates, and explicit release-tag approval.
+
 ## [0.3.0] - 2026-08-12
 
 ### Added

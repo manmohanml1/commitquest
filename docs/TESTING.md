@@ -1,5 +1,7 @@
 # Testing
 
+Every change begins with a green pre-edit baseline for the component being touched. Focused tests run again during implementation; the full affected application gate and browser journey run before review. The required commands and ownership boundaries are defined in [Component contracts](engineering/COMPONENT_CONTRACTS.md).
+
 ## Current gates
 
 - Angular component behavior

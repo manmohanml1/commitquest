@@ -17,6 +17,7 @@ class CampaignProjectionMapperTest {
         var source = new RepositoryEvidence(
                 new RepositoryRef("owner", "sample-repo"),
                 "A sample repository",
+                "GitHub repository metadata",
                 "main",
                 "Java",
                 false,
@@ -54,11 +55,11 @@ class CampaignProjectionMapperTest {
         var projection = mapper.map(source);
 
         assertThat(projection.schemaVersion()).isEqualTo(3);
-        assertThat(projection.mappingAlgorithmVersion()).isEqualTo(5);
+        assertThat(projection.mappingAlgorithmVersion()).isEqualTo(6);
         assertThat(projection.scoringRulesetVersion()).isEqualTo(1);
         assertThat(projection.mode()).isEqualTo("full");
         assertThat(projection.repository()).isEqualTo("owner/sample-repo");
-        assertThat(projection.title()).isEqualTo("Sample Repo Frontier");
+        assertThat(projection.title()).isEqualTo("Sample Repo Forge");
         assertThat(projection.evidence()).hasSize(6);
         assertThat(projection.quests()).hasSize(2);
         assertThat(projection.quests()).extracting(CampaignProjection.Quest::level)
@@ -74,6 +75,7 @@ class CampaignProjectionMapperTest {
         var source = new RepositoryEvidence(
                 new RepositoryRef("owner", "small-repo"),
                 "Small project",
+                "README.md introduction",
                 "main",
                 "JavaScript",
                 false,
@@ -119,11 +121,34 @@ class CampaignProjectionMapperTest {
         assertThat(mapper.map(archive).mode()).isEqualTo("archive");
     }
 
+    @Test
+    void composesAConciseThemedTitleForLongRepositoryNames() {
+        var source = new RepositoryEvidence(
+                new RepositoryRef("owner", "Scalable-Data-Processing-System-for-High-Volume-Workloads"),
+                "A high-performance data ingestion and processing pipeline using Kafka and Kinesis.",
+                "README.md introduction",
+                "main",
+                "Python",
+                false,
+                "2026-08-11T12:00:00Z",
+                List.of("README.md"),
+                List.of(),
+                List.of(),
+                List.of(),
+                List.of(),
+                List.of(),
+                List.of(),
+                List.of());
+
+        assertThat(mapper.map(source).title()).isEqualTo("Dataflow Foundry");
+    }
+
     private static RepositoryEvidence emptyEvidence(
             boolean archived, List<RepositoryEvidence.PullRequest> pullRequests) {
         return new RepositoryEvidence(
                 new RepositoryRef("owner", "sample"),
                 "Sample",
+                "Verified repository facts",
                 "main",
                 "Java",
                 archived,
