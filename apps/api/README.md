@@ -15,7 +15,9 @@ $env:COMMITQUEST_GITHUB_TOKEN = "..."
 ./gradlew.bat bootRun
 ```
 
-The token remains server-side. Preview requests are bounded and are never persisted.
+The token remains server-side. Preview requests are bounded and are never persisted. Provider-neutral evidence is retained only in a 256-entry, ten-minute in-memory cache to prevent repeated public requests from exhausting GitHub's shared IP limit.
+
+The v0.3 adapter reads bounded repository metadata, root structure, open issues, `ROADMAP.md`, merged pull requests, Releases, tags, workflows, and recent default-branch commits. The mapper preserves whether each result is verified, repository-authored, or inferred.
 
 ## Free deployment
 
@@ -24,5 +26,5 @@ The root `render.yaml` deploys this Dockerfile as exactly one Render Free web se
 ## Verify
 
 ```powershell
-./gradlew.bat check
+./gradlew.bat check bootJar
 ```

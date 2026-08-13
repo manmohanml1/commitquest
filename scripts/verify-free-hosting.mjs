@@ -10,11 +10,23 @@ if (!/^\s*plan:\s*free\s*$/m.test(renderBlueprint)) {
 }
 
 if (/^\s*(databases|disks|previews):\s*$/m.test(renderBlueprint)) {
-  failures.push('The v0.3 free-hosting blueprint must not provision databases, disks, or previews.');
+  failures.push(
+    'The v0.3 free-hosting blueprint must not provision databases, disks, or previews.',
+  );
 }
 
-if (/^\s*envVars:\s*$/m.test(renderBlueprint)) {
-  failures.push('The v0.3 hosted demo must not require provider secrets or environment add-ons.');
+const environmentKeys = [...renderBlueprint.matchAll(/^\s*- key:\s*([^\s#]+)\s*$/gm)].map(
+  ([, key]) => key,
+);
+
+if (
+  environmentKeys.length !== 1 ||
+  environmentKeys[0] !== 'COMMITQUEST_GITHUB_TOKEN' ||
+  !/^\s*sync:\s*false\s*$/m.test(renderBlueprint)
+) {
+  failures.push(
+    'render.yaml may declare only the non-synced COMMITQUEST_GITHUB_TOKEN server secret.',
+  );
 }
 
 const apiRewrite = vercelConfig.rewrites?.find((rewrite) => rewrite.source === '/api/:path*');
@@ -23,11 +35,15 @@ if (apiRewrite?.destination !== 'https://commitquest-api-manmohanml1.onrender.co
 }
 
 if ('functions' in vercelConfig) {
-  failures.push('The v0.3 Vercel deployment must remain static and use no billable function configuration.');
+  failures.push(
+    'The v0.3 Vercel deployment must remain static and use no billable function configuration.',
+  );
 }
 
 if (failures.length > 0) {
   throw new Error(`Zero-cost hosting contract failed:\n- ${failures.join('\n- ')}`);
 }
 
-console.log('Zero-cost hosting contract verified: Vercel Hobby + one Render Free web service.');
+console.log(
+  'Zero-cost hosting contract verified: Vercel Hobby + one Render Free web service + one non-synced GitHub credential.',
+);

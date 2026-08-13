@@ -97,6 +97,14 @@ export class App implements AfterViewInit, OnDestroy {
     this.activeView.set(view);
   }
 
+  protected isEphemeralCampaign(): boolean {
+    return this.campaign().schemaVersion >= 3 || this.campaign().mode === 'preview';
+  }
+
+  protected campaignModeLabel(): string {
+    return `${this.campaign().mode.charAt(0).toUpperCase()}${this.campaign().mode.slice(1)}`;
+  }
+
   protected handleViewKey(event: KeyboardEvent, index: number): void {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
 

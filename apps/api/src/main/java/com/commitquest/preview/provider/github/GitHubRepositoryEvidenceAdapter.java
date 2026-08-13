@@ -5,7 +5,9 @@ import com.commitquest.preview.application.RepositoryEvidencePort;
 import com.commitquest.preview.domain.RepositoryEvidence;
 import com.commitquest.preview.domain.RepositoryRef;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
@@ -16,10 +18,13 @@ import org.springframework.web.client.RestClientResponseException;
 final class GitHubRepositoryEvidenceAdapter implements RepositoryEvidencePort {
 
     private static final int SAMPLE_LIMIT = 10;
+    private static final int MAX_ENCODED_ROADMAP_LENGTH = 180_000;
     private final RestClient client;
+    private final RoadmapParser roadmapParser;
 
-    GitHubRepositoryEvidenceAdapter(RestClient gitHubRestClient) {
+    GitHubRepositoryEvidenceAdapter(RestClient gitHubRestClient, RoadmapParser roadmapParser) {
         this.client = gitHubRestClient;
+        this.roadmapParser = roadmapParser;
     }
 
     @Override
@@ -33,10 +38,13 @@ final class GitHubRepositoryEvidenceAdapter implements RepositoryEvidencePort {
                         "CommitQuest v0.3 can preview only public GitHub repositories.");
             }
 
-            var rootEntries = getList(path + "/contents", GitHubDtos.Content[].class, repository).stream()
+            var allRootEntries = getList(path + "/contents", GitHubDtos.Content[].class, repository).stream()
                     .map(GitHubDtos.Content::name)
+                    .toList();
+            var rootEntries = allRootEntries.stream()
                     .limit(8)
                     .toList();
+            var roadmapItems = loadRoadmap(path, repository, allRootEntries);
             var issues = getList(
                             path + "/issues?state=open&sort=updated&direction=desc&per_page=" + SAMPLE_LIMIT,
                             GitHubDtos.Issue[].class,
@@ -47,7 +55,7 @@ final class GitHubRepositoryEvidenceAdapter implements RepositoryEvidencePort {
                     .limit(SAMPLE_LIMIT)
                     .toList();
             var pullRequests = getList(
-                            path + "/pulls?state=closed&sort=updated&direction=desc&per_page=" + SAMPLE_LIMIT,
+                            path + "/pulls?state=closed&sort=updated&direction=desc&per_page=30",
                             GitHubDtos.PullRequest[].class,
                             repository)
                     .stream()
@@ -57,6 +65,7 @@ final class GitHubRepositoryEvidenceAdapter implements RepositoryEvidencePort {
                             pullRequest.title(),
                             pullRequest.htmlUrl(),
                             pullRequest.mergedAt()))
+                    .limit(SAMPLE_LIMIT)
                     .toList();
             var releases = getList(
                             path + "/releases?per_page=" + SAMPLE_LIMIT,
@@ -69,6 +78,12 @@ final class GitHubRepositoryEvidenceAdapter implements RepositoryEvidencePort {
                             release.htmlUrl(),
                             release.publishedAt()))
                     .toList();
+            var tags = releases.isEmpty()
+                    ? getList(path + "/tags?per_page=" + SAMPLE_LIMIT, GitHubDtos.Tag[].class, repository).stream()
+                            .map(tag -> new RepositoryEvidence.Tag(
+                                    tag.name(), repository.webUrl() + "/tree/" + tag.name()))
+                            .toList()
+                    : List.<RepositoryEvidence.Tag>of();
             var workflowResponse = get(
                     path + "/actions/workflows?per_page=" + SAMPLE_LIMIT,
                     GitHubDtos.Workflows.class,
@@ -79,6 +94,19 @@ final class GitHubRepositoryEvidenceAdapter implements RepositoryEvidencePort {
                             .map(workflow -> new RepositoryEvidence.Workflow(
                                     workflow.id(), workflow.name(), workflow.state(), workflow.htmlUrl()))
                             .toList();
+            var commits = pullRequests.isEmpty()
+                    ? getList(
+                                    path + "/commits?sha=" + metadata.defaultBranch() + "&per_page=" + SAMPLE_LIMIT,
+                                    GitHubDtos.Commit[].class,
+                                    repository)
+                            .stream()
+                            .map(commit -> new RepositoryEvidence.Commit(
+                                    commit.sha(),
+                                    firstLine(commit.commit().message()),
+                                    commit.htmlUrl(),
+                                    commit.commit().author() == null ? null : commit.commit().author().date()))
+                            .toList()
+                    : List.<RepositoryEvidence.Commit>of();
 
             return new RepositoryEvidence(
                     repository,
@@ -86,11 +114,15 @@ final class GitHubRepositoryEvidenceAdapter implements RepositoryEvidencePort {
                     metadata.defaultBranch(),
                     metadata.language(),
                     metadata.archived(),
+                    metadata.pushedAt(),
                     rootEntries,
                     issues,
+                    roadmapItems,
                     pullRequests,
                     releases,
-                    workflows);
+                    tags,
+                    workflows,
+                    commits);
         } catch (PreviewFailure failure) {
             throw failure;
         } catch (RestClientResponseException failure) {
@@ -117,6 +149,25 @@ final class GitHubRepositoryEvidenceAdapter implements RepositoryEvidencePort {
 
     private <T> List<T> getList(String path, Class<T[]> type, RepositoryRef repository) {
         return Arrays.asList(get(path, type, repository));
+    }
+
+    private List<RepositoryEvidence.RoadmapItem> loadRoadmap(
+            String path, RepositoryRef repository, List<String> rootEntries) {
+        var roadmapName = rootEntries.stream()
+                .filter(name -> name.equalsIgnoreCase("ROADMAP.md"))
+                .findFirst();
+        if (roadmapName.isEmpty()) return List.of();
+        var detail = get(path + "/contents/" + roadmapName.get(), GitHubDtos.ContentDetail.class, repository);
+        if (!"base64".equalsIgnoreCase(detail.encoding())
+                || detail.content() == null
+                || detail.content().length() > MAX_ENCODED_ROADMAP_LENGTH) return List.of();
+        var markdown = new String(
+                Base64.getMimeDecoder().decode(detail.content()), StandardCharsets.UTF_8);
+        return roadmapParser.parse(markdown, detail.htmlUrl());
+    }
+
+    private static String firstLine(String value) {
+        return value == null ? "Repository commit" : value.lines().findFirst().orElse("Repository commit");
     }
 
     private static PreviewFailure translate(RestClientResponseException failure) {

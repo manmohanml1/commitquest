@@ -10,10 +10,22 @@
 
 export interface Chapter {
   version: string;
+  level: ChapterLevelEnum;
+  kind: ChapterKindEnum;
   title: string;
   summary: string;
   status: ChapterStatusEnum;
   evidenceUrl: string;
+}
+export enum ChapterLevelEnum {
+  VERIFIED = 'verified',
+  REPOSITORY_AUTHORED = 'repository-authored',
+  INFERRED = 'inferred',
+}
+export enum ChapterKindEnum {
+  RELEASE = 'release',
+  TAG = 'tag',
+  FOUNDATION = 'foundation',
 }
 export enum ChapterStatusEnum {
   CURRENT = 'current',

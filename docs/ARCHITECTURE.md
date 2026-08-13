@@ -20,6 +20,8 @@ The Angular application contains a bundled, sanitized Portfolio Citadel fixture.
 
 A Spring Boot API becomes the sole GitHub API boundary. It validates repository URLs, manages rate limits, normalizes evidence, and returns a versioned campaign projection. The browser never receives a GitHub credential.
 
+Projection schema v3 and mapping algorithm v4 classify each request as a full, history, foundation, or archive campaign. Open issues remain verified candidates; roadmap entries are repository-authored candidates; merged pull requests are verified encounters; commit-only history is inferred; published Releases, tags, and default-branch foundations remain visibly distinct. A bounded ten-minute in-memory cache reduces provider traffic without introducing persistence or a paid service.
+
 ### 0.4–1.0: connected campaigns
 
 The production system uses:

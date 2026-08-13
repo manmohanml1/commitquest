@@ -29,7 +29,7 @@
 
     <div class="campaign-card" [attr.aria-label]="campaign().title + ' campaign summary'">
       <div class="card-topline">
-        <span>{{ campaign().mode === 'preview' ? 'EPHEMERAL CAMPAIGN' : 'FLAGSHIP CAMPAIGN' }}</span
+        <span>{{ isEphemeralCampaign() ? 'EPHEMERAL CAMPAIGN' : 'FLAGSHIP CAMPAIGN' }}</span
         ><span class="live-status"><i></i> SYNCHRONIZED</span>
       </div>
       <div class="citadel-art" aria-hidden="true">
@@ -54,7 +54,7 @@
         <span
           ><b>{{ campaign().currentChapter }}</b> Current chapter</span
         ><span
-          ><b>{{ campaign().mode === 'preview' ? 'Ephemeral' : 'Bundled' }}</b> Campaign</span
+          ><b>{{ isEphemeralCampaign() ? campaignModeLabel() : 'Bundled' }}</b> Campaign</span
         >
       </div>
     </div>
@@ -92,7 +92,7 @@
       <div class="preview-feedback" [class.error]="previewPhase() === 'error'" aria-live="polite">
         <span [attr.data-phase]="previewPhase()"></span>
         <p>{{ previewMessage() }}</p>
-        @if (campaign().mode === 'preview') {
+        @if (isEphemeralCampaign()) {
           <button type="button" (click)="restorePortfolioCitadel()">
             Restore Portfolio Citadel
           </button>
@@ -117,7 +117,7 @@
         <h2>{{ campaign().title }}</h2>
       </div>
       <p>
-        @if (campaign().mode === 'preview') {
+        @if (isEphemeralCampaign()) {
           Generated ephemerally from bounded public GitHub evidence. Nothing in this campaign is
           persisted.
         } @else {
@@ -220,12 +220,12 @@
     >
       <header class="ledger-heading">
         <div>
-          <p class="panel-eyebrow">REPOSITORY-AUTHORED · NOT YET VERIFIED</p>
+          <p class="panel-eyebrow">OPEN ISSUES · ROADMAP ITEMS · RECOMMENDED NEXT STEP</p>
           <h3>Candidate quest board</h3>
         </div>
         <p>
-          Roadmap entries become candidates, never completed achievements. GitHub issues will become
-          verified quests when live ingestion arrives.
+          GitHub issues and roadmap entries remain source-linked candidates. When neither exists,
+          CommitQuest provides one explicit recommendation instead of leaving the campaign empty.
         </p>
       </header>
       <div class="quest-grid">
@@ -233,13 +233,30 @@
           <article class="quest-card">
             <div class="card-label">
               <span>Q{{ index + 1 }}</span
-              ><b>{{ quest.status }}</b>
+              ><b>
+                @if (quest.level === 'repository-authored') {
+                  ROADMAP SOURCE
+                } @else if (quest.level === 'inferred') {
+                  COMMITQUEST SUGGESTION
+                } @else {
+                  VERIFIED GITHUB ISSUE
+                }
+                · {{ quest.status }}
+              </b>
             </div>
             <h4>{{ quest.title }}</h4>
             <p>{{ quest.summary }}</p>
             <small>{{ quest.sourceLabel }}</small>
-            <a [href]="quest.evidenceUrl" target="_blank" rel="noreferrer">Inspect roadmap ↗</a>
+            <a [href]="quest.evidenceUrl" target="_blank" rel="noreferrer"
+              >Open supporting source ↗</a
+            >
           </article>
+        }
+        @if (campaign().quests.length === 0) {
+          <p class="ledger-empty">
+            No candidate or recommendation could be projected from the available repository
+            evidence.
+          </p>
         }
       </div>
     </section>
@@ -253,24 +270,33 @@
     >
       <header class="ledger-heading">
         <div>
-          <p class="panel-eyebrow">VERIFIED · MERGED PULL REQUESTS</p>
+          <p class="panel-eyebrow">VERIFIED MERGES · INFERRED COMMIT EXPEDITIONS</p>
           <h3>Encounter archive</h3>
         </div>
         <p>
-          Each encounter is a source-linked outcome. Commit volume and comment count award nothing.
+          Merged pull requests are victories. Commit-only history is an observed expedition and
+          awards no verified outcome.
         </p>
       </header>
       <div class="encounter-list">
         @for (encounter of campaign().encounters; track encounter.id) {
           <article>
-            <span class="encounter-rank">PR #{{ encounter.pullRequest }}</span>
+            <span class="encounter-rank">{{
+              encounter.reference ?? 'PR #' + encounter.pullRequest
+            }}</span>
             <div>
-              <p>{{ encounter.release }} · {{ encounter.status }}</p>
+              <p>{{ encounter.level ?? 'verified' }} · {{ encounter.status }}</p>
               <h4>{{ encounter.title }}</h4>
               <small>{{ encounter.summary }}</small>
             </div>
-            <a [href]="encounter.evidenceUrl" target="_blank" rel="noreferrer">Open encounter ↗</a>
+            <a [href]="encounter.evidenceUrl" target="_blank" rel="noreferrer">Open evidence ↗</a>
           </article>
+        }
+        @if (campaign().encounters.length === 0) {
+          <p class="ledger-empty">
+            No merged pull request or recent default-branch commit was available in the bounded
+            sample. CommitQuest does not invent an encounter.
+          </p>
         }
       </div>
     </section>
@@ -284,20 +310,24 @@
     >
       <header class="ledger-heading">
         <div>
-          <p class="panel-eyebrow">VERIFIED · GITHUB RELEASES</p>
+          <p class="panel-eyebrow">RELEASES · TAGS · FOUNDATION SNAPSHOT</p>
           <h3>Chapter chronicle</h3>
         </div>
-        <p>Releases preserve meaningful campaign milestones instead of rewarding raw activity.</p>
+        <p>
+          Evidence labels distinguish published Releases from tags and default-branch foundations.
+        </p>
       </header>
       <ol class="chapter-timeline">
         @for (chapter of campaign().chapters; track chapter.version) {
           <li [class.current]="chapter.status === 'current'">
             <span class="chapter-marker" aria-hidden="true"></span>
             <div>
-              <p>{{ chapter.version }} · {{ chapter.status }}</p>
+              <p>
+                {{ chapter.version }} · {{ chapter.level ?? 'verified' }} · {{ chapter.status }}
+              </p>
               <h4>{{ chapter.title }}</h4>
               <small>{{ chapter.summary }}</small>
-              <a [href]="chapter.evidenceUrl" target="_blank" rel="noreferrer">Open release ↗</a>
+              <a [href]="chapter.evidenceUrl" target="_blank" rel="noreferrer">Open evidence ↗</a>
             </div>
           </li>
         }

@@ -53,7 +53,7 @@ The bundled Portfolio Citadel campaign is the permanent zero-account demonstrati
 | Phase     | Product proof                                                 | Infrastructure allowed                                            |
 | --------- | ------------------------------------------------------------- | ----------------------------------------------------------------- |
 | `0.1–0.2` | Compelling bundled campaign and complete interaction language | Angular, Phaser, versioned fixtures, static hosting               |
-| `0.3`     | Ephemeral public-repository preview                           | Java 25/Spring Boot API, Render Free, and Vercel Hobby             |
+| `0.3`     | Ephemeral public-repository preview                           | Java 25/Spring Boot API, Render Free, and Vercel Hobby            |
 | `0.4–0.5` | Persistent, user-controlled connected campaign                | PostgreSQL, GitHub App, jOOQ, Flyway, authentication              |
 | `0.6–0.8` | Reliable live progression and public sharing                  | Webhooks, durable inbox/outbox, SQS, SSE, object storage          |
 | `0.9–1.0` | Operable public product                                       | Load/security/recovery hardening, Terraform, production telemetry |

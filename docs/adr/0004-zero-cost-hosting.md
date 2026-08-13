@@ -13,7 +13,7 @@ Keep the accepted Angular, Java 25, Spring Boot 4, Phaser, Gradle, OpenAPI, and 
 - the static Angular site on Vercel Hobby, whose included usage is capped rather than billed for overage;
 - one Docker-based Render Free web service for the Spring Boot API, pinned with `plan: free` in `render.yaml`.
 
-Vercel proxies `/api/*` to the Render service so the browser retains a same-origin contract. The hosted demo uses GitHub's unauthenticated public allowance and stores no provider secret. No database, disk, worker, queue, cache, paid preview environment, or paid observability service is provisioned. CI verifies the free-plan pin and proxy destination.
+Vercel proxies `/api/*` to the Render service so the browser retains a same-origin contract. The hosted demo may use one free, fine-grained, read-only GitHub credential stored only as Render's non-synced `COMMITQUEST_GITHUB_TOKEN` secret. This avoids GitHub's shared unauthenticated-IP limit without exposing a credential to the browser or adding a payable service. No database, disk, worker, queue, external cache, paid preview environment, or paid observability service is provisioned. CI verifies the free-plan pin, the single permitted secret declaration, and the proxy destination.
 
 This ADR supersedes the AWS ECS hosting decision in ADR 0003 and the AWS resource choices in ADR 0002. It does not replace the application architecture. Later milestones may introduce persistence or asynchronous processing only after a separate ADR identifies a provider with a hard zero-spend cap; otherwise those milestones remain local-only.
 
@@ -23,4 +23,5 @@ This ADR supersedes the AWS ECS hosting decision in ADR 0003 and the AWS resourc
 - Render Free sleeps after 15 idle minutes, so the first request can take approximately one minute to wake.
 - Render Free is suitable for a hobby demonstration, not an availability-sensitive commercial production service.
 - The API remains stateless and ephemeral, so sleep and filesystem loss do not compromise product data.
+- The GitHub credential must be rotated or removed through Render; it is never stored in Git, Vercel, logs, or campaign projections.
 - Deployment protection must be disabled for the public production Vercel URL; branch previews may remain protected.

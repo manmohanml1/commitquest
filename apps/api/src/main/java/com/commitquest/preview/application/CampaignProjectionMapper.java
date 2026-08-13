@@ -21,55 +21,79 @@ public final class CampaignProjectionMapper {
         var repository = source.repository();
         var repositoryUrl = repository.webUrl();
         var title = titleCase(repository.name()) + " Frontier";
-        var latestRelease = source.releases().isEmpty() ? source.defaultBranch() : source.releases().getFirst().tag();
+        var chapters = chapters(source);
+        var currentChapter = chapters.isEmpty() ? source.defaultBranch() : chapters.getFirst().version();
 
         return new CampaignProjection(
-                2,
                 3,
+                5,
                 1,
                 slug(repository.fullName()),
                 title,
                 repository.fullName(),
-                "preview",
-                latestRelease,
+                campaignMode(source),
+                currentChapter,
                 metrics(source),
                 regions(source, repositoryUrl),
                 quests(source),
                 encounters(source),
-                chapters(source));
+                chapters);
+    }
+
+    private static String campaignMode(RepositoryEvidence source) {
+        if (source.archived()) return "archive";
+        var hasCandidates = !source.issues().isEmpty() || !source.roadmapItems().isEmpty();
+        var hasHistory = !source.pullRequests().isEmpty() || !source.releases().isEmpty() || !source.tags().isEmpty();
+        if (hasCandidates && hasHistory) return "full";
+        if (hasHistory) return "history";
+        return "foundation";
     }
 
     private static List<Metric> metrics(RepositoryEvidence source) {
+        var candidates = source.issues().size() + source.roadmapItems().size();
+        var milestones = !source.releases().isEmpty() ? source.releases().size() : source.tags().size();
         return List.of(
-                new Metric(Integer.toString(source.pullRequests().size()), "merged encounters sampled"),
-                new Metric(Integer.toString(source.releases().size()), "released chapters sampled"),
-                new Metric(Integer.toString(source.workflows().size()), "CI defenses discovered"),
-                new Metric(Integer.toString(source.issues().size()), "open candidate quests sampled"));
+                new Metric(sampleValue(source.pullRequests().size()), "merged PR encounters"),
+                new Metric(sampleValue(milestones), "release or tag chapters"),
+                new Metric(sampleValue(source.workflows().size()), "CI workflows discovered"),
+                new Metric(sampleValue(candidates), "issue + roadmap candidates"));
+    }
+
+    private static String sampleValue(int value) {
+        return value == 10 ? "10+" : Integer.toString(value);
     }
 
     private static List<Region> regions(RepositoryEvidence source, String repositoryUrl) {
         var rootSummary = source.rootEntries().isEmpty()
                 ? "GitHub did not expose any root entries for this repository."
                 : "Mapped root entries: " + String.join(", ", source.rootEntries()) + ".";
+        var candidates = source.issues().size() + source.roadmapItems().size();
+        var codebaseTitle = source.primaryLanguage().equals("Not reported")
+                ? "Codebase Province"
+                : source.primaryLanguage() + " Province";
+        var roadmapUrl = source.roadmapItems().isEmpty()
+                ? repositoryUrl + "/issues"
+                : source.roadmapItems().getFirst().url();
+        var hasCandidateSources = candidates > 0;
 
         return List.of(
                 new Region(
                         "repository-gate",
                         "verified",
-                        "REGION · REPOSITORY",
-                        "Repository Gate",
+                        "REGION · " + campaignMode(source).toUpperCase(Locale.ROOT) + " CAMPAIGN",
+                        source.archived() ? "Archive Gate" : "Repository Gate",
                         source.description(),
                         "Default branch: " + source.defaultBranch() + " · Primary language: " + source.primaryLanguage(),
                         repositoryUrl,
-                        source.archived() ? "Archived" : "Public",
+                        source.archived() ? "Archived" : titleCase(campaignMode(source)),
                         source.archived() ? "amber" : "mint",
                         "⌂",
                         new Position(125, 190)),
                 new Region(
                         "codebase-province",
                         "inferred",
-                        "REGION · CODEBASE",
-                        "Codebase Province",
+                        "REGION · CODEBASE STRUCTURE",
+                        codebaseTitle,
                         rootSummary,
                         "Interpretation of verified root-directory evidence",
                         repositoryUrl,
@@ -79,25 +103,35 @@ public final class CampaignProjectionMapper {
                         new Position(365, 135)),
                 new Region(
                         "quest-board",
-                        "repository-authored",
-                        "REGION · OPEN ISSUES",
-                        "Quest Board",
-                        countDescription(source.issues().size(), "open repository-authored issue", "open repository-authored issues"),
-                        "Sample limited to the 10 most recently updated open issues",
-                        repositoryUrl + "/issues",
-                        source.issues().isEmpty() ? "Quiet" : "Calling",
-                        source.issues().isEmpty() ? "amber" : "blue",
+                        hasCandidateSources
+                                ? (source.issues().isEmpty() ? "repository-authored" : "verified")
+                                : "inferred",
+                        "REGION · ISSUES + ROADMAP",
+                        hasCandidateSources ? "Quest Board" : "Quest Starter",
+                        hasCandidateSources
+                                ? countDescription(candidates, "candidate quest", "candidate quests")
+                                : "No open issue or ROADMAP.md candidate was observed; one clearly labelled CommitQuest recommendation keeps the campaign actionable.",
+                        hasCandidateSources
+                                ? "Up to 10 open issues plus 10 repository-authored roadmap candidates"
+                                : "Recommendation inferred from the absence of tracked candidate work",
+                        roadmapUrl,
+                        hasCandidateSources ? "Calling" : "Recommended",
+                        hasCandidateSources ? "blue" : "amber",
                         "?",
                         new Position(625, 185)),
                 new Region(
                         "encounter-archive",
-                        "verified",
-                        "REGION · MERGED PULL REQUESTS",
-                        "Encounter Archive",
-                        countDescription(source.pullRequests().size(), "merged pull request", "merged pull requests"),
-                        "Sample limited to the 10 most recently updated closed pull requests",
-                        repositoryUrl + "/pulls?q=is%3Apr+is%3Amerged",
-                        source.pullRequests().isEmpty() ? "Uncharted" : "Recorded",
+                        source.pullRequests().isEmpty() ? "inferred" : "verified",
+                        "REGION · DELIVERY HISTORY",
+                        source.pullRequests().isEmpty() ? "Commit Trail" : "Encounter Archive",
+                        source.pullRequests().isEmpty()
+                                ? countDescription(source.commits().size(), "recent commit expedition", "recent commit expeditions")
+                                : countDescription(source.pullRequests().size(), "merged pull request", "merged pull requests"),
+                        source.pullRequests().isEmpty()
+                                ? "Commit expeditions are inferred history, never verified victories"
+                                : "Up to 10 recently merged pull requests",
+                        source.pullRequests().isEmpty() ? repositoryUrl + "/commits" : repositoryUrl + "/pulls?q=is%3Apr+is%3Amerged",
+                        source.pullRequests().isEmpty() ? "Observed" : "Recorded",
                         source.pullRequests().isEmpty() ? "amber" : "mint",
                         "⚔",
                         new Position(165, 355)),
@@ -105,7 +139,7 @@ public final class CampaignProjectionMapper {
                         "defense-bastion",
                         "verified",
                         "DEFENSE · GITHUB ACTIONS",
-                        "Defense Bastion",
+                        source.workflows().isEmpty() ? "Unconfigured Outpost" : "Defense Bastion",
                         countDescription(source.workflows().size(), "repository workflow", "repository workflows"),
                         "Workflow presence is evidence; run success is not inferred",
                         repositoryUrl + "/actions",
@@ -115,56 +149,128 @@ public final class CampaignProjectionMapper {
                         new Position(400, 330)),
                 new Region(
                         "chapter-beacon",
-                        "verified",
-                        "REGION · RELEASES",
-                        "Chapter Beacon",
-                        countDescription(source.releases().size(), "published release", "published releases"),
-                        "Sample limited to the 10 most recent GitHub releases",
-                        repositoryUrl + "/releases",
-                        source.releases().isEmpty() ? "Unlit" : "Kindled",
+                        source.releases().isEmpty() ? "repository-authored" : "verified",
+                        "REGION · MILESTONES",
+                        source.releases().isEmpty() ? "Foundation Beacon" : "Chapter Beacon",
+                        milestoneDescription(source),
+                        source.releases().isEmpty()
+                                ? "Tags and the default branch are not presented as GitHub Releases"
+                                : "Up to 10 recent GitHub Releases",
+                        source.releases().isEmpty() ? repositoryUrl + "/tags" : repositoryUrl + "/releases",
+                        source.releases().isEmpty() ? "Grounded" : "Kindled",
                         source.releases().isEmpty() ? "amber" : "blue",
                         "◉",
                         new Position(635, 350)));
     }
 
+    private static String milestoneDescription(RepositoryEvidence source) {
+        if (!source.releases().isEmpty()) {
+            return countDescription(source.releases().size(), "published GitHub Release", "published GitHub Releases");
+        }
+        if (!source.tags().isEmpty()) {
+            return countDescription(source.tags().size(), "repository tag", "repository tags");
+        }
+        return "No GitHub Release or repository tag was observed; the default branch anchors this foundation campaign.";
+    }
+
     private static List<Quest> quests(RepositoryEvidence source) {
-        return source.issues().stream()
-                .map(issue -> new Quest(
-                        "issue-" + issue.number(),
-                        "quest-board",
-                        "repository-authored",
-                        issue.title(),
-                        "Open issue presented as a candidate quest; no completion is inferred.",
-                        "candidate",
-                        "GitHub issue #" + issue.number(),
-                        issue.url()))
-                .toList();
+        var quests = new ArrayList<Quest>();
+        source.issues().forEach(issue -> quests.add(new Quest(
+                "issue-" + issue.number(),
+                "quest-board",
+                "verified",
+                issue.title(),
+                "Open GitHub issue presented as a candidate; no completion is inferred.",
+                "candidate",
+                "GitHub issue #" + issue.number(),
+                issue.url())));
+        source.roadmapItems().forEach(item -> quests.add(new Quest(
+                "roadmap-" + item.id(),
+                "quest-board",
+                "repository-authored",
+                item.title(),
+                item.summary(),
+                "candidate",
+                item.sourceLabel(),
+                item.url())));
+        if (quests.isEmpty()) {
+            quests.add(new Quest(
+                    "recommendation-establish-quest-board",
+                    "quest-board",
+                    "inferred",
+                    "Define the next repository milestone",
+                    "No open GitHub issue or ROADMAP.md candidate was observed. CommitQuest recommends publishing the next concrete piece of work so future previews can link to repository-authored evidence.",
+                    "recommended",
+                    "CommitQuest recommendation",
+                    source.repository().webUrl() + "/issues"));
+        }
+        return List.copyOf(quests);
     }
 
     private static List<Encounter> encounters(RepositoryEvidence source) {
-        return source.pullRequests().stream()
-                .map(pullRequest -> new Encounter(
-                        "pull-request-" + pullRequest.number(),
-                        pullRequest.title(),
-                        "Merged pull request verified by GitHub" + dateSuffix(pullRequest.mergedAt()),
-                        "victory",
-                        pullRequest.number(),
-                        "Repository preview",
-                        pullRequest.url()))
+        if (!source.pullRequests().isEmpty()) {
+            return source.pullRequests().stream()
+                    .map(pullRequest -> new Encounter(
+                            "pull-request-" + pullRequest.number(),
+                            "verified",
+                            "pull-request",
+                            "PR #" + pullRequest.number(),
+                            pullRequest.title(),
+                            "Merged pull request verified by GitHub" + dateSuffix(pullRequest.mergedAt()),
+                            "victory",
+                            pullRequest.url()))
+                    .toList();
+        }
+        return source.commits().stream()
+                .limit(5)
+                .map(commit -> new Encounter(
+                        "commit-" + commit.sha(),
+                        "inferred",
+                        "commit",
+                        commit.sha().substring(0, Math.min(7, commit.sha().length())),
+                        commit.title(),
+                        "Recent default-branch commit presented as an inferred expedition" + dateSuffix(commit.committedAt()),
+                        "observed",
+                        commit.url()))
                 .toList();
     }
 
     private static List<Chapter> chapters(RepositoryEvidence source) {
         var chapters = new ArrayList<Chapter>();
-        IntStream.range(0, source.releases().size()).forEach(index -> {
-            var release = source.releases().get(index);
+        if (!source.releases().isEmpty()) {
+            IntStream.range(0, source.releases().size()).forEach(index -> {
+                var release = source.releases().get(index);
+                chapters.add(new Chapter(
+                        release.tag(),
+                        "verified",
+                        "release",
+                        release.name().isBlank() ? "Release " + release.tag() : release.name(),
+                        "Published GitHub Release" + dateSuffix(release.publishedAt()),
+                        index == 0 ? "current" : "unlocked",
+                        release.url()));
+            });
+        } else if (!source.tags().isEmpty()) {
+            IntStream.range(0, source.tags().size()).forEach(index -> {
+                var tag = source.tags().get(index);
+                chapters.add(new Chapter(
+                        tag.name(),
+                        "repository-authored",
+                        "tag",
+                        "Tagged milestone " + tag.name(),
+                        "Repository tag observed; GitHub Release publication is not inferred.",
+                        index == 0 ? "current" : "unlocked",
+                        tag.url()));
+            });
+        } else {
             chapters.add(new Chapter(
-                    release.tag(),
-                    release.name().isBlank() ? "Release " + release.tag() : release.name(),
-                    "Published GitHub release" + dateSuffix(release.publishedAt()),
-                    index == 0 ? "current" : "unlocked",
-                    release.url()));
-        });
+                    source.defaultBranch(),
+                    "inferred",
+                    "foundation",
+                    "Foundation snapshot",
+                    "No GitHub Release or tag was observed; this chapter represents the current default branch only.",
+                    "current",
+                    source.repository().webUrl() + "/tree/" + source.defaultBranch()));
+        }
         return List.copyOf(chapters);
     }
 

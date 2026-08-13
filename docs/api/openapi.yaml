@@ -126,10 +126,10 @@ components:
       properties:
         schemaVersion:
           type: integer
-          const: 2
+          const: 3
         mappingAlgorithmVersion:
           type: integer
-          const: 3
+          const: 4
         scoringRulesetVersion:
           type: integer
           const: 1
@@ -141,7 +141,7 @@ components:
           type: string
         mode:
           type: string
-          const: preview
+          enum: [full, history, foundation, archive]
         currentChapter:
           type: string
         metrics:
@@ -156,7 +156,7 @@ components:
             $ref: '#/components/schemas/Region'
         quests:
           type: array
-          maxItems: 10
+          maxItems: 20
           items:
             $ref: '#/components/schemas/Quest'
         encounters:
@@ -190,7 +190,8 @@ components:
     Region:
       type: object
       additionalProperties: false
-      required: [id, level, eyebrow, title, description, meta, evidenceUrl, status, tone, icon, position]
+      required:
+        [id, level, eyebrow, title, description, meta, evidenceUrl, status, tone, icon, position]
       properties:
         id:
           type: string
@@ -228,14 +229,14 @@ components:
           type: string
         level:
           type: string
-          const: repository-authored
+          enum: [verified, repository-authored, inferred]
         title:
           type: string
         summary:
           type: string
         status:
           type: string
-          const: candidate
+          enum: [candidate, recommended]
         sourceLabel:
           type: string
         evidenceUrl:
@@ -244,9 +245,17 @@ components:
     Encounter:
       type: object
       additionalProperties: false
-      required: [id, title, summary, status, pullRequest, release, evidenceUrl]
+      required: [id, level, kind, reference, title, summary, status, evidenceUrl]
       properties:
         id:
+          type: string
+        level:
+          type: string
+          enum: [verified, inferred]
+        kind:
+          type: string
+          enum: [pull-request, commit]
+        reference:
           type: string
         title:
           type: string
@@ -254,21 +263,23 @@ components:
           type: string
         status:
           type: string
-          const: victory
-        pullRequest:
-          type: integer
-        release:
-          type: string
+          enum: [victory, observed]
         evidenceUrl:
           type: string
           format: uri
     Chapter:
       type: object
       additionalProperties: false
-      required: [version, title, summary, status, evidenceUrl]
+      required: [version, level, kind, title, summary, status, evidenceUrl]
       properties:
         version:
           type: string
+        level:
+          type: string
+          enum: [verified, repository-authored, inferred]
+        kind:
+          type: string
+          enum: [release, tag, foundation]
         title:
           type: string
         summary:

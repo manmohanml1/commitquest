@@ -499,6 +499,16 @@ nav a:focus-visible {
   background: var(--line);
   border: 1px solid var(--line);
 }
+
+.ledger-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px dashed rgba(130, 205, 224, 0.42);
+  border-radius: 0.75rem;
+  color: var(--ink-muted);
+  background: rgba(8, 25, 39, 0.62);
+}
 .quest-card {
   min-height: 260px;
   padding: 24px;
