@@ -4,6 +4,8 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-12
+
 ### Added
 
 - Public GitHub repository URL input with accessible loading, result, failure, retry, and bundled-fixture fallback states.
@@ -23,7 +25,7 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - Established an independent Git-connected Vercel project and pinned the web build runtime to Node 24.
 - Made campaign summary labels and repository evidence links reflect the active ephemeral or bundled campaign.
 - Superseded the payable AWS v0.3 deployment with a Vercel Hobby and Render Free hosting contract.
-- Upgraded the campaign projection to schema v3 and mapping algorithm v4 so missing GitHub workflow artifacts remain informative without becoming fabricated achievements.
+- Upgraded the campaign projection to schema v3 and mapping algorithm v5 so sparse repositories remain actionable without fabricating verified achievements.
 - Expanded merged-PR sampling and made capped evidence metrics explicit.
 
 ## [0.2.0] - 2026-08-12

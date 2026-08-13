@@ -4,9 +4,9 @@ CommitQuest turns real repository work into a playable, evidence-backed engineer
 
 The product remains separate from GitHub: GitHub is the source of truth, and every verified claim links back to its evidence.
 
-## Current milestone
+## Current release
 
-Version `0.3.0` is in progress. Its hosted vertical slice accepts public GitHub repositories, while the final evidence-classification and repository-compatibility work is tracked in the milestone checklist:
+Version `0.3.0` accepts public GitHub repositories and generates temporary, evidence-aware campaigns:
 
 - Paste and validate one public GitHub repository URL
 - Fetch GitHub evidence only through a Java 25/Spring Boot 4 API
@@ -16,7 +16,7 @@ Version `0.3.0` is in progress. Its hosted vertical slice accepts public GitHub 
 - Perform no authentication, persistence, background processing, GitHub App installation, or AI work
 - Keep the bundled Portfolio Citadel demo available when GitHub or the API is unavailable
 
-The tagged baseline remains `0.2.0` until the `v0.3.0` release review is complete. See the [0.3.0 milestone contract](docs/milestones/0.3.0.md) for acceptance criteria and exclusions.
+See the [0.3.0 milestone contract](docs/milestones/0.3.0.md) for its verified acceptance criteria and exclusions.
 
 The hosted v0.3 stack is constrained to zero-cost resources: Vercel Hobby for the static web and one explicitly pinned Render Free API service. Free-tier cold starts are expected; no database or other paid cloud resource is provisioned.
 
