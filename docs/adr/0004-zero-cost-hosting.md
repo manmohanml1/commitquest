@@ -1,6 +1,6 @@
 # ADR 0004: Zero-cost hosting constraint
 
-**Status:** Accepted
+**Status:** Accepted; extended by ADR 0005
 
 ## Context
 
@@ -15,7 +15,7 @@ Keep the accepted Angular, Java 25, Spring Boot 4, Phaser, Gradle, OpenAPI, and 
 
 Vercel proxies `/api/*` to the Render service so the browser retains a same-origin contract. The hosted demo may use one free, fine-grained, read-only GitHub credential stored only as Render's non-synced `COMMITQUEST_GITHUB_TOKEN` secret. This avoids GitHub's shared unauthenticated-IP limit without exposing a credential to the browser or adding a payable service. No database, disk, worker, queue, external cache, paid preview environment, or paid observability service is provisioned. CI verifies the free-plan pin, the single permitted secret declaration, and the proxy destination.
 
-This ADR supersedes the AWS ECS hosting decision in ADR 0003 and the AWS resource choices in ADR 0002. It does not replace the application architecture. Later milestones may introduce persistence or asynchronous processing only after a separate ADR identifies a provider with a hard zero-spend cap; otherwise those milestones remain local-only.
+This ADR supersedes the AWS ECS hosting decision in ADR 0003 and the AWS resource choices in ADR 0002. It does not replace the application architecture. At acceptance time, later milestones remained local-only until another ADR approved their zero-cost boundary; ADR 0005 now supplies that connected-product decision.
 
 ## Consequences
 

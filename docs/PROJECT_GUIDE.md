@@ -17,7 +17,7 @@ If implementation contradicts a higher-priority record, either correct the imple
 
 ## Product commitment
 
-CommitQuest is a standalone product that translates trustworthy repository evidence into an understandable RPG campaign. GitHub remains the source of truth; CommitQuest adds a deterministic, explainable projection and never replaces repository workflow tools.
+CommitQuest is a standalone evidence-backed engineering progression product presented as an evolving RPG world. GitHub remains the source of truth; CommitQuest adds a deterministic, explainable projection and never replaces repository workflow tools. The game layer makes engineering evidence understandable and motivating, while progression, recommendations, and proof are the lasting product value.
 
 The bundled Portfolio Citadel campaign is the permanent zero-account demonstration and portfolio integration point. It must continue working without GitHub, authentication, a database, AI, or another provider. Later, users can preview a public repository, connect one repository through a minimum-permission GitHub App, and publish a sanitized read-only showcase.
 
@@ -46,7 +46,8 @@ The bundled Portfolio Citadel campaign is the permanent zero-account demonstrati
 - No global competitive leaderboard, chat, or multiplayer movement
 - AI can explain or suggest but cannot mutate progression and must have a deterministic fallback
 - Public showcases use an explicit allowlisted projection; they are never filtered private API responses
-- Portfolio integration is a lightweight card/embed linking to a standalone hosted campaign
+- The standalone application owns the complete Phaser experience; the portfolio owns a compact, native live demo backed by a sanitized CommitQuest projection
+- Cross-repository mastery, organization analytics, team competition, and billing are post-1.0
 
 ## Delivery sequence
 
@@ -54,11 +55,11 @@ The bundled Portfolio Citadel campaign is the permanent zero-account demonstrati
 | --------- | ------------------------------------------------------------- | ----------------------------------------------------------------- |
 | `0.1–0.2` | Compelling bundled campaign and complete interaction language | Angular, Phaser, versioned fixtures, static hosting               |
 | `0.3`     | Ephemeral public-repository preview                           | Java 25/Spring Boot API, Render Free, and Vercel Hobby            |
-| `0.4–0.5` | Persistent, user-controlled connected campaign                | PostgreSQL, GitHub App, jOOQ, Flyway, authentication              |
-| `0.6–0.8` | Reliable live progression and public sharing                  | Webhooks, durable inbox/outbox, SQS, SSE, object storage          |
-| `0.9–1.0` | Operable public product                                       | Load/security/recovery hardening, Terraform, production telemetry |
+| `0.4–0.5` | Persistent, user-controlled connected campaign                | PostgreSQL, GitHub App, jOOQ, Flyway, GitHub identity              |
+| `0.6–0.8` | Reliable progression, improvement quests, and public sharing  | Durable webhook inbox/outbox, bounded polling, sanitized API       |
+| `0.9–1.0` | Operable evidence-backed progression product                  | Load/security/recovery hardening and cost-bounded telemetry        |
 
-Do not scaffold databases, queues, caches, cloud resources, or placeholder services before their first milestone uses them. No payable resource may be provisioned. Later hosted infrastructure requires a separate ADR proving a hard zero-spend cap. Redis and Kafka are not default dependencies.
+Do not scaffold databases, queues, caches, cloud resources, or placeholder services before their first milestone uses them. No payable resource may be provisioned. ADR 0005 defines the approved zero-cost connected-product path. Redis, Kafka, SQS, and a continuously running worker are not default dependencies.
 
 ## Technology baseline
 
@@ -70,12 +71,12 @@ Do not scaffold databases, queues, caches, cloud resources, or placeholder servi
 - Phaser 4 isolated behind a lazy-loaded map adapter
 - Semantic HTML and CSS for navigation, dashboards, evidence, and accessible controls
 - OpenAPI-generated API client when the backend contract exists
-- SSE for server-to-browser progress unless bidirectional communication becomes necessary
+- Bounded polling or refresh-on-visit for connected progress; SSE only after a measured need and hosting fit
 - Vitest/Angular unit testing, Playwright for release-critical journeys, Storybook when reusable UI components justify it, and automated accessibility checks
 
 Angular owns routing, focus, keyboard behavior, reduced motion, evidence state, and responsive layout. Phaser renders the world; it does not become the application shell.
 
-### API and worker
+### API and processing
 
 - Java 25 LTS and Gradle Kotlin DSL
 - Spring Boot 4 modular monolith with Spring Modulith boundaries
@@ -91,10 +92,12 @@ Code is organized by business capability. Provider DTOs terminate in adapters. M
 
 ### Data and hosting
 
-- PostgreSQL 18 is the transactional source of truth
+- PostgreSQL is the transactional source of truth; the hosted zero-cost path uses a separate CommitQuest Neon Free project
 - Transactional inbox/outbox for webhook deduplication and reliable delivery
-- A durable queue only after a zero-cost, hard-capped provider is accepted
-- S3-compatible object storage for immutable generated assets and snapshots
+- A transport-only Vercel Function may verify and durably store GitHub webhook deliveries while Render is asleep
+- Spring Boot owns normalization, progression, and all domain transitions; transport adapters never duplicate domain rules
+- A durable queue only after a zero-cost, hard-capped provider is accepted and measured throughput requires it
+- S3-compatible object storage only when a shipped generated-asset or snapshot requirement justifies it
 - Redis only when justified by a measured requirement
 - Vercel Hobby for the static web and one Render Free container for the v0.3 API
 - Repository-owned deployment configuration and GitHub Actions for delivery
@@ -121,6 +124,8 @@ Every pull request must:
 - update roadmap, changelog, contracts, and ADRs when affected
 
 Releases use Semantic Versioning and annotated `vMAJOR.MINOR.PATCH` tags. The commit approved in staging is the commit promoted to production. Artifacts are identified by immutable commit SHA; environments are deployment metadata rather than product versions.
+
+Milestone completion, documentation readiness, a merged pull request, and a production deployment do not authorize a tag or GitHub Release. Create either only after an explicit owner instruction naming the release action.
 
 ## Decision change process
 
