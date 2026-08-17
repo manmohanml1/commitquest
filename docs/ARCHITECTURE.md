@@ -26,18 +26,19 @@ The hero artwork is a campaign crest, not the world map and not a score. The act
 
 ### 0.4–1.0: connected campaigns
 
-The production system uses:
+The connected-product system uses:
 
 - Angular web application with an isolated Phaser map adapter
 - Java 25 and Spring Boot 4 modular monolith API
-- Separate worker runtime from the same backend codebase
 - PostgreSQL transactional inbox, outbox, projections, and reward ledger
-- A durable queue only after a hard-capped zero-cost provider is accepted
+- A thin transport-only webhook receiver that verifies GitHub signatures and commits deliveries quickly
+- Request-driven or bounded-poll processing from the Spring Boot codebase on the zero-cost deployment
+- A separate worker and durable queue only after measured throughput requires them and a cost-safe provider is accepted
 - Redis only when shared ephemeral coordination is demonstrated necessary
 - GitHub App with minimum read permissions
-- OpenTelemetry across API, worker, database, and outbound GitHub requests
+- OpenTelemetry-compatible instrumentation across the API, database, outbound GitHub requests, and any future worker
 
-Later connected infrastructure remains an architectural design, not an authorized hosted resource. Under ADR 0004, it stays local-only until every selected provider has a hard zero-spend cap.
+ADR 0005 authorizes the connected zero-cost deployment boundary: Vercel Hobby, Render Free, and a separate Neon Free project. Cloud Run remains the preferred migration target when availability or commercial use justifies billing-enabled infrastructure; AWS/SQS remains an optional scale path rather than a v1 requirement.
 
 ## Backend modules
 
@@ -64,10 +65,10 @@ GitHub webhook
   -> signature verification
   -> durable inbox keyed by X-GitHub-Delivery
   -> immediate 2xx response
-  -> asynchronous normalization
+  -> Spring Boot normalization on bounded poll, refresh, or future worker
   -> deterministic domain transition
   -> transactional outbox
-  -> campaign projection and live update
+  -> campaign projection and client refresh
 ```
 
 ## Invariants

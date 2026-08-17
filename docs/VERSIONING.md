@@ -19,6 +19,8 @@ CommitQuest uses one product version for the web, API, and worker until they acq
 
 Annotated release tags use `vMAJOR.MINOR.PATCH`. Prereleases use `-alpha.N`, `-beta.N`, and `-rc.N`. Environments are deployment metadata and never appear in a product version.
 
+A completed milestone, updated release record, merged pull request, or production deployment is not release authorization. Tags and GitHub Releases are created only after the owner explicitly requests that release action.
+
 ## Independent compatibility versions
 
 - HTTP API version

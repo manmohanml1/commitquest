@@ -40,13 +40,15 @@ The hero crest is the product's visual signature and an immediate summary, while
 
 This is a design direction, not the accepted formula. An ADR is required before implementation.
 
-- Score a small set of evidence dimensions rather than raw activity volume: project explanation, actionable planning, reviewed delivery, automated quality, release discipline, and maintenance.
+- Score a small set of applicable evidence dimensions rather than raw activity volume: project explanation, actionable planning, reviewed delivery, automated quality, security, operability, release discipline, and maintenance.
 - Every point must link to evidence and explain why it was awarded.
 - Suggestions must identify a concrete next step, such as adding a useful repository description, opening a scoped issue, adopting pull-request review, configuring CI, or publishing a tagged release.
 - Repeated low-value commits, mass-created issues, or cosmetic releases must not farm score.
 - Repository-authored and inferred evidence can guide improvements but cannot silently earn the same progression as verified outcomes.
 
 Possible presentation unlocks include roads between established regions, landmark upgrades, chapter gates, banners, beacons, and additional map districts. Unlocks are visual explanations of verified maturity, never randomized loot and never a substitute for the evidence ledger.
+
+Improvement quests connect evidence gaps to useful engineering work. Examples include running an existing test suite in CI, linking a scoped issue to a pull request, adding dependency update automation, documenting recovery behavior, or publishing a traceable release. Repository-type applicability is part of the ruleset: a documentation archive is not penalized for lacking production deployment signals, and a solo repository is not treated as defective for lacking a large review graph.
 
 ## Acceptance rules for future visual work
 

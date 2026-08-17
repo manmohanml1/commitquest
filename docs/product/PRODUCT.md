@@ -2,7 +2,7 @@
 
 ## Vision
 
-CommitQuest makes repository maintenance understandable, motivating, and shareable by translating engineering evidence into a persistent RPG campaign.
+CommitQuest is an evidence-backed engineering progression product presented as an evolving RPG world. It makes repository maintenance understandable, motivating, and shareable without turning raw activity volume into achievement.
 
 The campaign crest, interactive world, and future scored progression are separate product concepts. Their current and planned behavior is defined in [World map and progression](WORLD_MAP.md).
 
@@ -22,7 +22,8 @@ The campaign crest, interactive world, and future scored progression are separat
 4. Verified issues become quests; repository-authored roadmap items become candidate quests.
 5. Pull requests, reviews, checks, and merges drive encounters.
 6. Releases complete chapters and preserve campaign snapshots.
-7. A sanitized showcase can be shared without granting repository access.
+7. CommitQuest explains concrete evidence-backed improvements that can strengthen the repository and unlock presentation changes.
+8. A sanitized showcase can be shared without granting repository access.
 
 ## Evidence levels
 

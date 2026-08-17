@@ -36,7 +36,7 @@ Version 0.2 requires no runtime environment variables. Preview deployments are b
 
 The API listens on port `8081`; Angular proxies same-origin `/api` requests to it. Local CORS is restricted to the documented `localhost` and `127.0.0.1` Angular ports. `COMMITQUEST_GITHUB_TOKEN` is read only by Spring Boot. It must be a fine-grained, read-only credential for public repositories; it is entered directly in Render, is never committed, and is never copied into Vercel or the browser bundle.
 
-The Vercel project proxies `/api/*` to `commitquest-api-manmohanml1.onrender.com` through the repository-owned rewrite. The Render service sleeps after 15 idle minutes and can take approximately one minute to wake; the bundled Portfolio Citadel campaign remains usable during a cold start or provider outage.
+The Vercel project proxies `/api/*` to `commitquest-api-manmohanml1.onrender.com` through the repository-owned rewrite. The Render service sleeps after 15 idle minutes. A cold start commonly takes approximately one minute and has exceeded two minutes during production verification; the bundled Portfolio Citadel campaign remains usable during a cold start or provider outage.
 
 The verified release-candidate resources are:
 
@@ -68,7 +68,7 @@ Environment names are deployment metadata and never part of the product version.
 
 ## Later milestones
 
-Connected campaigns remain local-only until a later ADR selects persistence and asynchronous infrastructure with hard zero-spend limits. No paid cloud resource may be introduced implicitly.
+ADR 0005 defines the connected-product zero-cost path. A separate CommitQuest Neon Free project may be introduced when v0.4 first persists campaigns. A transport-only Vercel Function may verify and store GitHub webhook deliveries when v0.6 begins. Render remains the Java host until measured availability needs justify a separately approved Cloud Run migration. No paid cloud resource may be introduced implicitly.
 
 ## Promotion contract
 
@@ -80,7 +80,9 @@ Pull request checks
   -> production approval
   -> promote the identical artifact
   -> production smoke verification
-  -> annotated Git tag and GitHub Release
+  -> explicit owner approval for an annotated Git tag and GitHub Release
 ```
+
+The promotion and verification steps can finish without creating a tag or GitHub Release. Those external release actions are never inferred from milestone completion.
 
 Database changes use forward-only Flyway migrations and expand-and-contract compatibility. A failed provider integration must not make the bundled public demo unavailable.

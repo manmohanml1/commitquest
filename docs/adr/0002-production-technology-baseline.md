@@ -1,6 +1,6 @@
 # ADR 0002: Production technology baseline
 
-**Status:** Accepted
+**Status:** Superseded in part by ADR 0005
 
 ## Context
 
@@ -19,3 +19,5 @@ Redis is not a default dependency. Kafka, microservices, Kubernetes, GraphQL, an
 - A modular monolith keeps transactions and operational ownership simple while preserving future extraction seams.
 - Explicit SQL, idempotency, observability, and generated contracts become engineering requirements rather than late hardening tasks.
 - Infrastructure is introduced only when a shipped milestone exercises it.
+
+ADR 0005 preserves the application baseline while superseding mandatory SQS, SSE, AWS, and Terraform hosting for v1.

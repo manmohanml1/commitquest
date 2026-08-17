@@ -4,14 +4,7 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 
 ## [Unreleased]
 
-### Changed
-
-- Advance the mapping model to v6, compose concise theme-aware campaign names, and show a staged repository-to-world transformation while previews load.
-- Clarified that the hero illustration is a campaign crest and mapping algorithm versions are not progression scores.
-- Added bounded README-derived repository descriptions when GitHub metadata is empty.
-- Formalized component ownership, pre-edit baselines, focused regression tests, full affected-application gates, and explicit release-tag approval.
-
-## [0.3.0] - 2026-08-12
+## [0.3.0] - 2026-08-17
 
 ### Added
 
@@ -34,6 +27,11 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - Superseded the payable AWS v0.3 deployment with a Vercel Hobby and Render Free hosting contract.
 - Upgraded the campaign projection to schema v3 and mapping algorithm v5 so sparse repositories remain actionable without fabricating verified achievements.
 - Expanded merged-PR sampling and made capped evidence metrics explicit.
+- Advanced the mapping model to v6, composed concise theme-aware campaign names, and added a staged repository-to-world transformation.
+- Clarified that the hero illustration is a campaign crest and mapping algorithm versions are not progression scores.
+- Added bounded README-derived repository descriptions when GitHub metadata is empty.
+- Formalized component ownership, pre-edit baselines, focused regression tests, full affected-application gates, and explicit release-tag approval.
+- Adopted evidence-backed engineering progression as the product thesis, refined the v0.4–1.0 return loop, selected a cost-bounded connected architecture, and specified the portfolio-native live demo.
 
 ## [0.2.0] - 2026-08-12
 

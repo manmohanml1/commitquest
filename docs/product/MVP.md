@@ -8,10 +8,11 @@ CommitQuest 1.0 is complete when a visitor can:
 4. See issues, roadmap candidates, PRs, CI, tests, and releases represented honestly.
 5. Watch an issue-to-merge workflow alter the campaign exactly once.
 6. Inspect the evidence and score explanation behind every verified outcome.
-7. Share a sanitized, read-only campaign.
-8. Navigate the core experience with a keyboard and reduced motion.
-9. Disconnect a repository and delete imported data.
-10. Recover correctly from duplicate, delayed, and out-of-order webhooks.
+7. Receive concrete improvement quests without CommitQuest inventing achievements.
+8. Share a sanitized, read-only campaign and compact portfolio demonstration.
+9. Navigate the core experience with a keyboard and reduced motion.
+10. Disconnect a repository and delete imported data.
+11. Recover correctly from duplicate, delayed, and out-of-order webhooks.
 
 ## Deferred until after 1.0
 
@@ -23,3 +24,5 @@ CommitQuest 1.0 is complete when a visitor can:
 - Chat and multiplayer movement
 - AI-generated repository comments
 - Native mobile applications
+- Cross-repository mastery profiles
+- AI-authored progression or achievements
