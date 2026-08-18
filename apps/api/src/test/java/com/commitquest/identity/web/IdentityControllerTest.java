@@ -48,7 +48,7 @@ class IdentityControllerTest {
 
     @Test
     void redirectsToGitHubAndIssuesHardenedCookiesOnCallback() throws Exception {
-        when(service.begin("/#campaign")).thenReturn(URI.create("https://github.test/authorize?state=opaque"));
+        when(service.begin("/#campaign", false)).thenReturn(URI.create("https://github.test/authorize?state=opaque"));
         when(service.complete("code", "state"))
                 .thenReturn(new IdentityService.LoginResult(
                         account(), "session-token", "csrf-token", "/#campaign"));
@@ -66,6 +66,19 @@ class IdentityControllerTest {
                 .anySatisfy(cookie -> assertThat(cookie)
                         .contains("commitquest_csrf=csrf-token", "Secure", "SameSite=Lax")
                         .doesNotContain("HttpOnly"));
+    }
+
+    @Test
+    void requestsTheGitHubAccountPickerWhenTheUserChoosesAnotherAccount() throws Exception {
+        when(service.begin("/#campaign-vault", true))
+                .thenReturn(URI.create("https://github.test/authorize?prompt=select_account"));
+
+        mvc.perform(get("/api/v1/auth/github")
+                        .param("returnPath", "/#campaign-vault")
+                        .param("selectAccount", "true"))
+                .andExpect(status().isFound())
+                .andExpect(header().string(
+                        HttpHeaders.LOCATION, "https://github.test/authorize?prompt=select_account"));
     }
 
     @Test

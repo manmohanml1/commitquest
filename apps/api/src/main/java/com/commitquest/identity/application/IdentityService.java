@@ -32,13 +32,13 @@ public final class IdentityService {
         this.clock = Objects.requireNonNull(clock);
     }
 
-    public URI begin(String requestedReturnPath) {
+    public URI begin(String requestedReturnPath, boolean selectAccount) {
         var returnPath = validateReturnPath(requestedReturnPath);
         var state = tokens.randomToken();
         var now = clock.instant();
         store.saveOAuthAttempt(tokens.digest(state), returnPath, now, now.plus(OAUTH_STATE_LIFETIME));
         var verifier = tokens.codeVerifier(state);
-        return gateway.authorizationUri(state, tokens.codeChallenge(verifier));
+        return gateway.authorizationUri(state, tokens.codeChallenge(verifier), selectAccount);
     }
 
     public LoginResult complete(String code, String state) {

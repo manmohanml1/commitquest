@@ -14,6 +14,8 @@ GitHub OAuth identity and GitHub App repository installation solve different pro
 
 - Use GitHub OAuth authorization-code login for authentication only.
 - Request no OAuth scopes. The default public identity response is sufficient to reconcile a stable GitHub numeric user ID; CommitQuest does not store email.
+- Let an ordinary CommitQuest sign-out reconnect the active GitHub browser account without repeating consent. Offer a separate account-choice action that adds GitHub's documented `prompt=select_account` authorization parameter.
+- After CommitQuest account deletion, present GitHub account choice as the primary next action. Deleting CommitQuest data does not sign the browser out of GitHub or mutate GitHub's own multi-account sessions.
 - Store an internal UUID account ID, GitHub numeric ID, current login, display name, avatar URL, and timestamps.
 - Treat the numeric GitHub user ID as the stable external identity; login changes update metadata rather than creating another account.
 - Discard the GitHub OAuth access token after retrieving and reconciling the user profile. Repository access begins separately through the v0.5 GitHub App.
@@ -82,6 +84,7 @@ All foreign keys use deletion behavior consistent with transactional account del
 - **Use GitHub App installation as login:** rejected because identity and repository authorization have different lifecycles and minimum permissions.
 - **Persist GitHub OAuth tokens:** rejected for v0.4 because identity reconciliation does not require long-lived provider access.
 - **Browser-stored JWT:** rejected because revocation and account deletion must take effect immediately without placing durable identity claims in browser-readable storage.
+- **Force a GitHub logout or depend on a browser popup:** rejected because CommitQuest must not terminate the user's provider session, popup blockers and mobile browsers make a separate window unreliable, and GitHub already owns the authoritative account picker.
 - **Provider-managed auth:** deferred because GitHub-only identity is small, Spring Security remains the application boundary, and another vendor would expand cost and data-processing scope.
 - **Enable JDBC unconditionally:** rejected because it would break the released database-free preview before connected deployment exists.
 

@@ -37,9 +37,11 @@ final class IdentityController {
     }
 
     @GetMapping("/api/v1/auth/github")
-    ResponseEntity<Void> begin(@RequestParam(defaultValue = "/") String returnPath) {
+    ResponseEntity<Void> begin(
+            @RequestParam(defaultValue = "/") String returnPath,
+            @RequestParam(defaultValue = "false") boolean selectAccount) {
         return ResponseEntity.status(HttpStatus.FOUND)
-                .location(identityService.begin(returnPath))
+                .location(identityService.begin(returnPath, selectAccount))
                 .build();
     }
 

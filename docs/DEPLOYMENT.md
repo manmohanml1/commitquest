@@ -76,6 +76,8 @@ The unreleased v0.4 API contains an opt-in persistence mode controlled by `COMMI
 
 Identity transport is separately gated by `COMMITQUEST_IDENTITY_ENABLED` and requires the GitHub OAuth client ID and secret, a Base64-encoded HMAC secret containing at least 32 random bytes, and the public web base URL. Identity cannot start without the persistence adapters. Production uses the same-origin web URL as the OAuth callback base; only loopback development may use HTTP. Registering an OAuth App or placing these secrets in Render remains an explicit external deployment action.
 
+The begin-login endpoint accepts a bounded boolean `selectAccount` intent. When true, the server adds GitHub's documented `prompt=select_account` parameter; it never accepts a provider redirect URL, requested scope, or user-supplied GitHub identity. Both quick reconnect and account-picker flows retain the same one-time state, PKCE, callback, token-disposal, and session-rotation boundary.
+
 ### v0.4 connected resources
 
 The following free-tier resources were explicitly approved, configured, and production-verified on 2026-08-17.
@@ -115,6 +117,8 @@ Owner approval promoted merge commit `042bebc` on 2026-08-17:
 - Public repository preview generation remained available and the production browser console reported no errors.
 
 The verified private campaign remains in the owner's vault for inspection. This deployment does not authorize or create a `v0.4.0` tag or GitHub Release.
+
+The final v0.4 release-candidate promotion additionally verifies the centered account-choice modal, GitHub's `prompt=select_account` redirect, ordinary same-account reconnect, post-deletion account choice, and the themed free-host wake state. These checks must pass against the exact merged frontend and API commit before v0.4 is presented for release authorization.
 
 ## Promotion contract
 

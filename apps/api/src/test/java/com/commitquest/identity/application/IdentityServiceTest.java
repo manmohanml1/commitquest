@@ -30,7 +30,7 @@ class IdentityServiceTest {
         var deletion = new FakeAccountDeletion();
         var service = service(store, gateway, tokens, deletion);
 
-        var authorization = service.begin("/#campaign");
+        var authorization = service.begin("/#campaign", false);
         var result = service.complete("temporary-code", "state-token");
         var authenticated = service.authenticateMutation("session-token", "csrf-token");
 
@@ -58,11 +58,11 @@ class IdentityServiceTest {
         var tokens = new DeterministicTokens("state", "session", "csrf");
         var service = service(store, new FakeGateway(), tokens, new FakeAccountDeletion());
 
-        assertThatThrownBy(() -> service.begin("https://attacker.example/return"))
+        assertThatThrownBy(() -> service.begin("https://attacker.example/return", false))
                 .isInstanceOf(IdentityFailure.class)
                 .extracting(failure -> ((IdentityFailure) failure).code())
                 .isEqualTo(IdentityFailure.Code.INVALID_RETURN_PATH);
-        service.begin("/");
+        service.begin("/", false);
         service.complete("code", "state");
         assertThatThrownBy(() -> service.authenticateMutation("session", "wrong"))
                 .isInstanceOf(IdentityFailure.class)
@@ -87,7 +87,7 @@ class IdentityServiceTest {
         var tokens = new DeterministicTokens("state-one", "session-one", "csrf-one");
         var deletion = new FakeAccountDeletion();
         var service = service(store, new FakeGateway(), tokens, deletion);
-        service.begin("/");
+        service.begin("/", false);
         var login = service.complete("code", "state-one");
 
         service.logout("session-one", "csrf-one");
@@ -95,7 +95,7 @@ class IdentityServiceTest {
 
         var secondTokens = new DeterministicTokens("state-two", "session-two", "csrf-two");
         var secondService = service(store, new FakeGateway(), secondTokens, deletion);
-        secondService.begin("/");
+        secondService.begin("/", false);
         secondService.complete("code", "state-two");
         secondService.deleteAccount("session-two", "csrf-two");
 
@@ -143,7 +143,7 @@ class IdentityServiceTest {
         private String exchangedVerifier;
 
         @Override
-        public URI authorizationUri(String state, String codeChallenge) {
+        public URI authorizationUri(String state, String codeChallenge, boolean selectAccount) {
             return URI.create("https://github.test/authorize?state=" + state + "&challenge=" + codeChallenge);
         }
 
