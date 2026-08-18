@@ -220,6 +220,24 @@ describe('App', () => {
     expect(link?.getAttribute('href')).toBe('/api/v1/auth/github?returnPath=%2F%23campaign-vault');
   });
 
+  it('recovers automatically while the free connected host wakes up', async () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    http
+      .expectOne('/api/v1/session')
+      .flush({ code: 'UNAVAILABLE' }, { status: 503, statusText: 'Service Unavailable' });
+
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Waking private vault');
+    await new Promise((resolve) => setTimeout(resolve, 3_100));
+    http
+      .expectOne('/api/v1/session')
+      .flush({ code: 'UNAUTHENTICATED' }, { status: 401, statusText: 'Unauthorized' });
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Sign in with GitHub');
+  });
+
   it('loads the owner library and saves the current campaign privately', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();

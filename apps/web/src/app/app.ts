@@ -47,7 +47,7 @@ export class App implements AfterViewInit, OnDestroy {
   );
   protected readonly connectedPhase = signal<ConnectedPhase>('checking');
   protected readonly connectedMessage = signal(
-    'Checking whether the private campaign vault is available…',
+    'Waking the private campaign vault. The free host can take about a minute…',
   );
   protected readonly session = signal<Session | null>(null);
   protected readonly savedCampaigns = signal<ReadonlyArray<SavedCampaign>>([]);
@@ -252,6 +252,15 @@ export class App implements AfterViewInit, OnDestroy {
     }
   }
 
+  protected retryConnectedState(): void {
+    if (this.connectedPhase() === 'checking' || this.connectedPhase() === 'working') return;
+    this.connectedPhase.set('checking');
+    this.connectedMessage.set(
+      'Waking the private campaign vault. The free host can take about a minute…',
+    );
+    void this.loadConnectedState();
+  }
+
   protected updateRepositoryUrl(event: Event): void {
     this.repositoryUrl.set((event.target as HTMLInputElement).value);
   }
@@ -326,8 +335,17 @@ export class App implements AfterViewInit, OnDestroy {
         );
         return;
       }
+      if (this.connectedClient.isTransient(error)) {
+        this.connectedPhase.set('error');
+        this.connectedMessage.set(
+          'The free vault host is still waking up. Retry the connection; public previews remain available.',
+        );
+        return;
+      }
       this.connectedPhase.set('error');
-      this.connectedMessage.set('The private campaign vault could not be reached.');
+      this.connectedMessage.set(
+        'The private campaign vault could not be reached. Retry the connection or continue with public previews.',
+      );
     }
   }
 

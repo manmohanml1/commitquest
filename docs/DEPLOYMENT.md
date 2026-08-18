@@ -38,6 +38,8 @@ The API listens on port `8081`; Angular proxies same-origin `/api` requests to i
 
 The Vercel project proxies `/api/*` to `commitquest-api-manmohanml1.onrender.com` through the repository-owned rewrite. The Render service sleeps after 15 idle minutes. A cold start commonly takes approximately one minute and has exceeded two minutes during production verification; the bundled Portfolio Citadel campaign remains usable during a cold start or provider outage.
 
+The connected web client treats gateway failures and network timeouts as transient during startup. It retries the session probe across a bounded wake-up window, explains the free-host delay while waiting, and exposes a manual retry if the service still has not recovered. A true `404` remains the signal that connected mode is not configured.
+
 The verified release-candidate resources are:
 
 - **Public application:** <https://commitquest-web.vercel.app>

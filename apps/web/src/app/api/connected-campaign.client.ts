@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, retry, throwError, timeout, TimeoutError, timer } from 'rxjs';
 
 import { CampaignProjection } from '../domain/campaign';
 import { IdentityClient } from './generated/api/identity.service';
@@ -24,7 +24,16 @@ export class ConnectedCampaignClient {
   private readonly campaigns = inject(SavedCampaignsClient);
 
   session(): Observable<Session> {
-    return this.identity.getSession();
+    return this.identity.getSession().pipe(
+      timeout({ first: 20_000 }),
+      retry({
+        count: 4,
+        delay: (error: unknown, retryCount: number) =>
+          this.isTransient(error)
+            ? timer(Math.min(retryCount * 3_000, 10_000))
+            : throwError(() => error),
+      }),
+    );
   }
 
   list(): Observable<ReadonlyArray<SavedCampaign>> {
@@ -85,7 +94,14 @@ export class ConnectedCampaignClient {
   }
 
   isUnavailable(error: unknown): boolean {
-    return error instanceof HttpErrorResponse && [0, 404, 503].includes(error.status);
+    return error instanceof HttpErrorResponse && error.status === 404;
+  }
+
+  isTransient(error: unknown): boolean {
+    return (
+      error instanceof TimeoutError ||
+      (error instanceof HttpErrorResponse && [0, 502, 503, 504].includes(error.status))
+    );
   }
 
   isSignedOut(error: unknown): boolean {
