@@ -2,6 +2,7 @@ package com.commitquest.campaign.provider.postgresql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.name;
 import static org.jooq.impl.DSL.table;
 
@@ -203,32 +204,36 @@ class JooqSavedCampaignStoreIntegrationTest {
     }
 
     private void insertAccount(AccountId id, long githubUserId, String login) {
-        dsl.execute(
-                "insert into cq_account (id, github_user_id, github_login, created_at, updated_at) values (?, ?, ?, ?, ?)",
-                id.value(), githubUserId, login, CREATED_AT, CREATED_AT);
+        var account = table(name("cq_account"));
+        dsl.insertInto(account)
+                .set(field(name("id"), UUID.class), id.value())
+                .set(field(name("github_user_id"), Long.class), githubUserId)
+                .set(field(name("github_login"), String.class), login)
+                .set(field(name("created_at"), Instant.class), CREATED_AT)
+                .set(field(name("updated_at"), Instant.class), CREATED_AT)
+                .execute();
     }
 
     private void insertSessionAndOauthState(AccountId ownerId) {
-        dsl.execute(
-                "insert into cq_user_session "
-                        + "(id, account_id, token_digest, csrf_digest, created_at, expires_at) "
-                        + "values (?, ?, ?, ?, ?, ?)",
-                new UUID(0, 301),
-                ownerId.value(),
-                "a".repeat(64),
-                "b".repeat(64),
-                CREATED_AT,
-                UPDATED_AT);
-        dsl.execute(
-                "insert into cq_oauth_state "
-                        + "(id, account_id, state_digest, return_path, created_at, expires_at) "
-                        + "values (?, ?, ?, ?, ?, ?)",
-                new UUID(0, 302),
-                ownerId.value(),
-                "c".repeat(64),
-                "/campaigns",
-                CREATED_AT,
-                UPDATED_AT);
+        var session = table(name("cq_user_session"));
+        dsl.insertInto(session)
+                .set(field(name("id"), UUID.class), new UUID(0, 301))
+                .set(field(name("account_id"), UUID.class), ownerId.value())
+                .set(field(name("token_digest"), String.class), "a".repeat(64))
+                .set(field(name("csrf_digest"), String.class), "b".repeat(64))
+                .set(field(name("created_at"), Instant.class), CREATED_AT)
+                .set(field(name("expires_at"), Instant.class), UPDATED_AT)
+                .execute();
+
+        var oauthState = table(name("cq_oauth_state"));
+        dsl.insertInto(oauthState)
+                .set(field(name("id"), UUID.class), new UUID(0, 302))
+                .set(field(name("account_id"), UUID.class), ownerId.value())
+                .set(field(name("state_digest"), String.class), "c".repeat(64))
+                .set(field(name("return_path"), String.class), "/campaigns")
+                .set(field(name("created_at"), Instant.class), CREATED_AT)
+                .set(field(name("expires_at"), Instant.class), UPDATED_AT)
+                .execute();
     }
 
     private static SavedCampaign campaign(
