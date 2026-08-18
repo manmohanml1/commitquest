@@ -153,34 +153,82 @@
         } @else if (connectedPhase() === 'signed-out' || connectedPhase() === 'signing-in') {
           <span>
             <small>GITHUB IDENTITY</small>
-            <strong>Keep campaigns between visits</strong>
-          </span>
-          <a class="primary-button" [href]="githubSignInUrl" (click)="beginSignIn()">
-            {{ connectedPhase() === 'signing-in' ? 'Opening GitHub…' : 'Sign in with GitHub' }}
-          </a>
-        } @else {
-          <span>
-            <small>CONNECTED SERVICES</small>
             <strong>
               {{
-                connectedPhase() === 'checking'
-                  ? 'Waking private vault…'
-                  : connectedPhase() === 'error'
-                    ? 'Connection paused'
-                    : 'Not enabled in this environment'
+                lastGithubLogin() ? 'Reconnect your campaign vault' : 'Choose your GitHub identity'
               }}
             </strong>
+            @if (lastGithubLogin(); as login) {
+              <code>LAST SESSION · &#64;{{ login }}</code>
+            }
           </span>
-          @if (connectedPhase() === 'error') {
+          @if (lastGithubLogin(); as login) {
+            <a class="primary-button" [href]="githubSignInUrl" (click)="beginSignIn()">
+              {{ connectedPhase() === 'signing-in' ? 'Opening GitHub…' : 'Reconnect @' + login }}
+            </a>
+            <button type="button" (click)="openIdentityChoice(true)">Use another account</button>
+          } @else {
+            <button class="primary-button" type="button" (click)="openIdentityChoice()">
+              Sign in with GitHub
+            </button>
+          }
+        } @else {
+          @if (connectedPhase() === 'checking') {
+            <div class="vault-awakening" role="status" aria-label="Private vault is waking">
+              <span class="vault-awakening-sigil" aria-hidden="true"><i></i><i></i><b>⌘</b></span>
+              <span class="vault-awakening-copy">
+                <small>VAULT AWAKENING · FREE HOST</small>
+                <strong>Rekindling the private archive</strong>
+                <span>Keep exploring—the connection retries automatically.</span>
+              </span>
+              <span class="vault-awakening-steps" aria-hidden="true">
+                <i>HOST</i><i>ARCHIVE</i><i>IDENTITY</i>
+              </span>
+            </div>
+            <button type="button" disabled>Retrying automatically…</button>
+          } @else if (connectedPhase() === 'error') {
+            <span>
+              <small>CONNECTED SERVICES</small>
+              <strong>Connection paused</strong>
+            </span>
             <button type="button" (click)="retryConnectedState()">Retry vault connection</button>
           } @else {
-            <button type="button" disabled>
-              {{ connectedPhase() === 'checking' ? 'Connecting…' : 'GitHub sign-in unavailable' }}
-            </button>
+            <span>
+              <small>CONNECTED SERVICES</small>
+              <strong>Not enabled in this environment</strong>
+            </span>
+            <button type="button" disabled>GitHub sign-in unavailable</button>
           }
         }
       </div>
     </div>
+
+    @if (showIdentityChoice() && connectedPhase() === 'signed-out') {
+      <div class="identity-choice" role="dialog" aria-labelledby="identity-choice-title">
+        <div>
+          <p class="kicker">GITHUB ACCOUNT CHOICE</p>
+          <h3 id="identity-choice-title">Who is entering the vault?</h3>
+          <p>
+            GitHub controls its signed-in browser accounts. Choose the fast path, or ask GitHub to
+            show its official account picker.
+          </p>
+        </div>
+        <div class="identity-choice-actions">
+          @if (preferAccountSelection()) {
+            <a class="primary-button" [href]="githubAccountPickerUrl" (click)="beginSignIn()">
+              Choose GitHub account
+            </a>
+            <a [href]="githubSignInUrl" (click)="beginSignIn()">Continue current account</a>
+          } @else {
+            <a class="primary-button" [href]="githubSignInUrl" (click)="beginSignIn()">
+              Continue current account
+            </a>
+            <a [href]="githubAccountPickerUrl" (click)="beginSignIn()">Choose another account</a>
+          }
+          <button type="button" (click)="closeIdentityChoice()">Cancel</button>
+        </div>
+      </div>
+    }
 
     <div class="vault-feedback" [class.error]="connectedPhase() === 'error'" aria-live="polite">
       <span [attr.data-state]="connectedPhase()"></span>

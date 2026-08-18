@@ -24,15 +24,15 @@ public final class GitHubOAuthGateway implements OAuthIdentityGateway {
     }
 
     @Override
-    public URI authorizationUri(String state, String codeChallenge) {
-        return UriComponentsBuilder.fromUri(properties.authorizationUrl())
+    public URI authorizationUri(String state, String codeChallenge, boolean selectAccount) {
+        var authorization = UriComponentsBuilder.fromUri(properties.authorizationUrl())
                 .queryParam("client_id", properties.clientId())
                 .queryParam("redirect_uri", properties.redirectUri())
                 .queryParam("state", state)
                 .queryParam("code_challenge", codeChallenge)
-                .queryParam("code_challenge_method", "S256")
-                .build(true)
-                .toUri();
+                .queryParam("code_challenge_method", "S256");
+        if (selectAccount) authorization.queryParam("prompt", "select_account");
+        return authorization.build(true).toUri();
     }
 
     @Override

@@ -76,6 +76,8 @@ The unreleased v0.4 API contains an opt-in persistence mode controlled by `COMMI
 
 Identity transport is separately gated by `COMMITQUEST_IDENTITY_ENABLED` and requires the GitHub OAuth client ID and secret, a Base64-encoded HMAC secret containing at least 32 random bytes, and the public web base URL. Identity cannot start without the persistence adapters. Production uses the same-origin web URL as the OAuth callback base; only loopback development may use HTTP. Registering an OAuth App or placing these secrets in Render remains an explicit external deployment action.
 
+The begin-login endpoint accepts a bounded boolean `selectAccount` intent. When true, the server adds GitHub's documented `prompt=select_account` parameter; it never accepts a provider redirect URL, requested scope, or user-supplied GitHub identity. Both quick reconnect and account-picker flows retain the same one-time state, PKCE, callback, token-disposal, and session-rotation boundary.
+
 ### v0.4 connected resources
 
 The following free-tier resources were explicitly approved, configured, and production-verified on 2026-08-17.

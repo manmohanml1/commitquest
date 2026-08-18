@@ -20,6 +20,13 @@ paths:
             type: string
             default: /
             maxLength: 512
+        - name: selectAccount
+          in: query
+          required: false
+          description: Ask GitHub to show its account picker instead of silently reusing the active account
+          schema:
+            type: boolean
+            default: false
       responses:
         '302':
           description: Redirect to GitHub authorization without repository scopes

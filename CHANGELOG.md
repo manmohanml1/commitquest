@@ -14,12 +14,14 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - Added opt-in PostgreSQL persistence with Flyway migrations, jOOQ owner-scoped campaign storage, database-cascade account deletion, bounded connection pooling, and Testcontainers coverage.
 - Added opt-in GitHub OAuth identity transport with no requested scopes, one-time state, PKCE, immediate provider-token disposal, rotated opaque sessions, hardened cookies, CSRF/origin enforcement, logout, and account deletion.
 - Added a guarded web control for permanent account and imported-campaign deletion.
+- Added explicit GitHub account choice through the provider's official account picker, with post-deletion choice and fast ordinary reconnect paths.
 
 ### Fixed
 
 - Aligned the OpenAPI campaign mapping constant and generated Angular client with mapping algorithm v6.
 - Prevented narrow mobile viewports from clipping hero copy, campaign metadata, navigation, and action controls.
 - Recover the private campaign vault automatically from Render Free cold starts and provide an explicit retry state when wake-up exceeds the bounded retry window.
+- Replace the cold-start placeholder with a responsive, reduced-motion-aware vault-awakening experience that keeps the public campaign usable while connected services recover.
 
 ## [0.3.0] - 2026-08-17
 

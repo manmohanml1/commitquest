@@ -538,6 +538,148 @@
   text-align: center;
 }
 
+.vault-awakening {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.vault-awakening-sigil {
+  width: 48px;
+  height: 48px;
+  position: relative;
+  display: grid;
+  grid-row: 1 / span 2;
+  place-items: center;
+  border: 1px solid rgba(101, 244, 197, 0.35);
+  color: var(--mint);
+  background: rgba(101, 244, 197, 0.05);
+}
+
+.vault-awakening-sigil i {
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  border: 1px solid rgba(120, 191, 255, 0.42);
+  animation: vault-awakening-orbit 3s linear infinite;
+}
+
+.vault-awakening-sigil i:nth-child(2) {
+  width: 22px;
+  height: 22px;
+  animation-direction: reverse;
+  animation-duration: 2s;
+}
+
+.vault-awakening-copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.vault-awakening-copy > span {
+  color: #8ba4b3;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.vault-awakening-steps {
+  grid-column: 2;
+  display: flex;
+  gap: 5px;
+}
+
+.vault-awakening-steps i {
+  padding: 3px 5px;
+  border: 1px solid rgba(120, 191, 255, 0.18);
+  color: #67869a;
+  font: 700 8px/1 var(--font-geist-mono);
+  font-style: normal;
+  animation: vault-awakening-step 3s ease-in-out infinite;
+}
+
+.vault-awakening-steps i:nth-child(2) {
+  animation-delay: 1s;
+}
+
+.vault-awakening-steps i:nth-child(3) {
+  animation-delay: 2s;
+}
+
+.identity-choice {
+  margin-top: 18px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  border: 1px solid rgba(101, 244, 197, 0.34);
+  background: linear-gradient(110deg, rgba(101, 244, 197, 0.08), transparent 52%), #081a28;
+  box-shadow: 8px 8px 0 rgba(4, 15, 25, 0.72);
+}
+
+.identity-choice h3 {
+  margin: 5px 0 7px;
+  color: var(--paper);
+  font-size: 22px;
+}
+
+.identity-choice p:last-child {
+  max-width: 650px;
+  margin: 0;
+  color: #91a7b5;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.identity-choice-actions {
+  min-width: 210px;
+  display: grid;
+  gap: 7px;
+}
+
+.identity-choice-actions a,
+.identity-choice-actions button {
+  min-height: 38px;
+  padding: 8px 12px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(120, 191, 255, 0.28);
+  background: transparent;
+  color: #c6d5dc;
+  cursor: pointer;
+  font: 700 10px/1.2 var(--font-geist-mono);
+  text-align: center;
+}
+
+.identity-choice-actions .primary-button {
+  border-color: var(--mint);
+  color: #041018;
+  background: var(--mint);
+}
+
+@keyframes vault-awakening-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes vault-awakening-step {
+  0%,
+  100% {
+    border-color: rgba(120, 191, 255, 0.18);
+    color: #67869a;
+  }
+  45% {
+    border-color: var(--mint);
+    color: var(--mint);
+    box-shadow: 0 0 8px rgba(101, 244, 197, 0.25);
+  }
+}
+
 .vault-feedback {
   margin-top: 28px;
   padding: 13px 15px;
@@ -734,6 +876,15 @@
   .vault-session .primary-button {
     width: 100%;
   }
+  .identity-choice {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .identity-choice-actions {
+    min-width: 0;
+  }
+  .vault-awakening {
+    flex-basis: 100%;
+  }
   .account-delete-confirmation {
     flex-basis: 100%;
     justify-content: stretch;
@@ -805,5 +956,12 @@
   }
   .region-controls strong {
     font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vault-awakening-sigil i,
+  .vault-awakening-steps i {
+    animation: none;
   }
 }

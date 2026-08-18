@@ -53,7 +53,12 @@ export class App implements AfterViewInit, OnDestroy {
   protected readonly savedCampaigns = signal<ReadonlyArray<SavedCampaign>>([]);
   protected readonly pendingDeleteId = signal<string | null>(null);
   protected readonly pendingAccountDelete = signal(false);
+  protected readonly showIdentityChoice = signal(false);
+  protected readonly preferAccountSelection = signal(false);
+  protected readonly lastGithubLogin = signal<string | null>(null);
   protected readonly githubSignInUrl = '/api/v1/auth/github?returnPath=%2F%23campaign-vault';
+  protected readonly githubAccountPickerUrl =
+    '/api/v1/auth/github?returnPath=%2F%23campaign-vault&selectAccount=true';
 
   private game?: Phaser.Game;
   private readonly previewClient = inject(RepositoryPreviewClient);
@@ -118,8 +123,18 @@ export class App implements AfterViewInit, OnDestroy {
   }
 
   protected beginSignIn(): void {
+    this.showIdentityChoice.set(false);
     this.connectedPhase.set('signing-in');
     this.connectedMessage.set('Opening GitHub to verify your identity…');
+  }
+
+  protected openIdentityChoice(preferAccountSelection = false): void {
+    this.preferAccountSelection.set(preferAccountSelection);
+    this.showIdentityChoice.set(true);
+  }
+
+  protected closeIdentityChoice(): void {
+    this.showIdentityChoice.set(false);
   }
 
   protected async openSavedCampaign(saved: SavedCampaign): Promise<void> {
@@ -213,11 +228,16 @@ export class App implements AfterViewInit, OnDestroy {
     if (!session) return;
     try {
       await firstValueFrom(this.connectedClient.logout(session.csrfToken));
+      this.lastGithubLogin.set(session.githubLogin);
       this.session.set(null);
       this.savedCampaigns.set([]);
       this.pendingAccountDelete.set(false);
+      this.preferAccountSelection.set(false);
+      this.showIdentityChoice.set(false);
       this.connectedPhase.set('signed-out');
-      this.connectedMessage.set('Signed out. Public, ephemeral previews are still available.');
+      this.connectedMessage.set(
+        `Signed out of CommitQuest. Reconnect @${session.githubLogin} or choose another GitHub account.`,
+      );
     } catch (error: unknown) {
       this.handleConnectedFailure(error, 'Sign out could not be completed. Please try again.');
     }
@@ -242,9 +262,12 @@ export class App implements AfterViewInit, OnDestroy {
       this.savedCampaigns.set([]);
       this.pendingDeleteId.set(null);
       this.pendingAccountDelete.set(false);
+      this.lastGithubLogin.set(null);
+      this.preferAccountSelection.set(true);
+      this.showIdentityChoice.set(true);
       this.connectedPhase.set('signed-out');
       this.connectedMessage.set(
-        'Your CommitQuest account and imported campaign data were permanently deleted.',
+        'Your CommitQuest account and imported campaign data were permanently deleted. Choose which GitHub account to use next.',
       );
     } catch (error: unknown) {
       this.pendingAccountDelete.set(false);
@@ -315,6 +338,9 @@ export class App implements AfterViewInit, OnDestroy {
     try {
       const session = await firstValueFrom(this.connectedClient.session());
       this.session.set(session);
+      this.lastGithubLogin.set(session.githubLogin);
+      this.preferAccountSelection.set(false);
+      this.showIdentityChoice.set(false);
       this.savedCampaigns.set(await firstValueFrom(this.connectedClient.list()));
       this.connectedPhase.set('ready');
       this.connectedMessage.set(
@@ -358,10 +384,13 @@ export class App implements AfterViewInit, OnDestroy {
 
   private handleConnectedFailure(error: unknown, fallback: string): void {
     if (this.connectedClient.isSignedOut(error)) {
+      const expiredLogin = this.session()?.githubLogin ?? this.lastGithubLogin();
       this.session.set(null);
       this.savedCampaigns.set([]);
       this.pendingDeleteId.set(null);
       this.pendingAccountDelete.set(false);
+      this.lastGithubLogin.set(expiredLogin);
+      this.showIdentityChoice.set(false);
       this.connectedPhase.set('signed-out');
       this.connectedMessage.set('Your session expired. Sign in with GitHub to reopen the vault.');
       return;

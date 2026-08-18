@@ -5,7 +5,7 @@ import java.net.URI;
 
 public interface OAuthIdentityGateway {
 
-    URI authorizationUri(String state, String codeChallenge);
+    URI authorizationUri(String state, String codeChallenge, boolean selectAccount);
 
     GitHubIdentity exchange(String code, String codeVerifier);
 }

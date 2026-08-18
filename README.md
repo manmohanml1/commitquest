@@ -18,9 +18,9 @@ Version `0.3.0` accepts public GitHub repositories and generates temporary, evid
 
 See the [0.3.0 milestone contract](docs/milestones/0.3.0.md) for its verified acceptance criteria and exclusions.
 
-The hosted v0.3 stack is constrained to zero-cost resources: Vercel Hobby for the static web and one explicitly pinned Render Free API service. Free-tier cold starts are expected; no database or other paid cloud resource is provisioned.
+The hosted stack is constrained to zero-cost resources: Vercel Hobby for the static web, one explicitly pinned Render Free API service, and a dedicated Neon Free PostgreSQL project. Free-tier cold starts are expected and handled as a visible, recoverable application state.
 
-Development of `0.4.0` is underway on an unreleased branch. Its opt-in connected mode separates GitHub identity from later repository authorization and now includes durable owner-scoped storage, secure OAuth/session transport, authenticated saved-campaign APIs, and an Angular private-vault interface. Connected controls report their unavailable state honestly when the database and identity configuration is absent; the bundled campaign and public preview remain independent. See the [0.4.0 milestone contract](docs/milestones/0.4.0.md) and [ADR 0006](docs/adr/0006-github-identity-and-saved-campaign-ownership.md).
+The production-verified, still-untagged `0.4.0` build separates GitHub identity from later repository authorization and includes durable owner-scoped storage, secure OAuth/session transport, authenticated saved-campaign APIs, and an Angular private-vault interface. Connected controls recover from free-host wake-up, distinguish quick same-account reconnect from explicit GitHub account selection, and report genuinely absent configuration honestly; the bundled campaign and public preview remain independent. See the [0.4.0 milestone contract](docs/milestones/0.4.0.md) and [ADR 0006](docs/adr/0006-github-identity-and-saved-campaign-ownership.md).
 
 ## Repository layout
 

@@ -29,11 +29,11 @@ class GitHubOAuthGatewayTest {
         var apiServer = MockRestServiceServer.bindTo(apiBuilder).build();
         var gateway = new GitHubOAuthGateway(properties(), tokenBuilder.build(), apiBuilder.build());
 
-        var authorization = gateway.authorizationUri("state-value", "challenge-value");
+        var authorization = gateway.authorizationUri("state-value", "challenge-value", false);
         assertThat(authorization.toString())
                 .contains("client_id=client-id", "state=state-value", "code_challenge=challenge-value")
                 .contains("code_challenge_method=S256")
-                .doesNotContain("scope=");
+                .doesNotContain("scope=", "prompt=");
 
         tokenServer.expect(requestTo("https://github.test/login/oauth/access_token"))
                 .andExpect(method(HttpMethod.POST))
@@ -59,6 +59,16 @@ class GitHubOAuthGatewayTest {
         assertThat(identity.login()).isEqualTo("octocat");
         tokenServer.verify();
         apiServer.verify();
+    }
+
+    @Test
+    void asksGitHubToShowItsAccountPickerWhenRequested() {
+        var gateway = new GitHubOAuthGateway(
+                properties(), RestClient.builder().build(), RestClient.builder().build());
+
+        assertThat(gateway.authorizationUri("state-value", "challenge-value", true).toString())
+                .contains("prompt=select_account")
+                .doesNotContain("scope=");
     }
 
     @Test

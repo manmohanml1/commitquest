@@ -204,7 +204,7 @@ describe('App', () => {
     expect(element.querySelector<HTMLButtonElement>('.vault-session button')?.disabled).toBe(true);
   });
 
-  it('shows GitHub sign-in when connected mode is available without a session', async () => {
+  it('offers fast reconnect and GitHub account selection without inventing local account control', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     http
@@ -213,11 +213,24 @@ describe('App', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    const link = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>(
-      '.vault-session a',
+    const element = fixture.nativeElement as HTMLElement;
+    element.querySelector<HTMLButtonElement>('.vault-session .primary-button')?.click();
+    fixture.detectChanges();
+
+    const choices = [...element.querySelectorAll<HTMLAnchorElement>('.identity-choice a')];
+    expect(element.querySelector('.identity-choice')?.textContent).toContain(
+      'Who is entering the vault?',
     );
-    expect(link?.textContent).toContain('Sign in with GitHub');
-    expect(link?.getAttribute('href')).toBe('/api/v1/auth/github?returnPath=%2F%23campaign-vault');
+    expect(
+      choices
+        .find((link) => link.textContent?.includes('Continue current account'))
+        ?.getAttribute('href'),
+    ).toBe('/api/v1/auth/github?returnPath=%2F%23campaign-vault');
+    expect(
+      choices
+        .find((link) => link.textContent?.includes('Choose another account'))
+        ?.getAttribute('href'),
+    ).toBe('/api/v1/auth/github?returnPath=%2F%23campaign-vault&selectAccount=true');
   });
 
   it('recovers automatically while the free connected host wakes up', async () => {
@@ -227,7 +240,8 @@ describe('App', () => {
       .expectOne('/api/v1/session')
       .flush({ code: 'UNAVAILABLE' }, { status: 503, statusText: 'Service Unavailable' });
 
-    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Waking private vault');
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('VAULT AWAKENING');
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Retrying automatically');
     await new Promise((resolve) => setTimeout(resolve, 3_100));
     http
       .expectOne('/api/v1/session')
@@ -236,6 +250,35 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('Sign in with GitHub');
+  });
+
+  it('makes same-account reconnect fast after an ordinary sign out', async () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    http.expectOne('/api/v1/session').flush({
+      githubLogin: 'octocat',
+      displayName: 'The Octocat',
+      avatarUrl: 'https://avatars.example/octocat',
+      expiresAt: '2026-08-24T12:00:00Z',
+      csrfToken: 'csrf-token',
+    });
+    await Promise.resolve();
+    http.expectOne('/api/v1/campaigns').flush([]);
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    [...element.querySelectorAll<HTMLButtonElement>('.vault-session button')]
+      .find((button) => button.textContent?.trim() === 'Sign out')
+      ?.click();
+    const logout = http.expectOne('/api/v1/session/logout');
+    expect(logout.request.method).toBe('POST');
+    logout.flush(null, { status: 204, statusText: 'No Content' });
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(element.querySelector('.vault-session')?.textContent).toContain('Reconnect @octocat');
+    expect(element.querySelector('.vault-session')?.textContent).toContain('Use another account');
   });
 
   it('loads the owner library and saves the current campaign privately', async () => {
@@ -308,7 +351,8 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(element.querySelector('#campaign-vault')?.textContent).toContain('Your session expired');
-    expect(element.querySelector('.vault-session a')?.textContent).toContain('Sign in with GitHub');
+    expect(element.querySelector('.vault-session')?.textContent).toContain('Reconnect @octocat');
+    expect(element.querySelector('.vault-session')?.textContent).toContain('Use another account');
     expect(element.querySelector('.campaign-section h2')?.textContent).toContain(
       'Portfolio Citadel',
     );
@@ -406,7 +450,14 @@ describe('App', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    expect(element.querySelector('.vault-session a')?.textContent).toContain('Sign in with GitHub');
+    expect(element.querySelector('.identity-choice')?.textContent).toContain(
+      'Choose GitHub account',
+    );
+    expect(
+      [...element.querySelectorAll<HTMLAnchorElement>('.identity-choice a')]
+        .find((link) => link.textContent?.includes('Choose GitHub account'))
+        ?.getAttribute('href'),
+    ).toContain('selectAccount=true');
     expect(element.querySelector('.account-delete-confirmation')).toBeNull();
     expect(element.querySelector('.vault-feedback')?.textContent).toContain('permanently deleted');
   });
