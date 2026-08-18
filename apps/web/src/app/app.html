@@ -164,12 +164,20 @@
             <strong>
               {{
                 connectedPhase() === 'checking'
-                  ? 'Checking availability…'
-                  : 'Not enabled in this environment'
+                  ? 'Waking private vault…'
+                  : connectedPhase() === 'error'
+                    ? 'Connection paused'
+                    : 'Not enabled in this environment'
               }}
             </strong>
           </span>
-          <button type="button" disabled>GitHub sign-in unavailable</button>
+          @if (connectedPhase() === 'error') {
+            <button type="button" (click)="retryConnectedState()">Retry vault connection</button>
+          } @else {
+            <button type="button" disabled>
+              {{ connectedPhase() === 'checking' ? 'Connecting…' : 'GitHub sign-in unavailable' }}
+            </button>
+          }
         }
       </div>
     </div>

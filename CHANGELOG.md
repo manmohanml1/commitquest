@@ -19,6 +19,7 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 
 - Aligned the OpenAPI campaign mapping constant and generated Angular client with mapping algorithm v6.
 - Prevented narrow mobile viewports from clipping hero copy, campaign metadata, navigation, and action controls.
+- Recover the private campaign vault automatically from Render Free cold starts and provide an explicit retry state when wake-up exceeds the bounded retry window.
 
 ## [0.3.0] - 2026-08-17
 
