@@ -150,7 +150,20 @@
               Delete account data
             </button>
           }
-        } @else if (connectedPhase() === 'signed-out' || connectedPhase() === 'signing-in') {
+        } @else if (connectedPhase() === 'signing-in') {
+          <div class="vault-awakening" role="status" aria-label="Identity gateway is waking">
+            <span class="vault-awakening-sigil" aria-hidden="true"><i></i><i></i><b>GH</b></span>
+            <span class="vault-awakening-copy">
+              <small>GATEWAY AWAKENING · STAY IN COMMITQUEST</small>
+              <strong>Preparing the path to GitHub</strong>
+              <span>The secure handoff begins as soon as the free host answers.</span>
+            </span>
+            <span class="vault-awakening-steps" aria-hidden="true">
+              <i>HOST</i><i>IDENTITY</i><i>GITHUB</i>
+            </span>
+          </div>
+          <button type="button" disabled>Preparing GitHub…</button>
+        } @else if (connectedPhase() === 'signed-out') {
           <span>
             <small>GITHUB IDENTITY</small>
             <strong>
@@ -163,9 +176,13 @@
             }
           </span>
           @if (lastGithubLogin(); as login) {
-            <a class="primary-button" [href]="githubSignInUrl" (click)="beginSignIn()">
-              {{ connectedPhase() === 'signing-in' ? 'Opening GitHub…' : 'Reconnect @' + login }}
-            </a>
+            <button
+              class="primary-button"
+              type="button"
+              (click)="beginSignIn($event, githubSignInUrl)"
+            >
+              Reconnect @{{ login }}
+            </button>
             <button type="button" (click)="openIdentityChoice(true)">Use another account</button>
           } @else {
             <button class="primary-button" type="button" (click)="openIdentityChoice()">
@@ -233,21 +250,31 @@
           </div>
           <div class="identity-choice-actions">
             @if (preferAccountSelection()) {
-              <a class="primary-button" [href]="githubAccountPickerUrl" (click)="beginSignIn()">
+              <button
+                class="primary-button"
+                type="button"
+                (click)="beginSignIn($event, githubAccountPickerUrl)"
+              >
                 Choose GitHub account
-              </a>
-              <a [href]="githubSignInUrl" (click)="beginSignIn()">Continue current account</a>
+              </button>
+              <button type="button" (click)="beginSignIn($event, githubSignInUrl)">
+                Continue current account
+              </button>
             } @else {
-              <a class="primary-button" [href]="githubSignInUrl" (click)="beginSignIn()">
+              <button
+                class="primary-button"
+                type="button"
+                (click)="beginSignIn($event, githubSignInUrl)"
+              >
                 @if (lastGithubLogin()) {
                   Continue as @{{ lastGithubLogin() }}
                 } @else {
                   Continue current account
                 }
-              </a>
-              <a [href]="githubAccountPickerUrl" (click)="beginSignIn()">
+              </button>
+              <button type="button" (click)="beginSignIn($event, githubAccountPickerUrl)">
                 Use another GitHub account
-              </a>
+              </button>
             }
           </div>
           <p class="identity-choice-note">

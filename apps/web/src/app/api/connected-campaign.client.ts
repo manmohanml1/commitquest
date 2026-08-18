@@ -100,7 +100,7 @@ export class ConnectedCampaignClient {
   isTransient(error: unknown): boolean {
     return (
       error instanceof TimeoutError ||
-      (error instanceof HttpErrorResponse && [0, 502, 503, 504].includes(error.status))
+      (error instanceof HttpErrorResponse && [0, 200, 502, 503, 504].includes(error.status))
     );
   }
 

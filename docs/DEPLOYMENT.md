@@ -122,6 +122,8 @@ The final v0.4 release-candidate promotion additionally verifies the centered ac
 
 That final promotion completed on August 18, 2026 for merge commit `5b610ee`. Vercel production deployment `commitquest-4c420avah-manmohanlonawat-8572s-projects.vercel.app` and Render deployment `dep-da27o3rl550s73b3919g` used the same commit. Direct health returned `200/UP`; the same-origin session proxy returned the expected unauthenticated `401`; GitHub displayed its provider-owned account picker; the original owner session was restored; and the temporary persistence journey was removed after verification. No tag or GitHub Release was created.
 
+OAuth entry must never navigate directly to a sleeping Render route. The Angular shell first probes the same-origin session endpoint with the existing bounded cold-start retry policy, treats `200` and the expected signed-out `401` as gateway-ready outcomes, and only then navigates to the OAuth authorization endpoint. Transient infrastructure responses and Render's temporary HTML wake response remain inside the branded gateway-awakening state.
+
 ## Promotion contract
 
 ```text

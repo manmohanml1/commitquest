@@ -16,6 +16,7 @@ GitHub OAuth identity and GitHub App repository installation solve different pro
 - Request no OAuth scopes. The default public identity response is sufficient to reconcile a stable GitHub numeric user ID; CommitQuest does not store email.
 - Let an ordinary CommitQuest sign-out reconnect the active GitHub browser account without repeating consent. Offer a separate account-choice action that adds GitHub's documented `prompt=select_account` authorization parameter.
 - After CommitQuest account deletion, present GitHub account choice as the primary next action. Deleting CommitQuest data does not sign the browser out of GitHub or mutate GitHub's own multi-account sessions.
+- Before a full-page OAuth navigation, preflight the same-origin session boundary with bounded cold-start retries. Keep the user inside CommitQuest until the identity host returns either a valid session or the expected unauthenticated response; never expose the hosting provider's wake page as product UI.
 - Store an internal UUID account ID, GitHub numeric ID, current login, display name, avatar URL, and timestamps.
 - Treat the numeric GitHub user ID as the stable external identity; login changes update metadata rather than creating another account.
 - Discard the GitHub OAuth access token after retrieving and reconciling the user profile. Repository access begins separately through the v0.5 GitHub App.
