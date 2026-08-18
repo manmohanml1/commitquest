@@ -17,6 +17,7 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - Added explicit GitHub account choice through the provider's official account picker, with post-deletion choice and fast ordinary reconnect paths.
 - Presented GitHub account choice as an accessible, Escape-dismissable modal with an explicit password-safety boundary.
 - Synchronized the web, API, OpenAPI, and workspace metadata for the untagged 0.4.0 release candidate.
+- Accepted the v0.5 dual-design contract: a redesigned authenticated application shell with shared Modern and medieval-fantasy Chronicle modes alongside minimum-permission GitHub App connection.
 
 ### Fixed
 

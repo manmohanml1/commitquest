@@ -74,6 +74,8 @@ cd apps/api
 - [0.2.0 milestone contract](docs/milestones/0.2.0.md)
 - [0.3.0 milestone contract](docs/milestones/0.3.0.md)
 - [0.4.0 milestone contract](docs/milestones/0.4.0.md)
+- [0.5.0 connected-repository and dual-design contract](docs/milestones/0.5.0.md)
+- [Modern and Chronicle design modes](docs/product/DESIGN_MODES.md)
 - [Roadmap](ROADMAP.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)

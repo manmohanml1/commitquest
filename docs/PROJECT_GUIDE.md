@@ -47,6 +47,7 @@ The bundled Portfolio Citadel campaign is the permanent zero-account demonstrati
 - AI can explain or suggest but cannot mutate progression and must have a deterministic fallback
 - Public showcases use an explicit allowlisted projection; they are never filtered private API responses
 - The standalone application owns the complete Phaser experience; the portfolio owns a compact, native live demo backed by a sanitized CommitQuest projection
+- Version 0.5 replaces the signed-in v0.4 layout with one semantic application shell and two complete presentations: a redesigned Modern mode and an original medieval-fantasy Chronicle mode. They share routes, state, evidence, security, and component logic as specified in `docs/product/DESIGN_MODES.md`.
 - Cross-repository mastery, organization analytics, team competition, and billing are post-1.0
 
 ## Delivery sequence
@@ -55,7 +56,7 @@ The bundled Portfolio Citadel campaign is the permanent zero-account demonstrati
 | --------- | ------------------------------------------------------------- | ----------------------------------------------------------------- |
 | `0.1–0.2` | Compelling bundled campaign and complete interaction language | Angular, Phaser, versioned fixtures, static hosting               |
 | `0.3`     | Ephemeral public-repository preview                           | Java 25/Spring Boot API, Render Free, and Vercel Hobby            |
-| `0.4–0.5` | Persistent, user-controlled connected campaign                | PostgreSQL, GitHub App, jOOQ, Flyway, GitHub identity              |
+| `0.4–0.5` | Persistent connected campaign and dual-mode signed-in redesign | PostgreSQL, GitHub App, jOOQ, Flyway, GitHub identity              |
 | `0.6–0.8` | Reliable progression, improvement quests, and public sharing  | Durable webhook inbox/outbox, bounded polling, sanitized API       |
 | `0.9–1.0` | Operable evidence-backed progression product                  | Load/security/recovery hardening and cost-bounded telemetry        |
 
