@@ -31,7 +31,7 @@ The hero crest is the product's visual signature and an immediate summary, while
 | Milestone | World change                                                                                                                |
 | --------- | --------------------------------------------------------------------------------------------------------------------------- |
 | 0.4       | Save a user-controlled campaign, visibility, and deletion state. The same repository can retain its world between sessions. |
-| 0.5       | GitHub App synchronization identifies connected evidence and permission-aware regions.                                      |
+| 0.5       | GitHub App synchronization identifies connected evidence and permission-aware regions; Modern and Chronicle modes render the same world semantics through a redesigned signed-in shell. |
 | 0.6       | Webhook events update encounters, defenses, and chapter state without rebuilding the whole campaign manually.               |
 | 0.7       | Explainable scoring, health, ruleset versioning, anti-gaming controls, and deterministic presentation unlocks.              |
 | 0.8       | Sanitized public worlds, social cards, and portfolio embeds expose selected unlocked presentation safely.                   |
@@ -56,4 +56,5 @@ Improvement quests connect evidence gaps to useful engineering work. Examples in
 - Desktop and mobile expose equivalent campaign meaning.
 - A new visual state requires a deterministic fixture and regression test.
 - Existing full, history, foundation, archive, bundled, empty-evidence, and provider-failure paths must remain usable.
+- Modern and Chronicle modes share authoritative evidence and interaction semantics; presentation cannot fork campaign truth.
 - Mapping changes version the mapping algorithm; scoring changes version the scoring ruleset. Neither version is marketed as a player score.

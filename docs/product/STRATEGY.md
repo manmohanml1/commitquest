@@ -27,6 +27,8 @@ preview or connect a repository
 
 Version 0.3 proves translation. Versions 0.4–0.6 create ownership and return. Version 0.7 creates explainable progression. Version 0.8 makes the result safely shareable. Versions 0.9–1.0 prove the system is fair, accessible, secure, recoverable, and operable.
 
+Version 0.5 also replaces the authenticated v0.4 presentation with one shared application shell and two complete visual modes: a focused Modern workspace and an original medieval-fantasy Chronicle. They share the same evidence, routes, security boundaries, and component semantics; the mode changes presentation, never campaign truth.
+
 ## Progression principles
 
 - Reward outcomes such as a resolved issue, merged and reviewed change, automated check, security control, recovery improvement, or traceable release.

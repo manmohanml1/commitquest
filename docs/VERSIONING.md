@@ -9,7 +9,7 @@ CommitQuest uses one product version for the web, API, and worker until they acq
 0.2.0  Expanded campaign map, encounters, chapters, and candidate quests
 0.3.0  Public repository preview
 0.4.0  Persistent campaigns
-0.5.0  GitHub App installation
+0.5.0  GitHub App installation and dual-mode authenticated redesign
 0.6.0  Live webhook synchronization
 0.7.0  Progression and repository health
 0.8.0  Public showcases and portfolio embed
