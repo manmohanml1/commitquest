@@ -25,9 +25,9 @@ public final class CampaignProjectionMapper {
         var currentChapter = chapters.isEmpty() ? source.defaultBranch() : chapters.getFirst().version();
 
         return new CampaignProjection(
-                3,
-                6,
-                1,
+                CampaignProjection.SCHEMA_VERSION,
+                CampaignProjection.MAPPING_ALGORITHM_VERSION,
+                CampaignProjection.SCORING_RULESET_VERSION,
                 slug(repository.fullName()),
                 title,
                 repository.fullName(),

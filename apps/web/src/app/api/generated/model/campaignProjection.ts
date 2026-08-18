@@ -32,7 +32,7 @@ export enum CampaignProjectionSchemaVersionEnum {
   NUMBER_3 = 3,
 }
 export enum CampaignProjectionMappingAlgorithmVersionEnum {
-  NUMBER_4 = 4,
+  NUMBER_6 = 6,
 }
 export enum CampaignProjectionScoringRulesetVersionEnum {
   NUMBER_1 = 1,

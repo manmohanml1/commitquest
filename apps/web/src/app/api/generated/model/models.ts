@@ -1,4 +1,5 @@
 export * from './campaignProjection';
+export * from './changeCampaignVisibilityRequest';
 export * from './chapter';
 export * from './encounter';
 export * from './metric';
@@ -7,3 +8,7 @@ export * from './problem';
 export * from './quest';
 export * from './region';
 export * from './repositoryPreviewRequest';
+export * from './saveCampaignRequest';
+export * from './savedCampaign';
+export * from './savedCampaignExport';
+export * from './session';

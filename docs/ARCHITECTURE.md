@@ -58,6 +58,10 @@ audit
 
 Modules expose explicit public interfaces. GitHub payloads terminate at the integration adapter and cannot leak into domain types.
 
+Identity and campaign ownership remain separate from repository-provider access. V0.4 GitHub OAuth proves who the user is; v0.5 GitHub App installation later proves which repositories CommitQuest may read. Saved-campaign application services query through owner-scoped ports so an unknown campaign and another user's campaign produce the same result.
+
+V0.4 keeps connected transport behind complete persistence and identity configuration. The Angular application probes the same-origin session endpoint and presents one of four explicit boundaries: connected services unavailable, signed out, signing in, or an authenticated owner library. All mutations carry the session-bound double-submit CSRF value and pass server-side Origin/Referer validation. Public preview transport does not depend on this path.
+
 ## Processing model
 
 ```text

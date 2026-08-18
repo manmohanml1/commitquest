@@ -32,6 +32,12 @@ cd apps/api
 
 ## Connected-product gates
 
-Later connected-product milestones add property-based scoring invariants, Spring Modulith verification, Testcontainers integration tests, authorization matrices, migration tests, and duplicated/out-of-order webhook scenarios.
+V0.4 begins the connected-product gates with saved-campaign domain invariants, owner-scoped authorization tests, private-by-default visibility, deterministic export, account campaign limits, and OpenAPI/runtime version alignment. PostgreSQL migration and adapter integration tests become mandatory in the persistence slice. Later milestones add property-based scoring invariants, Spring Modulith verification, duplicated/out-of-order webhook scenarios, and the complete issue-to-release journey.
+
+Identity gates cover relative return-path validation, one-time and expiring OAuth state, PKCE, zero requested scope, unexpected-scope rejection, stable GitHub numeric identity reconciliation, session rotation and expiry, HMAC-only persistence, Secure/HttpOnly/SameSite cookies, double-submit CSRF, Origin/Referer checks, logout, and cascading account deletion.
+
+Saved-campaign transport gates cover owner derivation from the session, identical missing/cross-owner responses, CSRF and source checks for every mutation, owner-free response models, generated Angular-client compilation, connected-unavailable fallback, signed-out entry, owner-library loading, and private save behavior. Browser acceptance must retain the bundled map when the API is unavailable and must not present a fake successful sign-in or save state.
+
+The PostgreSQL suite uses Testcontainers against PostgreSQL 17. A local machine without Docker may run the database-free gates with the integration suite reported as skipped; the GitHub Actions API job has Docker and fails explicitly if that suite does not execute. A skipped database suite is therefore never sufficient for merge or release evidence.
 
 The release-critical journey will prove that issue creation, PR association, CI, review, merge, reward issuance, map projection, duplicate delivery, showcase sanitization, and tenant authorization behave correctly end to end.

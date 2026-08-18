@@ -4,6 +4,20 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 
 ## [Unreleased]
 
+### Added
+
+- Add opt-in, owner-scoped saved-campaign HTTP contracts for create-or-refresh, list, read, explicit refresh, visibility preference, versioned export, and deletion.
+- Add an accessible Angular private campaign vault with honest unavailable and signed-out states, GitHub sign-in entry, owner library controls, session-expiry recovery, and destructive confirmation.
+- Generate saved-campaign Angular clients from the validated OpenAPI 0.4 contract and add transport/UI regression coverage.
+- Began the v0.4 saved-campaign foundation with explicit account ownership, private-by-default visibility, refresh semantics, export, deletion, storage limits, and tenant-safe lookup invariants.
+- Accepted the GitHub identity, opaque session, CSRF, PostgreSQL ownership, export, and deletion contract for connected campaigns.
+- Added opt-in PostgreSQL persistence with Flyway migrations, jOOQ owner-scoped campaign storage, database-cascade account deletion, bounded connection pooling, and Testcontainers coverage.
+- Added opt-in GitHub OAuth identity transport with no requested scopes, one-time state, PKCE, immediate provider-token disposal, rotated opaque sessions, hardened cookies, CSRF/origin enforcement, logout, and account deletion.
+
+### Fixed
+
+- Aligned the OpenAPI campaign mapping constant and generated Angular client with mapping algorithm v6.
+
 ## [0.3.0] - 2026-08-17
 
 ### Added

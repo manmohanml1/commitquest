@@ -5,6 +5,7 @@
     </a>
     <nav aria-label="Primary navigation">
       <a href="#campaign">Campaign</a>
+      <a href="#campaign-vault">Vault</a>
       <a href="#how-it-works">How it works</a>
       <a class="nav-cta" [href]="'https://github.com/' + campaign().repository"
         >View repository ↗</a
@@ -14,7 +15,7 @@
 
   <section class="hero" id="top">
     <div class="hero-copy">
-      <p class="kicker"><span></span> PUBLIC REPOSITORY PREVIEW · V0.3</p>
+      <p class="kicker"><span></span> PUBLIC PREVIEW + PRIVATE VAULT · V0.4 BUILD</p>
       <h1>Your repository<br />has a story.</h1>
       <p class="hero-lede">
         CommitQuest turns issues, pull requests, tests, and releases into a playable engineering
@@ -24,7 +25,9 @@
         <a class="primary-button" href="#preview">Preview a public repository</a>
         <a class="text-button" href="#campaign">Explore the current campaign →</a>
       </div>
-      <p class="trust-line">Public-only · Ephemeral · Source-linked · No GitHub login required</p>
+      <p class="trust-line">
+        Preview without login · Save privately when signed in · Source-linked
+      </p>
     </div>
 
     <div class="campaign-card" [attr.aria-label]="campaign().title + ' campaign summary'">
@@ -114,6 +117,122 @@
         </div>
       }
     </form>
+  </section>
+
+  <section class="vault-section" id="campaign-vault" aria-labelledby="vault-title">
+    <div class="vault-heading">
+      <div>
+        <p class="kicker">OPTIONAL CONNECTED MODE</p>
+        <h2 id="vault-title">Your private campaign vault.</h2>
+        <p>
+          Public previews stay ephemeral. GitHub sign-in adds an owner-scoped library with refresh,
+          portable export, visibility control, and deletion.
+        </p>
+      </div>
+
+      <div class="vault-session" [attr.data-state]="connectedPhase()">
+        @if (session(); as account) {
+          <img [src]="account.avatarUrl" alt="" width="42" height="42" />
+          <span>
+            <small>SIGNED IN AS</small>
+            <strong>{{ account.displayName }}</strong>
+            <code>&#64;{{ account.githubLogin }}</code>
+          </span>
+          <button type="button" (click)="logout()">Sign out</button>
+        } @else if (connectedPhase() === 'signed-out' || connectedPhase() === 'signing-in') {
+          <span>
+            <small>GITHUB IDENTITY</small>
+            <strong>Keep campaigns between visits</strong>
+          </span>
+          <a class="primary-button" [href]="githubSignInUrl" (click)="beginSignIn()">
+            {{ connectedPhase() === 'signing-in' ? 'Opening GitHub…' : 'Sign in with GitHub' }}
+          </a>
+        } @else {
+          <span>
+            <small>CONNECTED SERVICES</small>
+            <strong>
+              {{
+                connectedPhase() === 'checking'
+                  ? 'Checking availability…'
+                  : 'Not enabled in this environment'
+              }}
+            </strong>
+          </span>
+          <button type="button" disabled>GitHub sign-in unavailable</button>
+        }
+      </div>
+    </div>
+
+    <div class="vault-feedback" [class.error]="connectedPhase() === 'error'" aria-live="polite">
+      <span [attr.data-state]="connectedPhase()"></span>
+      <p>{{ connectedMessage() }}</p>
+      @if (session()) {
+        <button
+          class="vault-save"
+          type="button"
+          [disabled]="connectedPhase() === 'working'"
+          (click)="saveCurrentCampaign()"
+        >
+          {{ connectedPhase() === 'working' ? 'Working…' : 'Save current campaign privately' }}
+        </button>
+      }
+    </div>
+
+    @if (session()) {
+      <div class="vault-library" aria-label="Saved campaign library">
+        @if (savedCampaigns().length === 0) {
+          <div class="vault-empty">
+            <span>00</span>
+            <strong>No campaigns saved yet</strong>
+            <p>The current repository campaign can become your first private save.</p>
+          </div>
+        } @else {
+          @for (saved of savedCampaigns(); track saved.id) {
+            <article class="vault-card">
+              <div class="vault-card-copy">
+                <span>{{ saved.visibility }} · {{ saved.projection.mode }}</span>
+                <h3>{{ saved.projection.title }}</h3>
+                <p>{{ saved.projection.repository }}</p>
+                <small>Updated {{ saved.updatedAt | date: 'medium' }}</small>
+              </div>
+              <div class="vault-card-actions">
+                <button type="button" (click)="openSavedCampaign(saved)">Open map</button>
+                <button
+                  type="button"
+                  [disabled]="connectedPhase() === 'working'"
+                  (click)="refreshSavedCampaign(saved)"
+                >
+                  Refresh
+                </button>
+                <button
+                  type="button"
+                  [disabled]="connectedPhase() === 'working'"
+                  (click)="toggleVisibility(saved)"
+                >
+                  Make {{ saved.visibility === 'private' ? 'unlisted' : 'private' }}
+                </button>
+                <button type="button" (click)="exportSavedCampaign(saved)">Export JSON</button>
+                @if (pendingDeleteId() === saved.id) {
+                  <span class="delete-confirmation">
+                    <strong>Remove permanently?</strong>
+                    <button type="button" (click)="deleteSavedCampaign(saved)">Yes, remove</button>
+                    <button type="button" (click)="cancelCampaignDelete()">Cancel</button>
+                  </span>
+                } @else {
+                  <button
+                    class="danger-action"
+                    type="button"
+                    (click)="requestCampaignDelete(saved.id)"
+                  >
+                    Delete
+                  </button>
+                }
+              </div>
+            </article>
+          }
+        }
+      </div>
+    }
   </section>
 
   <section class="metrics" aria-label="Campaign metrics">
@@ -388,11 +507,11 @@
   <section class="closing">
     <p class="kicker">BUILT FOR REAL REPOSITORIES</p>
     <h2>Every codebase deserves a world worth exploring.</h2>
-    <p>Public previews now. Connected, user-controlled campaigns next.</p>
+    <p>Public previews for everyone. Private, user-controlled campaign libraries when connected.</p>
     <a class="primary-button" href="https://github.com/manmohanml1">Follow the build on GitHub ↗</a>
   </section>
 
   <footer>
-    <span>COMMITQUEST · v0.3.0 PREVIEW</span><span>Evidence over vanity metrics.</span>
+    <span>COMMITQUEST · v0.4.0 LOCAL BUILD</span><span>Evidence over vanity metrics.</span>
   </footer>
 </main>

@@ -1,12 +1,287 @@
 openapi: 3.1.0
 info:
   title: CommitQuest API
-  version: 0.3.0
-  description: Ephemeral, read-only public GitHub repository campaign previews.
+  version: 0.4.0
+  description: Public repository previews and opt-in GitHub identity sessions for saved campaigns.
 servers:
   - url: /
     description: Same-origin web gateway; local development proxies this path to the API
 paths:
+  /api/v1/auth/github:
+    get:
+      operationId: beginGitHubSignIn
+      summary: Begin a one-time, PKCE-protected GitHub identity flow
+      tags: [Identity]
+      parameters:
+        - name: returnPath
+          in: query
+          required: false
+          schema:
+            type: string
+            default: /
+            maxLength: 512
+      responses:
+        '302':
+          description: Redirect to GitHub authorization without repository scopes
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+        '400':
+          $ref: '#/components/responses/IdentityFailure'
+  /api/v1/auth/github/callback:
+    get:
+      operationId: completeGitHubSignIn
+      summary: Reconcile GitHub identity and issue an opaque CommitQuest session
+      tags: [Identity]
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Session and CSRF cookies issued; redirect to the allowlisted relative return path
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+            Set-Cookie:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/IdentityFailure'
+        '503':
+          $ref: '#/components/responses/IdentityFailure'
+  /api/v1/session:
+    get:
+      operationId: getSession
+      summary: Return the current authenticated identity and session-bound CSRF token
+      tags: [Identity]
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Current CommitQuest session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '401':
+          $ref: '#/components/responses/IdentityFailure'
+        '403':
+          $ref: '#/components/responses/IdentityFailure'
+  /api/v1/session/logout:
+    post:
+      operationId: logout
+      summary: Revoke the current CommitQuest session
+      tags: [Identity]
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/CsrfHeader'
+      responses:
+        '204':
+          description: Session revoked and browser cookies expired
+        '401':
+          $ref: '#/components/responses/IdentityFailure'
+        '403':
+          $ref: '#/components/responses/IdentityFailure'
+  /api/v1/account:
+    delete:
+      operationId: deleteAccount
+      summary: Delete the authenticated account and all imported CommitQuest data
+      tags: [Identity]
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/CsrfHeader'
+      responses:
+        '204':
+          description: Account, sessions, OAuth state, and saved campaigns deleted
+        '401':
+          $ref: '#/components/responses/IdentityFailure'
+        '403':
+          $ref: '#/components/responses/IdentityFailure'
+  /api/v1/campaigns:
+    get:
+      operationId: listSavedCampaigns
+      summary: List campaigns owned by the authenticated account
+      tags: [Saved campaigns]
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Owner-scoped saved campaigns, newest updates first
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 25
+                items:
+                  $ref: '#/components/schemas/SavedCampaign'
+        '401':
+          $ref: '#/components/responses/IdentityFailure'
+    post:
+      operationId: saveCampaign
+      summary: Save a private campaign or refresh the existing owner/repository campaign
+      tags: [Saved campaigns]
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/CsrfHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveCampaignRequest'
+      responses:
+        '200':
+          description: Created or refreshed saved campaign
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavedCampaign'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/IdentityFailure'
+        '403':
+          $ref: '#/components/responses/IdentityFailure'
+        '409':
+          $ref: '#/components/responses/SavedCampaignLimit'
+        '422':
+          $ref: '#/components/responses/UnprocessableRepository'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/ProviderUnavailable'
+  /api/v1/campaigns/{campaignId}:
+    parameters:
+      - $ref: '#/components/parameters/CampaignId'
+    get:
+      operationId: getSavedCampaign
+      summary: Load one campaign owned by the authenticated account
+      tags: [Saved campaigns]
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Saved campaign
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavedCampaign'
+        '401':
+          $ref: '#/components/responses/IdentityFailure'
+        '404':
+          $ref: '#/components/responses/SavedCampaignNotFound'
+    delete:
+      operationId: deleteSavedCampaign
+      summary: Delete one campaign owned by the authenticated account
+      tags: [Saved campaigns]
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/CsrfHeader'
+      responses:
+        '204':
+          description: Saved campaign deleted
+        '401':
+          $ref: '#/components/responses/IdentityFailure'
+        '403':
+          $ref: '#/components/responses/IdentityFailure'
+        '404':
+          $ref: '#/components/responses/SavedCampaignNotFound'
+  /api/v1/campaigns/{campaignId}/refresh:
+    parameters:
+      - $ref: '#/components/parameters/CampaignId'
+    post:
+      operationId: refreshSavedCampaign
+      summary: Rebuild a saved campaign from current public repository evidence
+      tags: [Saved campaigns]
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/CsrfHeader'
+      responses:
+        '200':
+          description: Refreshed campaign, retaining its identity and visibility
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavedCampaign'
+        '401':
+          $ref: '#/components/responses/IdentityFailure'
+        '403':
+          $ref: '#/components/responses/IdentityFailure'
+        '404':
+          $ref: '#/components/responses/SavedCampaignNotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableRepository'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/ProviderUnavailable'
+  /api/v1/campaigns/{campaignId}/visibility:
+    parameters:
+      - $ref: '#/components/parameters/CampaignId'
+    patch:
+      operationId: changeSavedCampaignVisibility
+      summary: Change a saved campaign between private and unlisted
+      tags: [Saved campaigns]
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/CsrfHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeCampaignVisibilityRequest'
+      responses:
+        '200':
+          description: Updated saved campaign
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavedCampaign'
+        '401':
+          $ref: '#/components/responses/IdentityFailure'
+        '403':
+          $ref: '#/components/responses/IdentityFailure'
+        '404':
+          $ref: '#/components/responses/SavedCampaignNotFound'
+  /api/v1/campaigns/{campaignId}/export:
+    parameters:
+      - $ref: '#/components/parameters/CampaignId'
+    get:
+      operationId: exportSavedCampaign
+      summary: Export a portable, versioned copy of an owned campaign
+      tags: [Saved campaigns]
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Versioned saved-campaign export
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavedCampaignExport'
+        '401':
+          $ref: '#/components/responses/IdentityFailure'
+        '404':
+          $ref: '#/components/responses/SavedCampaignNotFound'
   /api/v1/repository-previews:
     post:
       operationId: createRepositoryPreview
@@ -36,7 +311,32 @@ paths:
         '503':
           $ref: '#/components/responses/ProviderUnavailable'
 components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: __Host-commitquest_session
+  parameters:
+    CampaignId:
+      name: campaignId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    CsrfHeader:
+      name: X-CommitQuest-CSRF
+      in: header
+      required: true
+      schema:
+        type: string
   responses:
+    IdentityFailure:
+      description: Identity, session, or request-verification failure
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
     InvalidRequest:
       description: Invalid GitHub repository URL or request body
       content:
@@ -67,7 +367,98 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
+    SavedCampaignNotFound:
+      description: No campaign with that identity belongs to the authenticated account
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    SavedCampaignLimit:
+      description: The account already owns the maximum of 25 saved campaigns
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
   schemas:
+    SaveCampaignRequest:
+      type: object
+      additionalProperties: false
+      required: [repositoryUrl]
+      properties:
+        repositoryUrl:
+          type: string
+          format: uri
+          maxLength: 2048
+    ChangeCampaignVisibilityRequest:
+      type: object
+      additionalProperties: false
+      required: [visibility]
+      properties:
+        visibility:
+          type: string
+          enum: [PRIVATE, UNLISTED]
+    SavedCampaign:
+      type: object
+      additionalProperties: false
+      required: [id, projection, visibility, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        projection:
+          $ref: '#/components/schemas/CampaignProjection'
+        visibility:
+          type: string
+          enum: [private, unlisted]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    SavedCampaignExport:
+      type: object
+      additionalProperties: false
+      required:
+        - exportSchemaVersion
+        - campaignId
+        - repository
+        - title
+        - visibility
+        - projectionSchemaVersion
+        - mappingAlgorithmVersion
+        - scoringRulesetVersion
+        - createdAt
+        - updatedAt
+        - projection
+      properties:
+        exportSchemaVersion:
+          type: integer
+          const: 1
+        campaignId:
+          type: string
+          format: uuid
+        repository:
+          type: string
+        title:
+          type: string
+        visibility:
+          type: string
+          enum: [private, unlisted]
+        projectionSchemaVersion:
+          type: integer
+        mappingAlgorithmVersion:
+          type: integer
+        scoringRulesetVersion:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        projection:
+          $ref: '#/components/schemas/CampaignProjection'
     RepositoryPreviewRequest:
       type: object
       additionalProperties: false
@@ -106,6 +497,29 @@ components:
             - RATE_LIMITED
             - PROVIDER_UNAVAILABLE
             - INCOMPLETE_REPOSITORY
+            - INVALID_RETURN_PATH
+            - INVALID_OAUTH_STATE
+            - UNAUTHENTICATED
+            - INVALID_CSRF
+            - SAVED_CAMPAIGN_NOT_FOUND
+            - SAVED_CAMPAIGN_LIMIT_EXCEEDED
+    Session:
+      type: object
+      additionalProperties: false
+      required: [githubLogin, displayName, avatarUrl, expiresAt, csrfToken]
+      properties:
+        githubLogin:
+          type: string
+        displayName:
+          type: string
+        avatarUrl:
+          type: string
+          format: uri
+        expiresAt:
+          type: string
+          format: date-time
+        csrfToken:
+          type: string
     CampaignProjection:
       type: object
       additionalProperties: false
@@ -129,7 +543,7 @@ components:
           const: 3
         mappingAlgorithmVersion:
           type: integer
-          const: 4
+          const: 6
         scoringRulesetVersion:
           type: integer
           const: 1

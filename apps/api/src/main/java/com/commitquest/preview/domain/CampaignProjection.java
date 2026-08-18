@@ -17,6 +17,10 @@ public record CampaignProjection(
         List<Encounter> encounters,
         List<Chapter> chapters) {
 
+    public static final int SCHEMA_VERSION = 3;
+    public static final int MAPPING_ALGORITHM_VERSION = 6;
+    public static final int SCORING_RULESET_VERSION = 1;
+
     public CampaignProjection {
         metrics = List.copyOf(metrics);
         evidence = List.copyOf(evidence);

@@ -414,6 +414,260 @@
   text-transform: uppercase;
 }
 
+.vault-section {
+  position: relative;
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto 64px;
+  padding: 38px;
+  border: 1px solid rgba(101, 244, 197, 0.2);
+  background:
+    linear-gradient(135deg, rgba(101, 244, 197, 0.06), transparent 38%), rgba(8, 23, 37, 0.95);
+  box-shadow: 14px 14px 0 rgba(8, 31, 43, 0.74);
+}
+
+.vault-section::before {
+  content: 'OWNER-SCOPED · PRIVATE BY DEFAULT · 25 CAMPAIGNS MAX';
+  position: absolute;
+  top: -10px;
+  left: 28px;
+  padding: 3px 9px;
+  color: var(--mint);
+  background: var(--ink);
+  font: 700 9px/1.4 var(--font-geist-mono);
+  letter-spacing: 0.08em;
+}
+
+.vault-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.72fr);
+  gap: 44px;
+  align-items: center;
+}
+
+.vault-heading h2 {
+  margin: 10px 0 14px;
+  font-size: clamp(30px, 3.8vw, 50px);
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.vault-heading > div:first-child > p:last-child {
+  max-width: 620px;
+  margin: 0;
+  color: #9eb2bf;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.vault-session {
+  min-height: 86px;
+  padding: 16px;
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  border: 1px solid rgba(120, 191, 255, 0.22);
+  background: #071522;
+}
+
+.vault-session img {
+  border: 1px solid rgba(101, 244, 197, 0.5);
+  border-radius: 50%;
+}
+
+.vault-session > span {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 3px;
+}
+
+.vault-session small,
+.vault-session code,
+.vault-card-copy > span,
+.vault-card-copy small {
+  color: #7590a1;
+  font: 700 9px/1.35 var(--font-geist-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vault-session strong {
+  overflow: hidden;
+  color: var(--paper);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vault-session code {
+  overflow: hidden;
+  color: var(--mint);
+  text-overflow: ellipsis;
+}
+
+.vault-session button,
+.vault-card-actions button,
+.delete-confirmation button {
+  padding: 8px 10px;
+  border: 1px solid rgba(120, 191, 255, 0.28);
+  background: transparent;
+  color: #c6d5dc;
+  cursor: pointer;
+  font: 700 10px/1.2 var(--font-geist-mono);
+}
+
+.vault-session button:hover:not(:disabled),
+.vault-session button:focus-visible,
+.vault-card-actions button:hover:not(:disabled),
+.vault-card-actions button:focus-visible {
+  border-color: var(--mint);
+  color: var(--mint);
+}
+
+.vault-session button:disabled,
+.vault-card-actions button:disabled,
+.vault-save:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+.vault-session .primary-button {
+  min-height: 42px;
+  padding: 0 16px;
+  text-align: center;
+}
+
+.vault-feedback {
+  margin-top: 28px;
+  padding: 13px 15px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 11px;
+  align-items: center;
+  border: 1px solid var(--line);
+  color: #91a7b5;
+  background: rgba(7, 21, 34, 0.76);
+  font-size: 12px;
+}
+
+.vault-feedback > span {
+  width: 7px;
+  height: 7px;
+  background: #526a7a;
+}
+
+.vault-feedback > span[data-state='ready'] {
+  background: var(--mint);
+  box-shadow: 0 0 10px var(--mint);
+}
+
+.vault-feedback > span[data-state='working'],
+.vault-feedback > span[data-state='checking'] {
+  background: var(--blue);
+  box-shadow: 0 0 10px var(--blue);
+}
+
+.vault-feedback.error > span {
+  background: var(--amber);
+  box-shadow: 0 0 10px var(--amber);
+}
+
+.vault-feedback p {
+  margin: 0;
+}
+
+.vault-save {
+  padding: 9px 13px;
+  border: 0;
+  background: var(--mint);
+  color: var(--ink);
+  cursor: pointer;
+  font: 800 10px/1.2 var(--font-geist-mono);
+}
+
+.vault-library {
+  margin-top: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.vault-empty,
+.vault-card {
+  min-height: 104px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  background: #0b1927;
+}
+
+.vault-empty {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 14px;
+  align-items: center;
+}
+
+.vault-empty > span {
+  grid-row: span 2;
+  color: rgba(101, 244, 197, 0.35);
+  font: 800 34px/1 var(--font-geist-mono);
+}
+
+.vault-empty p {
+  margin: 4px 0 0;
+  color: #78909f;
+  font-size: 12px;
+}
+
+.vault-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+}
+
+.vault-card-copy {
+  min-width: 0;
+}
+
+.vault-card-copy > span {
+  color: var(--mint);
+}
+
+.vault-card-copy h3 {
+  margin: 7px 0 4px;
+  font-size: 19px;
+  overflow-wrap: anywhere;
+}
+
+.vault-card-copy p {
+  margin: 0 0 7px;
+  color: #8ea5b7;
+  font: 500 11px/1.4 var(--font-geist-mono);
+  overflow-wrap: anywhere;
+}
+
+.vault-card-actions {
+  max-width: 390px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.vault-card-actions .danger-action,
+.delete-confirmation button:first-of-type {
+  border-color: rgba(245, 185, 66, 0.38);
+  color: #f3bd82;
+}
+
+.delete-confirmation {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  color: #f3bd82;
+  font: 700 10px/1.2 var(--font-geist-mono);
+}
+
 @media (max-width: 600px) {
   .preview-section {
     width: min(100% - 28px, 1180px);
@@ -433,6 +687,47 @@
   }
   .preview-input-row .primary-button {
     width: 100%;
+  }
+  .vault-section {
+    width: min(100% - 28px, 1180px);
+    margin-bottom: 48px;
+    padding: 30px 20px 26px;
+  }
+  .vault-section::before {
+    left: 14px;
+    max-width: calc(100% - 28px);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .vault-heading {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+  .vault-session {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .vault-session > span {
+    min-width: calc(100% - 60px);
+  }
+  .vault-session button,
+  .vault-session .primary-button {
+    width: 100%;
+  }
+  .vault-feedback {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .vault-save {
+    grid-column: 2;
+    justify-self: start;
+  }
+  .vault-card {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .vault-card-actions {
+    max-width: none;
+    justify-content: flex-start;
   }
   .preview-feedback {
     grid-template-columns: auto minmax(0, 1fr);
