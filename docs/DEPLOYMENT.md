@@ -120,6 +120,8 @@ The verified private campaign remains in the owner's vault for inspection. This 
 
 The final v0.4 release-candidate promotion additionally verifies the centered account-choice modal, GitHub's `prompt=select_account` redirect, ordinary same-account reconnect, post-deletion account choice, and the themed free-host wake state. These checks must pass against the exact merged frontend and API commit before v0.4 is presented for release authorization.
 
+That final promotion completed on August 18, 2026 for merge commit `5b610ee`. Vercel production deployment `commitquest-4c420avah-manmohanlonawat-8572s-projects.vercel.app` and Render deployment `dep-da27o3rl550s73b3919g` used the same commit. Direct health returned `200/UP`; the same-origin session proxy returned the expected unauthenticated `401`; GitHub displayed its provider-owned account picker; the original owner session was restored; and the temporary persistence journey was removed after verification. No tag or GitHub Release was created.
+
 ## Promotion contract
 
 ```text
