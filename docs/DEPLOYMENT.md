@@ -74,9 +74,9 @@ The unreleased v0.4 API contains an opt-in persistence mode controlled by `COMMI
 
 Identity transport is separately gated by `COMMITQUEST_IDENTITY_ENABLED` and requires the GitHub OAuth client ID and secret, a Base64-encoded HMAC secret containing at least 32 random bytes, and the public web base URL. Identity cannot start without the persistence adapters. Production uses the same-origin web URL as the OAuth callback base; only loopback development may use HTTP. Registering an OAuth App or placing these secrets in Render remains an explicit external deployment action.
 
-### Staged v0.4 connected resources
+### v0.4 connected resources
 
-The following free-tier resources were explicitly approved and configured on 2026-08-17. They are staged for verification; saving their configuration did not deploy the unreleased v0.4 code.
+The following free-tier resources were explicitly approved, configured, and production-verified on 2026-08-17.
 
 - **Database:** dedicated Neon Free project `commitquest-db` in `iad1` (Washington, D.C.). Neon Auth is disabled because CommitQuest owns its GitHub OAuth and session boundary.
 - **Vercel connection:** the database integration is attached only to the `commitquest-web` Development environment with the `COMMITQUEST_DATABASE` prefix. It is not attached to Preview or Production.
@@ -85,7 +85,7 @@ The following free-tier resources were explicitly approved and configured on 202
 - **Render identity configuration:** identity enablement, OAuth credentials, a generated HMAC secret, and the public base URL are stored as server-only environment variables.
 - **Secret handling:** no database credential, OAuth secret, token, or HMAC material is committed, copied into Vercel browser variables, or documented here. The initially exposed OAuth client secret was rotated and deleted before use.
 
-Render configuration was saved with **Save only**. The running production service remains on the previously deployed v0.3 code until a separate commit, review, merge, and deployment are authorized. The v0.4 connected journey therefore cannot be considered production-verified yet.
+The Render configuration was initially staged with **Save only**, then activated when the owner separately authorized the reviewed v0.4 production deployment.
 
 ### v0.4 preview verification
 
@@ -96,9 +96,23 @@ Pull request #17 was verified on 2026-08-17 without changing production:
 - The signed-in journey covered save, return, explicit refresh, visibility, export, campaign deletion, logout, permanent account-data deletion, and reauthentication with an empty vault.
 - The OAuth callback was temporarily pointed at loopback only for same-origin browser QA, then restored to the exact production callback.
 - The temporary Render service was deleted after verification; its service, resources, and deploy hook no longer exist.
-- Production Render database credentials were corrected and saved without triggering a deployment. Production remains on v0.3 until owner approval.
+- Production Render database credentials were corrected and saved without triggering a deployment before owner approval.
 
 This isolated preview is acceptance evidence for the implementation, not production verification or release authorization.
+
+### v0.4 production verification
+
+Owner approval promoted merge commit `042bebc` on 2026-08-17:
+
+- Vercel deployed the production Angular application and reported a successful commit status.
+- Render manually deployed the same `main` commit and passed its internal `/actuator/health` check.
+- The public health endpoint returned `200` with liveness and readiness `UP`.
+- The unauthenticated same-origin session endpoint returned the expected `401`, proving connected identity mode was active rather than unavailable.
+- GitHub OAuth returned to the production callback and established the owner session.
+- `Commitquest Forge` saved privately, survived a full browser reload, refreshed from GitHub, changed to unlisted, and returned to private.
+- Public repository preview generation remained available and the production browser console reported no errors.
+
+The verified private campaign remains in the owner's vault for inspection. This deployment does not authorize or create a `v0.4.0` tag or GitHub Release.
 
 ## Promotion contract
 
