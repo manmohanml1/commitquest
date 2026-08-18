@@ -118,6 +118,8 @@ Owner approval promoted merge commit `042bebc` on 2026-08-17:
 
 The verified private campaign remains in the owner's vault for inspection. This deployment does not authorize or create a `v0.4.0` tag or GitHub Release.
 
+The final v0.4 release-candidate promotion additionally verifies the centered account-choice modal, GitHub's `prompt=select_account` redirect, ordinary same-account reconnect, post-deletion account choice, and the themed free-host wake state. These checks must pass against the exact merged frontend and API commit before v0.4 is presented for release authorization.
+
 ## Promotion contract
 
 ```text

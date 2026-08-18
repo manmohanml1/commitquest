@@ -204,28 +204,55 @@
     </div>
 
     @if (showIdentityChoice() && connectedPhase() === 'signed-out') {
-      <div class="identity-choice" role="dialog" aria-labelledby="identity-choice-title">
-        <div>
-          <p class="kicker">GITHUB ACCOUNT CHOICE</p>
-          <h3 id="identity-choice-title">Who is entering the vault?</h3>
-          <p>
-            GitHub controls its signed-in browser accounts. Choose the fast path, or ask GitHub to
-            show its official account picker.
+      <div class="identity-choice-backdrop">
+        <div
+          class="identity-choice"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="identity-choice-title"
+          aria-describedby="identity-choice-description"
+        >
+          <button
+            class="identity-choice-close"
+            type="button"
+            aria-label="Close GitHub account choice"
+            (click)="closeIdentityChoice()"
+          >
+            ×
+          </button>
+          <div class="identity-choice-copy">
+            <span class="identity-choice-mark" aria-hidden="true">GH</span>
+            <div>
+              <p class="kicker">GITHUB ACCOUNT CHOICE</p>
+              <h3 id="identity-choice-title">Who is entering the vault?</h3>
+              <p id="identity-choice-description">
+                Continue quickly with the GitHub account already active in this browser, or ask
+                GitHub to show its secure account picker.
+              </p>
+            </div>
+          </div>
+          <div class="identity-choice-actions">
+            @if (preferAccountSelection()) {
+              <a class="primary-button" [href]="githubAccountPickerUrl" (click)="beginSignIn()">
+                Choose GitHub account
+              </a>
+              <a [href]="githubSignInUrl" (click)="beginSignIn()">Continue current account</a>
+            } @else {
+              <a class="primary-button" [href]="githubSignInUrl" (click)="beginSignIn()">
+                @if (lastGithubLogin()) {
+                  Continue as @{{ lastGithubLogin() }}
+                } @else {
+                  Continue current account
+                }
+              </a>
+              <a [href]="githubAccountPickerUrl" (click)="beginSignIn()">
+                Use another GitHub account
+              </a>
+            }
+          </div>
+          <p class="identity-choice-note">
+            You will continue on GitHub. CommitQuest never sees your password.
           </p>
-        </div>
-        <div class="identity-choice-actions">
-          @if (preferAccountSelection()) {
-            <a class="primary-button" [href]="githubAccountPickerUrl" (click)="beginSignIn()">
-              Choose GitHub account
-            </a>
-            <a [href]="githubSignInUrl" (click)="beginSignIn()">Continue current account</a>
-          } @else {
-            <a class="primary-button" [href]="githubSignInUrl" (click)="beginSignIn()">
-              Continue current account
-            </a>
-            <a [href]="githubAccountPickerUrl" (click)="beginSignIn()">Choose another account</a>
-          }
-          <button type="button" (click)="closeIdentityChoice()">Cancel</button>
         </div>
       </div>
     }

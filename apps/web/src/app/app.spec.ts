@@ -221,6 +221,7 @@ describe('App', () => {
     expect(element.querySelector('.identity-choice')?.textContent).toContain(
       'Who is entering the vault?',
     );
+    expect(element.querySelector('.identity-choice')?.getAttribute('aria-modal')).toBe('true');
     expect(
       choices
         .find((link) => link.textContent?.includes('Continue current account'))
@@ -228,9 +229,13 @@ describe('App', () => {
     ).toBe('/api/v1/auth/github?returnPath=%2F%23campaign-vault');
     expect(
       choices
-        .find((link) => link.textContent?.includes('Choose another account'))
+        .find((link) => link.textContent?.includes('Use another GitHub account'))
         ?.getAttribute('href'),
     ).toBe('/api/v1/auth/github?returnPath=%2F%23campaign-vault&selectAccount=true');
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    fixture.detectChanges();
+    expect(element.querySelector('.identity-choice')).toBeNull();
   });
 
   it('recovers automatically while the free connected host wakes up', async () => {

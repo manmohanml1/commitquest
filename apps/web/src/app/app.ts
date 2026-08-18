@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   ViewChild,
   inject,
@@ -135,6 +136,11 @@ export class App implements AfterViewInit, OnDestroy {
 
   protected closeIdentityChoice(): void {
     this.showIdentityChoice.set(false);
+  }
+
+  @HostListener('document:keydown.escape')
+  protected closeIdentityChoiceWithEscape(): void {
+    if (this.showIdentityChoice()) this.closeIdentityChoice();
   }
 
   protected async openSavedCampaign(saved: SavedCampaign): Promise<void> {

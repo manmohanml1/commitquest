@@ -15,6 +15,8 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - Added opt-in GitHub OAuth identity transport with no requested scopes, one-time state, PKCE, immediate provider-token disposal, rotated opaque sessions, hardened cookies, CSRF/origin enforcement, logout, and account deletion.
 - Added a guarded web control for permanent account and imported-campaign deletion.
 - Added explicit GitHub account choice through the provider's official account picker, with post-deletion choice and fast ordinary reconnect paths.
+- Presented GitHub account choice as an accessible, Escape-dismissable modal with an explicit password-safety boundary.
+- Synchronized the web, API, OpenAPI, and workspace metadata for the untagged 0.4.0 release candidate.
 
 ### Fixed
 
