@@ -38,6 +38,12 @@ public final class JooqSavedCampaignStore implements SavedCampaignStore {
     private static final Field<UUID> ACCOUNT_ID = field(name("account_id"), UUID.class);
     private static final Field<String> REPOSITORY_OWNER = field(name("repository_owner"), String.class);
     private static final Field<String> REPOSITORY_NAME = field(name("repository_name"), String.class);
+    private static final Field<UUID> TARGET_ACCOUNT_ID =
+            field(name("cq_saved_campaign", "account_id"), UUID.class);
+    private static final Field<String> TARGET_REPOSITORY_OWNER =
+            field(name("cq_saved_campaign", "repository_owner"), String.class);
+    private static final Field<String> TARGET_REPOSITORY_NAME =
+            field(name("cq_saved_campaign", "repository_name"), String.class);
     private static final Field<JSONB> PROJECTION = field(name("projection"), SQLDataType.JSONB);
     private static final Field<String> VISIBILITY = field(name("visibility"), String.class);
     private static final Field<Integer> PROJECTION_SCHEMA_VERSION = field(name("projection_schema_version"), Integer.class);
@@ -147,9 +153,9 @@ public final class JooqSavedCampaignStore implements SavedCampaignStore {
                 .set(SCORING_RULESET_VERSION, campaign.projection().scoringRulesetVersion())
                 .set(EXPORT_SCHEMA_VERSION, SavedCampaignExport.CURRENT_SCHEMA_VERSION)
                 .set(UPDATED_AT, campaign.updatedAt())
-                .where(ACCOUNT_ID.eq(campaign.ownerId().value()))
-                .and(REPOSITORY_OWNER.eq(identity.owner()))
-                .and(REPOSITORY_NAME.eq(identity.name()))
+                .where(TARGET_ACCOUNT_ID.eq(campaign.ownerId().value()))
+                .and(TARGET_REPOSITORY_OWNER.eq(identity.owner()))
+                .and(TARGET_REPOSITORY_NAME.eq(identity.name()))
                 .execute();
         if (affectedRows != 1) {
             throw new IllegalStateException("The saved campaign identity or owner did not match persisted data.");
