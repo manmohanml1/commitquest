@@ -952,16 +952,18 @@ footer {
   .site-header {
     width: calc(100% - 28px);
   }
-  nav {
-    gap: 14px;
-  }
-  .nav-cta {
-    padding-left: 14px;
+  .site-header nav {
+    display: none;
   }
   .hero {
     width: calc(100% - 28px);
+    grid-template-columns: minmax(0, 1fr);
     padding-top: 58px;
     gap: 46px;
+  }
+  .hero-copy,
+  .campaign-card {
+    min-width: 0;
   }
   .hero h1 {
     font-size: 54px;
@@ -976,6 +978,27 @@ footer {
   .campaign-card {
     padding: 16px;
     min-height: 430px;
+  }
+  .card-topline {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .campaign-title {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .campaign-title > div {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .campaign-title p,
+  .campaign-title h2,
+  .trust-line {
+    overflow-wrap: anywhere;
+  }
+  .level {
+    white-space: normal;
   }
   .citadel-art {
     height: 225px;

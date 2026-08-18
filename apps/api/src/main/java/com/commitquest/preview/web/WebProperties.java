@@ -4,9 +4,9 @@ import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("commitquest.web")
-record WebProperties(List<String> allowedOriginPatterns) {
+public record WebProperties(List<String> allowedOriginPatterns) {
 
-    WebProperties {
+    public WebProperties {
         allowedOriginPatterns = List.copyOf(allowedOriginPatterns);
     }
 }

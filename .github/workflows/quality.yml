@@ -63,3 +63,10 @@ jobs:
           java-version: 25
           cache: gradle
       - run: ./gradlew check --no-daemon
+      - name: Require PostgreSQL integration tests
+        run: |
+          result="build/test-results/test/TEST-com.commitquest.campaign.provider.postgresql.JooqSavedCampaignStoreIntegrationTest.xml"
+          if [[ ! -f "$result" ]] || ! grep -q 'skipped="0"' "$result"; then
+            echo "The PostgreSQL migration and adapter integration suite did not execute."
+            exit 1
+          fi

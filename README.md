@@ -20,6 +20,8 @@ See the [0.3.0 milestone contract](docs/milestones/0.3.0.md) for its verified ac
 
 The hosted v0.3 stack is constrained to zero-cost resources: Vercel Hobby for the static web and one explicitly pinned Render Free API service. Free-tier cold starts are expected; no database or other paid cloud resource is provisioned.
 
+Development of `0.4.0` is underway on an unreleased branch. Its opt-in connected mode separates GitHub identity from later repository authorization and now includes durable owner-scoped storage, secure OAuth/session transport, authenticated saved-campaign APIs, and an Angular private-vault interface. Connected controls report their unavailable state honestly when the database and identity configuration is absent; the bundled campaign and public preview remain independent. See the [0.4.0 milestone contract](docs/milestones/0.4.0.md) and [ADR 0006](docs/adr/0006-github-identity-and-saved-campaign-ownership.md).
+
 ## Repository layout
 
 ```text
@@ -69,6 +71,7 @@ cd apps/api
 - [Versioning](docs/VERSIONING.md)
 - [0.2.0 milestone contract](docs/milestones/0.2.0.md)
 - [0.3.0 milestone contract](docs/milestones/0.3.0.md)
+- [0.4.0 milestone contract](docs/milestones/0.4.0.md)
 - [Roadmap](ROADMAP.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)

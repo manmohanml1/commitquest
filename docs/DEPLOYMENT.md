@@ -68,7 +68,37 @@ Environment names are deployment metadata and never part of the product version.
 
 ## Later milestones
 
-ADR 0005 defines the connected-product zero-cost path. A separate CommitQuest Neon Free project may be introduced when v0.4 first persists campaigns. A transport-only Vercel Function may verify and store GitHub webhook deliveries when v0.6 begins. Render remains the Java host until measured availability needs justify a separately approved Cloud Run migration. No paid cloud resource may be introduced implicitly.
+ADR 0005 defines the connected-product zero-cost path. A transport-only Vercel Function may verify and store GitHub webhook deliveries when v0.6 begins. Render remains the Java host until measured availability needs justify a separately approved Cloud Run migration. No paid cloud resource may be introduced implicitly.
+
+The unreleased v0.4 API contains an opt-in persistence mode controlled by `COMMITQUEST_PERSISTENCE_ENABLED`. It additionally requires a JDBC PostgreSQL URL, username, password, and a connection-pool size between 1 and 10. The default remains disabled. Enabling connected mode with partial configuration fails startup instead of silently falling back to ephemeral behavior.
+
+Identity transport is separately gated by `COMMITQUEST_IDENTITY_ENABLED` and requires the GitHub OAuth client ID and secret, a Base64-encoded HMAC secret containing at least 32 random bytes, and the public web base URL. Identity cannot start without the persistence adapters. Production uses the same-origin web URL as the OAuth callback base; only loopback development may use HTTP. Registering an OAuth App or placing these secrets in Render remains an explicit external deployment action.
+
+### Staged v0.4 connected resources
+
+The following free-tier resources were explicitly approved and configured on 2026-08-17. They are staged for verification; saving their configuration did not deploy the unreleased v0.4 code.
+
+- **Database:** dedicated Neon Free project `commitquest-db` in `iad1` (Washington, D.C.). Neon Auth is disabled because CommitQuest owns its GitHub OAuth and session boundary.
+- **Vercel connection:** the database integration is attached only to the `commitquest-web` Development environment with the `COMMITQUEST_DATABASE` prefix. It is not attached to Preview or Production.
+- **Render database configuration:** persistence enablement, JDBC credentials, and a pool size of three are stored as server-only environment variables on `commitquest-api-manmohanml1`.
+- **GitHub identity:** a dedicated `CommitQuest` OAuth App uses `https://commitquest-web.vercel.app` as its homepage and `https://commitquest-web.vercel.app/api/v1/auth/github/callback` as its exact callback URL. Device Flow is disabled and the application requests no scopes.
+- **Render identity configuration:** identity enablement, OAuth credentials, a generated HMAC secret, and the public base URL are stored as server-only environment variables.
+- **Secret handling:** no database credential, OAuth secret, token, or HMAC material is committed, copied into Vercel browser variables, or documented here. The initially exposed OAuth client secret was rotated and deleted before use.
+
+Render configuration was saved with **Save only**. The running production service remains on the previously deployed v0.3 code until a separate commit, review, merge, and deployment are authorized. The v0.4 connected journey therefore cannot be considered production-verified yet.
+
+### v0.4 preview verification
+
+Pull request #17 was verified on 2026-08-17 without changing production:
+
+- Vercel built the exact branch commit as an immutable web preview.
+- A temporary Render Free service ran the same branch API against the dedicated Neon Free database.
+- The signed-in journey covered save, return, explicit refresh, visibility, export, campaign deletion, logout, permanent account-data deletion, and reauthentication with an empty vault.
+- The OAuth callback was temporarily pointed at loopback only for same-origin browser QA, then restored to the exact production callback.
+- The temporary Render service was deleted after verification; its service, resources, and deploy hook no longer exist.
+- Production Render database credentials were corrected and saved without triggering a deployment. Production remains on v0.3 until owner approval.
+
+This isolated preview is acceptance evidence for the implementation, not production verification or release authorization.
 
 ## Promotion contract
 
