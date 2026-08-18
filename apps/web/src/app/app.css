@@ -507,7 +507,8 @@
 
 .vault-session button,
 .vault-card-actions button,
-.delete-confirmation button {
+.delete-confirmation button,
+.account-delete-confirmation button {
   padding: 8px 10px;
   border: 1px solid rgba(120, 191, 255, 0.28);
   background: transparent;
@@ -655,7 +656,9 @@
 }
 
 .vault-card-actions .danger-action,
-.delete-confirmation button:first-of-type {
+.delete-confirmation button:first-of-type,
+.vault-session .danger-action,
+.account-delete-confirmation button:first-of-type {
   border-color: rgba(245, 185, 66, 0.38);
   color: #f3bd82;
 }
@@ -666,6 +669,23 @@
   align-items: center;
   color: #f3bd82;
   font: 700 10px/1.2 var(--font-geist-mono);
+}
+
+.account-delete-confirmation {
+  flex: 1 1 260px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+  align-items: center;
+  color: #f3bd82;
+  font: 700 10px/1.35 var(--font-geist-mono);
+}
+
+.account-delete-confirmation strong {
+  flex-basis: 100%;
+  white-space: normal;
+  text-align: right;
 }
 
 @media (max-width: 600px) {
@@ -713,6 +733,13 @@
   .vault-session button,
   .vault-session .primary-button {
     width: 100%;
+  }
+  .account-delete-confirmation {
+    flex-basis: 100%;
+    justify-content: stretch;
+  }
+  .account-delete-confirmation strong {
+    text-align: left;
   }
   .vault-feedback {
     grid-template-columns: auto minmax(0, 1fr);

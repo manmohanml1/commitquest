@@ -38,6 +38,8 @@ Identity gates cover relative return-path validation, one-time and expiring OAut
 
 Saved-campaign transport gates cover owner derivation from the session, identical missing/cross-owner responses, CSRF and source checks for every mutation, owner-free response models, generated Angular-client compilation, connected-unavailable fallback, signed-out entry, owner-library loading, and private save behavior. Browser acceptance must retain the bundled map when the API is unavailable and must not present a fake successful sign-in or save state.
 
+The v0.4 browser acceptance journey additionally covers guarded campaign deletion, guarded permanent account-data deletion, sign-out and reauthentication, and a 390×844 responsive pass. Mobile acceptance requires no horizontal clipping in the header, hero, campaign crest, repository form, vault controls, or confirmation states.
+
 The PostgreSQL suite uses Testcontainers against PostgreSQL 17. A local machine without Docker may run the database-free gates with the integration suite reported as skipped; the GitHub Actions API job has Docker and fails explicitly if that suite does not execute. A skipped database suite is therefore never sufficient for merge or release evidence.
 
 The release-critical journey will prove that issue creation, PR association, CI, review, merge, reward issuance, map projection, duplicate delivery, showcase sanitization, and tenant authorization behave correctly end to end.

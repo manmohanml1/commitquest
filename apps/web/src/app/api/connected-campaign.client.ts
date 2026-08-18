@@ -72,6 +72,10 @@ export class ConnectedCampaignClient {
     return this.identity.logout(csrfToken);
   }
 
+  deleteAccount(csrfToken: string): Observable<void> {
+    return this.identity.deleteAccount(csrfToken);
+  }
+
   message(error: unknown, fallback: string): string {
     if (error instanceof HttpErrorResponse) {
       const problem = error.error as { detail?: string } | null;

@@ -52,6 +52,7 @@ export class App implements AfterViewInit, OnDestroy {
   protected readonly session = signal<Session | null>(null);
   protected readonly savedCampaigns = signal<ReadonlyArray<SavedCampaign>>([]);
   protected readonly pendingDeleteId = signal<string | null>(null);
+  protected readonly pendingAccountDelete = signal(false);
   protected readonly githubSignInUrl = '/api/v1/auth/github?returnPath=%2F%23campaign-vault';
 
   private game?: Phaser.Game;
@@ -214,10 +215,40 @@ export class App implements AfterViewInit, OnDestroy {
       await firstValueFrom(this.connectedClient.logout(session.csrfToken));
       this.session.set(null);
       this.savedCampaigns.set([]);
+      this.pendingAccountDelete.set(false);
       this.connectedPhase.set('signed-out');
       this.connectedMessage.set('Signed out. Public, ephemeral previews are still available.');
     } catch (error: unknown) {
       this.handleConnectedFailure(error, 'Sign out could not be completed. Please try again.');
+    }
+  }
+
+  protected requestAccountDelete(): void {
+    this.pendingAccountDelete.set(true);
+  }
+
+  protected cancelAccountDelete(): void {
+    this.pendingAccountDelete.set(false);
+  }
+
+  protected async deleteAccount(): Promise<void> {
+    const session = this.session();
+    if (!session || this.connectedPhase() === 'working') return;
+    this.connectedPhase.set('working');
+    this.connectedMessage.set('Deleting your CommitQuest account and imported campaign data…');
+    try {
+      await firstValueFrom(this.connectedClient.deleteAccount(session.csrfToken));
+      this.session.set(null);
+      this.savedCampaigns.set([]);
+      this.pendingDeleteId.set(null);
+      this.pendingAccountDelete.set(false);
+      this.connectedPhase.set('signed-out');
+      this.connectedMessage.set(
+        'Your CommitQuest account and imported campaign data were permanently deleted.',
+      );
+    } catch (error: unknown) {
+      this.pendingAccountDelete.set(false);
+      this.handleConnectedFailure(error, 'Account data could not be deleted. Please try again.');
     }
   }
 
@@ -312,6 +343,7 @@ export class App implements AfterViewInit, OnDestroy {
       this.session.set(null);
       this.savedCampaigns.set([]);
       this.pendingDeleteId.set(null);
+      this.pendingAccountDelete.set(false);
       this.connectedPhase.set('signed-out');
       this.connectedMessage.set('Your session expired. Sign in with GitHub to reopen the vault.');
       return;

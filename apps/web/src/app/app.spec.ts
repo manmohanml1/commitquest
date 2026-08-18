@@ -354,4 +354,42 @@ describe('App', () => {
 
     expect(element.querySelector('.vault-card')).toBeNull();
   });
+
+  it('requires confirmation before deleting the account and all imported data', async () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    http.expectOne('/api/v1/session').flush({
+      githubLogin: 'octocat',
+      displayName: 'The Octocat',
+      avatarUrl: 'https://avatars.example/octocat',
+      expiresAt: '2026-08-24T12:00:00Z',
+      csrfToken: 'csrf-token',
+    });
+    await Promise.resolve();
+    http.expectOne('/api/v1/campaigns').flush([]);
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    element.querySelector<HTMLButtonElement>('.vault-session .danger-action')?.click();
+    fixture.detectChanges();
+
+    expect(element.querySelector('.account-delete-confirmation')?.textContent).toContain(
+      'Delete account and all imported data?',
+    );
+    [...element.querySelectorAll<HTMLButtonElement>('.account-delete-confirmation button')]
+      .find((button) => button.textContent?.trim() === 'Yes, delete account data')
+      ?.click();
+
+    const deletion = http.expectOne('/api/v1/account');
+    expect(deletion.request.method).toBe('DELETE');
+    expect(deletion.request.headers.get('X-CommitQuest-CSRF')).toBe('csrf-token');
+    deletion.flush(null, { status: 204, statusText: 'No Content' });
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(element.querySelector('.vault-session a')?.textContent).toContain('Sign in with GitHub');
+    expect(element.querySelector('.account-delete-confirmation')).toBeNull();
+    expect(element.querySelector('.vault-feedback')?.textContent).toContain('permanently deleted');
+  });
 });

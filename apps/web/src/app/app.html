@@ -138,7 +138,18 @@
             <strong>{{ account.displayName }}</strong>
             <code>&#64;{{ account.githubLogin }}</code>
           </span>
-          <button type="button" (click)="logout()">Sign out</button>
+          @if (pendingAccountDelete()) {
+            <span class="account-delete-confirmation" role="group" aria-label="Delete account data">
+              <strong>Delete account and all imported data?</strong>
+              <button type="button" (click)="deleteAccount()">Yes, delete account data</button>
+              <button type="button" (click)="cancelAccountDelete()">Cancel</button>
+            </span>
+          } @else {
+            <button type="button" (click)="logout()">Sign out</button>
+            <button class="danger-action" type="button" (click)="requestAccountDelete()">
+              Delete account data
+            </button>
+          }
         } @else if (connectedPhase() === 'signed-out' || connectedPhase() === 'signing-in') {
           <span>
             <small>GITHUB IDENTITY</small>

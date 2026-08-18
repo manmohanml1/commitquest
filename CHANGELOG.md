@@ -13,10 +13,12 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - Accepted the GitHub identity, opaque session, CSRF, PostgreSQL ownership, export, and deletion contract for connected campaigns.
 - Added opt-in PostgreSQL persistence with Flyway migrations, jOOQ owner-scoped campaign storage, database-cascade account deletion, bounded connection pooling, and Testcontainers coverage.
 - Added opt-in GitHub OAuth identity transport with no requested scopes, one-time state, PKCE, immediate provider-token disposal, rotated opaque sessions, hardened cookies, CSRF/origin enforcement, logout, and account deletion.
+- Added a guarded web control for permanent account and imported-campaign deletion.
 
 ### Fixed
 
 - Aligned the OpenAPI campaign mapping constant and generated Angular client with mapping algorithm v6.
+- Prevented narrow mobile viewports from clipping hero copy, campaign metadata, navigation, and action controls.
 
 ## [0.3.0] - 2026-08-17
 

@@ -87,6 +87,19 @@ The following free-tier resources were explicitly approved and configured on 202
 
 Render configuration was saved with **Save only**. The running production service remains on the previously deployed v0.3 code until a separate commit, review, merge, and deployment are authorized. The v0.4 connected journey therefore cannot be considered production-verified yet.
 
+### v0.4 preview verification
+
+Pull request #17 was verified on 2026-08-17 without changing production:
+
+- Vercel built the exact branch commit as an immutable web preview.
+- A temporary Render Free service ran the same branch API against the dedicated Neon Free database.
+- The signed-in journey covered save, return, explicit refresh, visibility, export, campaign deletion, logout, permanent account-data deletion, and reauthentication with an empty vault.
+- The OAuth callback was temporarily pointed at loopback only for same-origin browser QA, then restored to the exact production callback.
+- The temporary Render service was deleted after verification; its service, resources, and deploy hook no longer exist.
+- Production Render database credentials were corrected and saved without triggering a deployment. Production remains on v0.3 until owner approval.
+
+This isolated preview is acceptance evidence for the implementation, not production verification or release authorization.
+
 ## Promotion contract
 
 ```text
