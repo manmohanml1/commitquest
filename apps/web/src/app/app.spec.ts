@@ -2,18 +2,27 @@ import { TestBed } from '@angular/core/testing';
 import { ComponentFixture } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { vi } from 'vitest';
 import { App } from './app';
 import { provideApi } from './api/generated/provide-api';
+import { IdentityNavigation } from './api/identity-navigation.service';
 import { PORTFOLIO_CITADEL } from './data/portfolio-citadel.fixture';
 import { CampaignProjection } from './domain/campaign';
 
 describe('App', () => {
   let http: HttpTestingController;
+  let identityNavigation: { navigate: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
+    identityNavigation = { navigate: vi.fn() };
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideApi('')],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideApi(''),
+        { provide: IdentityNavigation, useValue: identityNavigation },
+      ],
     }).compileComponents();
     http = TestBed.inject(HttpTestingController);
   });
@@ -217,25 +226,40 @@ describe('App', () => {
     element.querySelector<HTMLButtonElement>('.vault-session .primary-button')?.click();
     fixture.detectChanges();
 
-    const choices = [...element.querySelectorAll<HTMLAnchorElement>('.identity-choice a')];
+    const choices = [
+      ...element.querySelectorAll<HTMLButtonElement>('.identity-choice-actions button'),
+    ];
     expect(element.querySelector('.identity-choice')?.textContent).toContain(
       'Who is entering the vault?',
     );
     expect(element.querySelector('.identity-choice')?.getAttribute('aria-modal')).toBe('true');
+    expect(choices.some((button) => button.textContent?.includes('Continue current account'))).toBe(
+      true,
+    );
     expect(
-      choices
-        .find((link) => link.textContent?.includes('Continue current account'))
-        ?.getAttribute('href'),
-    ).toBe('/api/v1/auth/github?returnPath=%2F%23campaign-vault');
-    expect(
-      choices
-        .find((link) => link.textContent?.includes('Use another GitHub account'))
-        ?.getAttribute('href'),
-    ).toBe('/api/v1/auth/github?returnPath=%2F%23campaign-vault&selectAccount=true');
+      choices.some((button) => button.textContent?.includes('Use another GitHub account')),
+    ).toBe(true);
 
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     fixture.detectChanges();
     expect(element.querySelector('.identity-choice')).toBeNull();
+
+    element.querySelector<HTMLButtonElement>('.vault-session .primary-button')?.click();
+    fixture.detectChanges();
+    [...element.querySelectorAll<HTMLButtonElement>('.identity-choice-actions button')]
+      .find((button) => button.textContent?.includes('Use another GitHub account'))
+      ?.click();
+    fixture.detectChanges();
+
+    expect(element.textContent).toContain('GATEWAY AWAKENING');
+    expect(identityNavigation.navigate).not.toHaveBeenCalled();
+    http
+      .expectOne('/api/v1/session')
+      .flush({ code: 'UNAUTHENTICATED' }, { status: 401, statusText: 'Unauthorized' });
+    await fixture.whenStable();
+    expect(identityNavigation.navigate).toHaveBeenCalledWith(
+      '/api/v1/auth/github?returnPath=%2F%23campaign-vault&selectAccount=true',
+    );
   });
 
   it('recovers automatically while the free connected host wakes up', async () => {
@@ -458,12 +482,18 @@ describe('App', () => {
     expect(element.querySelector('.identity-choice')?.textContent).toContain(
       'Choose GitHub account',
     );
-    expect(
-      [...element.querySelectorAll<HTMLAnchorElement>('.identity-choice a')]
-        .find((link) => link.textContent?.includes('Choose GitHub account'))
-        ?.getAttribute('href'),
-    ).toContain('selectAccount=true');
     expect(element.querySelector('.account-delete-confirmation')).toBeNull();
     expect(element.querySelector('.vault-feedback')?.textContent).toContain('permanently deleted');
+
+    [...element.querySelectorAll<HTMLButtonElement>('.identity-choice-actions button')]
+      .find((button) => button.textContent?.includes('Choose GitHub account'))
+      ?.click();
+    http
+      .expectOne('/api/v1/session')
+      .flush({ code: 'UNAUTHENTICATED' }, { status: 401, statusText: 'Unauthorized' });
+    await fixture.whenStable();
+    expect(identityNavigation.navigate).toHaveBeenCalledWith(
+      '/api/v1/auth/github?returnPath=%2F%23campaign-vault&selectAccount=true',
+    );
   });
 });

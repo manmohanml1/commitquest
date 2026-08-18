@@ -13,6 +13,7 @@ import { firstValueFrom } from 'rxjs';
 import type Phaser from 'phaser';
 
 import { ConnectedCampaignClient, SavedCampaign } from './api/connected-campaign.client';
+import { IdentityNavigation } from './api/identity-navigation.service';
 import { RepositoryPreviewClient } from './api/repository-preview.client';
 import { Session } from './api/generated/model/session';
 import { PORTFOLIO_CITADEL } from './data/portfolio-citadel.fixture';
@@ -64,6 +65,7 @@ export class App implements AfterViewInit, OnDestroy {
   private game?: Phaser.Game;
   private readonly previewClient = inject(RepositoryPreviewClient);
   private readonly connectedClient = inject(ConnectedCampaignClient);
+  private readonly identityNavigation = inject(IdentityNavigation);
 
   async ngAfterViewInit(): Promise<void> {
     await Promise.all([this.rebuildMap(), this.loadConnectedState()]);
@@ -123,10 +125,32 @@ export class App implements AfterViewInit, OnDestroy {
     }
   }
 
-  protected beginSignIn(): void {
+  protected async beginSignIn(event: Event, destination: string): Promise<void> {
+    event.preventDefault();
+    if (this.connectedPhase() === 'signing-in') return;
     this.showIdentityChoice.set(false);
     this.connectedPhase.set('signing-in');
-    this.connectedMessage.set('Opening GitHub to verify your identity…');
+    this.connectedMessage.set(
+      'Waking the secure identity gateway. You will continue to GitHub when it is ready…',
+    );
+
+    try {
+      await firstValueFrom(this.connectedClient.session());
+    } catch (error: unknown) {
+      if (!this.connectedClient.isSignedOut(error)) {
+        this.connectedPhase.set(
+          this.connectedClient.isUnavailable(error) ? 'unavailable' : 'signed-out',
+        );
+        this.connectedMessage.set(
+          this.connectedClient.isUnavailable(error)
+            ? 'GitHub sign-in is not configured in this environment.'
+            : 'The secure identity gateway is still waking. Try sign-in again in a moment.',
+        );
+        return;
+      }
+    }
+
+    this.identityNavigation.navigate(destination);
   }
 
   protected openIdentityChoice(preferAccountSelection = false): void {

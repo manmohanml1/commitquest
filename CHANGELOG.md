@@ -24,6 +24,7 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - Prevented narrow mobile viewports from clipping hero copy, campaign metadata, navigation, and action controls.
 - Recover the private campaign vault automatically from Render Free cold starts and provide an explicit retry state when wake-up exceeds the bounded retry window.
 - Replace the cold-start placeholder with a responsive, reduced-motion-aware vault-awakening experience that keeps the public campaign usable while connected services recover.
+- Keep OAuth startup inside the branded CommitQuest gateway-awakening state until the sleeping Render identity service answers, preventing Render's infrastructure wake page from replacing the application.
 
 ## [0.3.0] - 2026-08-17
 
