@@ -18,6 +18,7 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - Presented GitHub account choice as an accessible, Escape-dismissable modal with an explicit password-safety boundary.
 - Synchronized the web, API, OpenAPI, and workspace metadata for the untagged 0.4.0 release candidate.
 - Accepted the v0.5 dual-design contract: a redesigned authenticated application shell with shared Modern and medieval-fantasy Chronicle modes alongside minimum-permission GitHub App connection.
+- Accepted the privacy-safe product-insights and community-signals contract: first-party aggregate analytics, opt-in public showcases and badges, and no global competitive leaderboard through 1.0.
 
 ### Fixed
 

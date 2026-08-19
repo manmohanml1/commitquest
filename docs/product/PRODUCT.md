@@ -50,4 +50,4 @@ The interface distinguishes failed, unavailable, private, not configured, not ap
 - Running arbitrary repository code
 - Claiming private or self-reported work is GitHub-verified
 - Autonomous GitHub writes in the initial product
-- Global competitive leaderboards
+- Global competitive leaderboards or activity-volume rankings

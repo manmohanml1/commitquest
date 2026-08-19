@@ -12,11 +12,14 @@ Pricing and limits below were reviewed on August 17, 2026. Provider terms change
 | Webhook ingress | Thin Vercel Function | `$0` within Hobby limits | Transport only; quota exhaustion delays new events but does not corrupt stored events |
 | GitHub integration | GitHub OAuth and GitHub App | `$0` | API rate limits and installation permissions apply |
 | CI/CD | GitHub Actions for the public repository | `$0` target | Workflow quotas and provider availability apply |
+| Anonymous traffic analytics | Vercel Web Analytics on Hobby | `$0` within the included 50,000 monthly-event limit | No custom events on Hobby; collection pauses at the plan boundary rather than creating an overage charge |
 | Domain | Provider subdomains | `$0` | A custom domain remains optional |
 
 The target monthly infrastructure bill is `$0`. No payment method, automatic overage, paid keep-alive, commercial workload, or unrelated-project resource reuse is part of this contract.
 
-Primary references: [Vercel Hobby](https://vercel.com/docs/plans/hobby), [Render Free](https://render.com/docs/free), and [Neon pricing](https://neon.com/pricing).
+Vercel Web Analytics may provide anonymous traffic insight, but it is optional and does not replace first-party aggregate product events. No third-party product analytics vendor, session replay, or paid analytics plan is part of the v1 target.
+
+Primary references: [Vercel Hobby](https://vercel.com/docs/plans/hobby), [Vercel Web Analytics pricing](https://vercel.com/docs/analytics/limits-and-pricing), [Render Free](https://render.com/docs/free), and [Neon pricing](https://neon.com/pricing).
 
 ## Alternatives
 
