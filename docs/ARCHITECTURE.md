@@ -37,6 +37,7 @@ The connected-product system uses:
 - Redis only when shared ephemeral coordination is demonstrated necessary
 - GitHub App with minimum read permissions
 - OpenTelemetry-compatible instrumentation across the API, database, outbound GitHub requests, and any future worker
+- From v0.6, a first-party, privacy-minimised product-event ledger with daily aggregate projections; it is separate from operational telemetry and does not retain provider credentials, raw repository payloads, or private campaign content
 
 ADR 0005 authorizes the connected zero-cost deployment boundary: Vercel Hobby, Render Free, and a separate Neon Free project. Cloud Run remains the preferred migration target when availability or commercial use justifies billing-enabled infrastructure; AWS/SQS remains an optional scale path rather than a v1 requirement.
 
@@ -54,6 +55,7 @@ progression
 health
 showcase
 audit
+insights
 ```
 
 Modules expose explicit public interfaces. GitHub payloads terminate at the integration adapter and cannot leak into domain types.
@@ -83,3 +85,4 @@ GitHub webhook
 - Public showcases use an allowlisted projection, not filtered private responses.
 - AI output cannot mutate state and always has a deterministic fallback.
 - Mapping, evidence, fixture, configuration, scoring, and prompt versions are recorded independently.
+- Product events are emitted only for completed or safely classified application outcomes; public community figures come only from delayed, thresholded aggregates and never identify an account, repository, or event.

@@ -12,6 +12,12 @@ CommitQuest never equates activity volume with engineering quality and never cla
 
 The v1 product serves an individual developer, student, portfolio builder, or open-source contributor who wants to improve and demonstrate one real repository. Maintainer onboarding is a secondary experiment. Cross-repository profiles, organizations, team competition, and paid administration remain later products.
 
+## Product insights and community signals
+
+CommitQuest measures whether the product is understandable and useful through privacy-safe, aggregate signals: successful preview generation, completed sign-in, saved campaigns, deliberate refreshes, exports, return journeys, and recovery outcomes. Operational telemetry answers whether infrastructure is healthy; product insights answer whether the product helps a visitor make progress. They remain separate datasets and neither is a proxy for engineering quality.
+
+The owner analytics dashboard is private. Public community signals begin only after the v0.8 sanitized-showcase boundary and contain delayed, thresholded aggregates such as campaigns forged or repositories explored. A campaign owner must explicitly approve any public showcase, featured frontier, or badge. CommitQuest does not publish a global developer ranking, activity-volume scoreboard, or opaque quality score. Post-1.0 opt-in seasonal activity boards require a separate fairness and abuse review.
+
 ## Return loop
 
 ```text
@@ -25,7 +31,7 @@ preview or connect a repository
   -> return after the next meaningful outcome
 ```
 
-Version 0.3 proves translation. Versions 0.4–0.6 create ownership and return. Version 0.7 creates explainable progression. Version 0.8 makes the result safely shareable. Versions 0.9–1.0 prove the system is fair, accessible, secure, recoverable, and operable.
+Version 0.3 proves translation. Versions 0.4–0.6 create ownership and return, including privacy-safe aggregate event foundations. Version 0.7 creates explainable progression and personal unlocks. Version 0.8 makes the result safely shareable and introduces aggregate community signals. Versions 0.9–1.0 prove the system is fair, accessible, secure, recoverable, measurable, and operable.
 
 Version 0.5 also replaces the authenticated v0.4 presentation with one shared application shell and two complete visual modes: a focused Modern workspace and an original medieval-fantasy Chronicle. They share the same evidence, routes, security boundaries, and component semantics; the mode changes presentation, never campaign truth.
 

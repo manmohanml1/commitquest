@@ -43,7 +43,7 @@ The bundled Portfolio Citadel campaign is the permanent zero-account demonstrati
 - One repository per campaign through `1.0.0`
 - GitHub first; GitLab and Bitbucket are post-1.0
 - Read-only GitHub integration through 1.0; no autonomous issue or PR writes
-- No global competitive leaderboard, chat, or multiplayer movement
+- No global competitive leaderboard, chat, or multiplayer movement through 1.0; any post-1.0 opt-in activity board requires a separate fairness, privacy, and abuse-prevention ADR
 - AI can explain or suggest but cannot mutate progression and must have a deterministic fallback
 - Public showcases use an explicit allowlisted projection; they are never filtered private API responses
 - The standalone application owns the complete Phaser experience; the portfolio owns a compact, native live demo backed by a sanitized CommitQuest projection
@@ -57,8 +57,8 @@ The bundled Portfolio Citadel campaign is the permanent zero-account demonstrati
 | `0.1–0.2` | Compelling bundled campaign and complete interaction language | Angular, Phaser, versioned fixtures, static hosting               |
 | `0.3`     | Ephemeral public-repository preview                           | Java 25/Spring Boot API, Render Free, and Vercel Hobby            |
 | `0.4–0.5` | Persistent connected campaign and dual-mode signed-in redesign | PostgreSQL, GitHub App, jOOQ, Flyway, GitHub identity              |
-| `0.6–0.8` | Reliable progression, improvement quests, and public sharing  | Durable webhook inbox/outbox, bounded polling, sanitized API       |
-| `0.9–1.0` | Operable evidence-backed progression product                  | Load/security/recovery hardening and cost-bounded telemetry        |
+| `0.6–0.8` | Reliable progression, improvement quests, aggregate community signals, and public sharing | Durable webhook inbox/outbox, bounded polling, first-party aggregate events, sanitized API |
+| `0.9–1.0` | Operable evidence-backed progression product                  | Load/security/recovery hardening and cost-bounded owner analytics  |
 
 Do not scaffold databases, queues, caches, cloud resources, or placeholder services before their first milestone uses them. No payable resource may be provisioned. ADR 0005 defines the approved zero-cost connected-product path. Redis, Kafka, SQS, and a continuously running worker are not default dependencies.
 
@@ -94,6 +94,7 @@ Code is organized by business capability. Provider DTOs terminate in adapters. M
 ### Data and hosting
 
 - PostgreSQL is the transactional source of truth; the hosted zero-cost path uses a separate CommitQuest Neon Free project
+- Product analytics use a first-party, minimised event ledger and daily aggregate projections only after their v0.6 contract is accepted; raw repository payloads, GitHub OAuth tokens, session tokens, email addresses, and private campaign contents never enter analytics storage
 - Transactional inbox/outbox for webhook deduplication and reliable delivery
 - A transport-only Vercel Function may verify and durably store GitHub webhook deliveries while Render is asleep
 - Spring Boot owns normalization, progression, and all domain transitions; transport adapters never duplicate domain rules
@@ -113,6 +114,7 @@ Code is organized by business capability. Provider DTOs terminate in adapters. M
 - Prefer ports and adapters at provider boundaries; do not leak GitHub types into campaign types
 - Use expand-and-contract database changes and backward-compatible events
 - Record historical rewards with the ruleset that created them
+- Derive public community counts from delayed, thresholded aggregates; do not expose an individual event stream or use activity volume as a quality signal
 
 ## Quality and release contract
 

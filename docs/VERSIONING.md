@@ -10,11 +10,11 @@ CommitQuest uses one product version for the web, API, and worker until they acq
 0.3.0  Public repository preview
 0.4.0  Persistent campaigns
 0.5.0  GitHub App installation and dual-mode authenticated redesign
-0.6.0  Live webhook synchronization
-0.7.0  Progression and repository health
-0.8.0  Public showcases and portfolio embed
-0.9.0  Closed beta and production hardening
-1.0.0  Stable public product
+0.6.0  Live webhook synchronization and first-party aggregate event foundation
+0.7.0  Progression, repository health, and personal unlocks
+0.8.0  Public showcases, Community Beacon, and portfolio embed
+0.9.0  Closed beta, private aggregate owner analytics, and production hardening
+1.0.0  Stable public product with privacy-verified telemetry gates
 ```
 
 Annotated release tags use `vMAJOR.MINOR.PATCH`. Prereleases use `-alpha.N`, `-beta.N`, and `-rc.N`. Environments are deployment metadata and never appear in a product version.
