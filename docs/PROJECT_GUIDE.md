@@ -47,7 +47,7 @@ The bundled Portfolio Citadel campaign is the permanent zero-account demonstrati
 - AI can explain or suggest but cannot mutate progression and must have a deterministic fallback
 - Public showcases use an explicit allowlisted projection; they are never filtered private API responses
 - The standalone application owns the complete Phaser experience; the portfolio owns a compact, native live demo backed by a sanitized CommitQuest projection
-- Version 0.5 replaces the signed-in v0.4 layout with one semantic application shell and two complete presentations: a redesigned Modern mode and an original medieval-fantasy Chronicle mode. They share routes, state, evidence, security, and component logic as specified in `docs/product/DESIGN_MODES.md`.
+- Version 0.5 replaces the signed-in v0.4 layout with one semantic application shell and two complete presentations: a redesigned Modern mode and an original medieval-fantasy Chronicle mode. They share routes, state, evidence, security, and component logic as specified in `docs/product/DESIGN_MODES.md`, `docs/product/AUTHENTICATED_SHELL.md`, and `docs/product/DESIGN_SYSTEM.md`. ADR 0008 owns the minimum-permission GitHub App boundary.
 - Cross-repository mastery, organization analytics, team competition, and billing are post-1.0
 
 ## Delivery sequence

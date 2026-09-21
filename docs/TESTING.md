@@ -40,6 +40,8 @@ Saved-campaign transport gates cover owner derivation from the session, identica
 
 The v0.4 browser acceptance journey additionally covers guarded campaign deletion, guarded permanent account-data deletion, sign-out and reauthentication, and a 390×844 responsive pass. Mobile acceptance requires no horizontal clipping in the header, hero, campaign crest, repository form, vault controls, or confirmation states.
 
+V0.5 adds route refresh and back/forward coverage, OAuth return to the requested shell route, shell-level state preservation, Modern/Chronicle semantic parity, mode switching without an unnecessary API request, 320 CSS-pixel reflow, forced colors, 200% zoom, and complete keyboard operation. GitHub App tests cover the fixed permission map, selected-repository scoping, short-lived token non-persistence, installation reconciliation, suspension, revocation, repository removal, permission changes, identical cross-owner/not-found responses, and private-evidence isolation. Every v0.4 public-preview, identity, vault, and destructive-action behavior must have an assigned v0.5 regression owner before extraction from the root component.
+
 The PostgreSQL suite uses Testcontainers against PostgreSQL 17. A local machine without Docker may run the database-free gates with the integration suite reported as skipped; the GitHub Actions API job has Docker and fails explicitly if that suite does not execute. A skipped database suite is therefore never sufficient for merge or release evidence.
 
 The release-critical journey will prove that issue creation, PR association, CI, review, merge, reward issuance, map projection, duplicate delivery, showcase sanitization, and tenant authorization behave correctly end to end.
