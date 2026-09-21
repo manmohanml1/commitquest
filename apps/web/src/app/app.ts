@@ -18,6 +18,7 @@ import { RepositoryPreviewClient } from './api/repository-preview.client';
 import { Session } from './api/generated/model/session';
 import { PORTFOLIO_CITADEL } from './data/portfolio-citadel.fixture';
 import { CampaignEvidence, CampaignProjection, CampaignView } from './domain/campaign';
+import { DesignModeControl } from './design/design-mode-control';
 
 type PreviewPhase = 'idle' | 'loading' | 'success' | 'error';
 type ConnectedPhase =
@@ -25,7 +26,7 @@ type ConnectedPhase =
 
 @Component({
   selector: 'app-root',
-  imports: [DatePipe],
+  imports: [DatePipe, DesignModeControl],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

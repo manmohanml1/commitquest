@@ -1,0 +1,38 @@
+<section class="mode-control" aria-labelledby="mode-control-title">
+  <div class="mode-control-copy">
+    <p>WORKSPACE STYLE · PREVIEW</p>
+    <h3 id="mode-control-title">Choose how your campaign is presented</h3>
+    <span
+      >Presentation changes here. Evidence, permissions, and campaign state stay identical.</span
+    >
+  </div>
+
+  <div class="mode-options" role="group" aria-label="Workspace presentation">
+    <button
+      type="button"
+      [attr.aria-pressed]="designMode.mode() === 'modern'"
+      (click)="selectMode('modern')"
+    >
+      <span aria-hidden="true">◇</span>
+      <strong>Modern</strong>
+      <small>Focused engineering workspace</small>
+    </button>
+    <button
+      type="button"
+      [attr.aria-pressed]="designMode.mode() === 'chronicle'"
+      (click)="selectMode('chronicle')"
+    >
+      <span aria-hidden="true">♜</span>
+      <strong>Chronicle</strong>
+      <small>Medieval campaign presentation</small>
+    </button>
+  </div>
+
+  <label class="easy-read-option">
+    <input type="checkbox" [checked]="designMode.easyRead()" (change)="setEasyRead($event)" />
+    <span>
+      <strong>Easy-read type</strong>
+      <small>Keep decorative headings in a familiar, highly legible typeface.</small>
+    </span>
+  </label>
+</section>
