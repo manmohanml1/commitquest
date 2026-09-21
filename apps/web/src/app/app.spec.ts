@@ -27,7 +27,12 @@ describe('App', () => {
     http = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => http.verify());
+  afterEach(() => {
+    http.verify();
+    window.localStorage.removeItem('commitquest.design-mode.v1');
+    delete document.documentElement.dataset['commitquestMode'];
+    delete document.documentElement.dataset['commitquestEasyRead'];
+  });
 
   function renderWithConnectedModeUnavailable(): ComponentFixture<App> {
     const fixture = TestBed.createComponent(App);
@@ -354,6 +359,47 @@ describe('App', () => {
     expect(element.querySelector('.vault-card')?.textContent).toContain(
       'manmohanml1/portfolio-website',
     );
+  });
+
+  it('switches authenticated presentation locally without making an API request', async () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    http.expectOne('/api/v1/session').flush({
+      githubLogin: 'octocat',
+      displayName: 'The Octocat',
+      avatarUrl: 'https://avatars.example/octocat',
+      expiresAt: '2026-08-24T12:00:00Z',
+      csrfToken: 'csrf-token',
+    });
+    await Promise.resolve();
+    http.expectOne('/api/v1/campaigns').flush([]);
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const control = element.querySelector('app-design-mode-control');
+    const buttons = [
+      ...(control?.querySelectorAll<HTMLButtonElement>('.mode-options button') ?? []),
+    ];
+
+    expect(control?.textContent).toContain('Choose how your campaign is presented');
+    expect(buttons.map((button) => button.getAttribute('aria-pressed'))).toEqual(['true', 'false']);
+
+    buttons[1]?.click();
+    fixture.detectChanges();
+
+    expect(buttons.map((button) => button.getAttribute('aria-pressed'))).toEqual(['false', 'true']);
+    expect(document.documentElement.dataset['commitquestMode']).toBe('chronicle');
+    expect(JSON.parse(window.localStorage.getItem('commitquest.design-mode.v1') ?? '{}')).toEqual({
+      version: 1,
+      mode: 'chronicle',
+      easyRead: false,
+    });
+
+    const easyRead = control?.querySelector<HTMLInputElement>('.easy-read-option input');
+    easyRead?.click();
+    fixture.detectChanges();
+    expect(document.documentElement.dataset['commitquestEasyRead']).toBe('true');
   });
 
   it('returns an expired session to the signed-out vault without losing the public campaign', async () => {

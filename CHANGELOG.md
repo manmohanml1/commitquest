@@ -20,6 +20,7 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - Accepted the v0.5 dual-design contract: a redesigned authenticated application shell with shared Modern and medieval-fantasy Chronicle modes alongside minimum-permission GitHub App connection.
 - Accepted the privacy-safe product-insights and community-signals contract: first-party aggregate analytics, opt-in public showcases and badges, and no global competitive leaderboard through 1.0.
 - Prepared the v0.5 authenticated-shell information architecture, responsive wireframes, shared design-system contract, and minimum-permission GitHub App boundary.
+- Added the first v0.5 implementation foundation: versioned local Modern/Chronicle preferences, an authenticated accessible mode control, easy-read preference, and shared semantic presentation tokens.
 
 ### Fixed
 

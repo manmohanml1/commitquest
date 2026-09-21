@@ -220,6 +220,10 @@
       </div>
     </div>
 
+    @if (session()) {
+      <app-design-mode-control />
+    }
+
     @if (showIdentityChoice() && connectedPhase() === 'signed-out') {
       <div class="identity-choice-backdrop">
         <div
