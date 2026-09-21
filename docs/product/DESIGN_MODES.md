@@ -9,6 +9,8 @@ Version 0.5 redesigns the authenticated CommitQuest experience and ships two com
 
 The current v0.4 interface is an accepted release baseline, not the v0.5 design target.
 
+The implementation-ready shell hierarchy and responsive wireframes are defined in [Authenticated application shell](AUTHENTICATED_SHELL.md). Shared tokens and component state requirements are defined in [V0.5 shared design system](DESIGN_SYSTEM.md).
+
 ## Shared product contract
 
 The modes are visual and presentational variants, not separate applications.

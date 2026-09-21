@@ -18,6 +18,7 @@ The 0.1 demo contains no credentials, authentication, persistent user data, or r
 - Origin and CSRF validation on every state-changing browser request
 - Stateless Spring Security filter chain with application-owned opaque sessions and explicit CSRF enforcement
 - Minimum GitHub App permissions and repository-specific installation access
+- GitHub App installation tokens are short lived, scoped to selected repositories and fixed read-only permissions, kept server-side in memory only, and discarded on expiry or installation-state change
 - HMAC-SHA256 webhook verification over the unmodified request body
 - Delivery deduplication using `X-GitHub-Delivery`
 - Short-lived installation tokens stored only server-side
@@ -27,6 +28,6 @@ The 0.1 demo contains no credentials, authentication, persistent user data, or r
 - Separate allowlisted public-showcase projection
 - Secret scanning, dependency scanning, and data-deletion support
 
-An owner-scoped lookup must not reveal whether another account's campaign exists. OAuth access tokens used only to fetch the signed-in profile are not retained after account reconciliation. Session tokens, OAuth state, provider credentials, and deletion secrets are never logged.
+An owner-scoped lookup must not reveal whether another account's campaign exists. OAuth access tokens used only to fetch the signed-in profile are not retained after account reconciliation. GitHub App installation tokens are never persisted or returned to the browser. Session tokens, OAuth state, provider credentials, private keys, webhook secrets, and deletion secrets are never logged.
 
 Do not open a public issue for a vulnerability that could expose credentials or private repository data.
