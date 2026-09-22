@@ -34,6 +34,20 @@ if (apiRewrite?.destination !== 'https://commitquest-api-manmohanml1.onrender.co
   failures.push('Vercel must proxy /api to the pinned Render Free API origin.');
 }
 
+const apiRewriteIndex = vercelConfig.rewrites?.findIndex(
+  (rewrite) => rewrite.source === '/api/:path*',
+);
+const appRewriteIndex = vercelConfig.rewrites?.findIndex(
+  (rewrite) => rewrite.source === '/app/:path*',
+);
+const appRewrite = vercelConfig.rewrites?.[appRewriteIndex];
+if (appRewrite?.destination !== '/index.html') {
+  failures.push('Vercel must serve authenticated /app history routes through index.html.');
+}
+if (apiRewriteIndex < 0 || appRewriteIndex < 0 || apiRewriteIndex > appRewriteIndex) {
+  failures.push('The /api proxy must retain precedence over the /app history fallback.');
+}
+
 if ('functions' in vercelConfig) {
   failures.push(
     'The v0.3 Vercel deployment must remain static and use no billable function configuration.',

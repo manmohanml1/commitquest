@@ -1,0 +1,37 @@
+<header class="destination-heading">
+  <p>OWNER-SCOPED · PRIVATE BY DEFAULT</p>
+  <h1>Campaign vault</h1>
+  <span
+    >Choose a saved repository realm. Lifecycle controls remain available in the released v0.4 vault
+    while their focused v0.5 migration is completed.</span
+  >
+</header>
+
+@if (store.campaigns().length === 0) {
+  <section class="empty-destination">
+    <p>00 CAMPAIGNS</p>
+    <h2>No campaigns saved yet</h2>
+    <span>Generate a public preview first; saving remains explicit and private by default.</span>
+    <a href="/#preview">Preview a repository</a>
+  </section>
+} @else {
+  <section class="vault-grid" aria-label="Saved campaign library">
+    @for (campaign of store.campaigns(); track campaign.id) {
+      <article
+        class="destination-card"
+        [class.selected]="store.selectedCampaignId() === campaign.id"
+      >
+        <p>{{ campaign.visibility }} · {{ campaign.projection.mode }}</p>
+        <h2>{{ campaign.projection.title }}</h2>
+        <span>{{ campaign.projection.repository }}</span>
+        <button
+          type="button"
+          (click)="store.selectCampaign(campaign.id)"
+          routerLink="/app/overview"
+        >
+          Open realm
+        </button>
+      </article>
+    }
+  </section>
+}

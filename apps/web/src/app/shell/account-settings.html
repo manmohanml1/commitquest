@@ -1,0 +1,26 @@
+<header class="destination-heading">
+  <p>IDENTITY · PRESENTATION · ACCESSIBILITY</p>
+  <h1>Account settings</h1>
+  <span>GitHub identity is separate from future repository installation permissions.</span>
+</header>
+
+@if (store.session(); as account) {
+  <section class="identity-card">
+    <img [src]="account.avatarUrl" alt="" width="54" height="54" />
+    <span
+      ><small>SIGNED IN AS</small><strong>{{ account.displayName }}</strong
+      ><code>&#64;{{ account.githubLogin }}</code></span
+    >
+    <button type="button" (click)="store.signOut()">Sign out</button>
+  </section>
+}
+
+<app-design-mode-control />
+
+<section class="migration-note">
+  <strong>Permanent account deletion remains protected.</strong>
+  <span
+    >The released confirmation flow stays in v0.4 until the shared v0.5 dialog and focus-management
+    regression suite are in place.</span
+  >
+</section>
