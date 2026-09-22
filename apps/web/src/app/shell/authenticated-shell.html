@@ -1,0 +1,101 @@
+<div class="shell">
+  <header class="command-bar">
+    <a class="shell-brand" routerLink="/" aria-label="CommitQuest public home">
+      <span>CQ</span><strong>COMMITQUEST</strong>
+    </a>
+
+    <label class="campaign-switcher">
+      <span>Campaign</span>
+      <select
+        aria-label="Current campaign"
+        [disabled]="store.phase() !== 'ready' || store.campaigns().length === 0"
+        [value]="store.selectedCampaignId() ?? ''"
+        (change)="selectCampaign($event)"
+      >
+        @if (store.campaigns().length === 0) {
+          <option value="">No saved campaigns</option>
+        }
+        @for (campaign of store.campaigns(); track campaign.id) {
+          <option [value]="campaign.id">{{ campaign.projection.title }}</option>
+        }
+      </select>
+    </label>
+
+    @if (store.session(); as account) {
+      <a class="account-entry" routerLink="/app/account">
+        <img [src]="account.avatarUrl" alt="" width="34" height="34" />
+        <span
+          ><small>Signed in</small><strong>{{ account.displayName }}</strong></span
+        >
+      </a>
+    }
+  </header>
+
+  <div class="shell-body">
+    <aside class="primary-navigation">
+      <nav aria-label="Campaign workspace">
+        <a routerLink="/app/overview" routerLinkActive="active">Overview</a>
+        <span aria-disabled="true">World <small>next</small></span>
+        <span aria-disabled="true">Quest log <small>next</small></span>
+        <span aria-disabled="true">Chronicle <small>next</small></span>
+        <a routerLink="/app/vault" routerLinkActive="active">Vault</a>
+        <span aria-disabled="true">Connections <small>GitHub App</small></span>
+        <a routerLink="/app/account" routerLinkActive="active">Account</a>
+      </nav>
+      <a class="public-exit" routerLink="/">← Public preview</a>
+    </aside>
+
+    <main class="shell-content" tabindex="-1">
+      <div class="source-status" [attr.data-state]="store.phase()" aria-live="polite">
+        <span aria-hidden="true"></span>
+        <p>{{ store.message() }}</p>
+        @if (store.phase() === 'error') {
+          <button type="button" (click)="store.load()">Retry</button>
+        }
+      </div>
+
+      @if (store.phase() === 'checking') {
+        <section class="shell-state" role="status">
+          <p>GATEWAY AWAKENING · FREE HOST</p>
+          <h1>Preparing your campaign workspace</h1>
+          <span>Public previews remain available while the private archive wakes.</span>
+        </section>
+      } @else if (store.phase() === 'signed-out') {
+        <section class="shell-state">
+          <p>PRIVATE WORKSPACE</p>
+          <h1>Choose your GitHub identity</h1>
+          <span>GitHub identity and future repository permissions remain separate.</span>
+          <div class="state-actions">
+            <button type="button" (click)="store.signIn()">Continue with GitHub</button>
+            <button type="button" (click)="store.signIn(true)">Use another account</button>
+          </div>
+        </section>
+      } @else if (store.phase() === 'unavailable') {
+        <section class="shell-state">
+          <p>CONNECTED MODE UNAVAILABLE</p>
+          <h1>The private workspace is not configured here</h1>
+          <span>The zero-account Portfolio Citadel and public repository preview still work.</span>
+          <a routerLink="/">Open public preview</a>
+        </section>
+      } @else if (store.session()) {
+        <router-outlet />
+      }
+    </main>
+  </div>
+
+  <nav class="mobile-navigation" aria-label="Mobile campaign workspace">
+    <a routerLink="/app/overview" routerLinkActive="active">Overview</a>
+    <span aria-disabled="true">World</span>
+    <a routerLink="/app/vault" routerLinkActive="active">Vault</a>
+    <a routerLink="/app/account" routerLinkActive="active">Account</a>
+  </nav>
+
+  <footer class="shell-footer">
+    <span>PRIVATE BY DEFAULT</span>
+    @if (store.selectedCampaign(); as activeCampaign) {
+      <span>MAPPING V{{ activeCampaign.projection.mappingAlgorithmVersion }}</span>
+    } @else {
+      <span>MAPPING —</span>
+    }
+  </footer>
+</div>

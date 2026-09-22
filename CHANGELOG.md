@@ -21,6 +21,7 @@ All notable changes follow Keep a Changelog and Semantic Versioning conventions.
 - Accepted the privacy-safe product-insights and community-signals contract: first-party aggregate analytics, opt-in public showcases and badges, and no global competitive leaderboard through 1.0.
 - Prepared the v0.5 authenticated-shell information architecture, responsive wireframes, shared design-system contract, and minimum-permission GitHub App boundary.
 - Added the first v0.5 implementation foundation: versioned local Modern/Chronicle preferences, an authenticated accessible mode control, easy-read preference, and shared semantic presentation tokens.
+- Added the routed v0.5 authenticated-shell foundation with a shared session and campaign store, responsive Modern navigation, and functional Overview, Vault, and Account destinations while retaining the public v0.4 route.
 
 ### Fixed
 

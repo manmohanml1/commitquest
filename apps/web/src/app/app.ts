@@ -25,7 +25,7 @@ type ConnectedPhase =
   'checking' | 'unavailable' | 'signed-out' | 'signing-in' | 'ready' | 'working' | 'error';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-public-experience',
   imports: [DatePipe, DesignModeControl],
   templateUrl: './app.html',
   styleUrl: './app.css',

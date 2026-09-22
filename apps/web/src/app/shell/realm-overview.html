@@ -1,0 +1,52 @@
+@if (store.selectedCampaign(); as saved) {
+  <header class="destination-heading">
+    <p>REALM OVERVIEW · {{ saved.visibility }}</p>
+    <h1>{{ saved.projection.title }}</h1>
+    <span>{{ saved.projection.repository }}</span>
+  </header>
+
+  <section class="metric-grid" aria-label="Campaign evidence summary">
+    @for (metric of saved.projection.metrics; track metric.label) {
+      <article>
+        <strong>{{ metric.value }}</strong
+        ><span>{{ metric.label }}</span>
+      </article>
+    }
+  </section>
+
+  <div class="overview-grid">
+    <section class="destination-card">
+      <p>RECOMMENDED NEXT QUEST</p>
+      @if (saved.projection.quests[0]; as quest) {
+        <h2>{{ quest.title }}</h2>
+        <span>{{ quest.summary }}</span>
+        <a [href]="quest.evidenceUrl" target="_blank" rel="noreferrer">Open source evidence ↗</a>
+      } @else {
+        <h2>No applicable quest yet</h2>
+        <span
+          >CommitQuest will not invent work when the available evidence has no valid next
+          action.</span
+        >
+      }
+    </section>
+
+    <section class="destination-card">
+      <p>MOST RECENT VERIFIED CHANGE</p>
+      @if (saved.projection.encounters[0]; as encounter) {
+        <h2>{{ encounter.title }}</h2>
+        <span>{{ encounter.summary }}</span>
+        <a [href]="encounter.evidenceUrl" target="_blank" rel="noreferrer">Open evidence ↗</a>
+      } @else {
+        <h2>No verified encounter in the bounded sample</h2>
+        <span>Commit history is not promoted to a verified pull-request outcome.</span>
+      }
+    </section>
+  </div>
+} @else {
+  <section class="empty-destination">
+    <p>NO SAVED CAMPAIGNS</p>
+    <h1>Your first realm starts with evidence</h1>
+    <span>Use the public preview to map a repository, then save it privately.</span>
+    <a href="/#preview">Open public repository preview</a>
+  </section>
+}

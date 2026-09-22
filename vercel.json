@@ -8,6 +8,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://commitquest-api-manmohanml1.onrender.com/api/:path*"
+    },
+    {
+      "source": "/app/:path*",
+      "destination": "/index.html"
     }
   ]
 }
